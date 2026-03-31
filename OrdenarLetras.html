@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔀 Ordena las Letras - Nivel 9</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --shadow-soft:   0 8px 32px rgba(139,92,246,0.15);
+    --shadow-strong: 0 20px 60px rgba(0,0,0,0.2);
+    --color-success: #6BCB77;
+    --color-error:   #FF6B6B;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
+    height: 100vh; width: 100vw;
+    display: flex; justify-content: center; align-items: center;
+    padding: 8px 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg-shapes { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .shape {
+    position:absolute; border-radius:50%; opacity:0.1;
+    animation: float-around 28s infinite ease-in-out;
+  }
+  .shape:nth-child(1){width:140px;height:140px;background:#FFE66D;top:8%;left:4%;animation-delay:0s}
+  .shape:nth-child(2){width:180px;height:180px;background:#4ECDC4;top:55%;right:6%;animation-delay:5s}
+  .shape:nth-child(3){width:100px;height:100px;background:#FF6B9D;bottom:12%;left:10%;animation-delay:10s}
+  .shape:nth-child(4){width:160px;height:160px;background:#FFE66D;top:20%;right:18%;animation-delay:15s}
+  @keyframes float-around {
+    0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}
+    25%{transform:translate(40px,-40px) rotate(90deg) scale(1.1)}
+    50%{transform:translate(-30px,30px) rotate(180deg) scale(0.9)}
+    75%{transform:translate(50px,50px) rotate(270deg) scale(1.05)}
+  }
+
+  /* ── Page ── */
+  .page {
+    position:relative; z-index:10;
+    width:100%; max-width:1050px; height:100%;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+
+  /* ── Header ── */
+  .header { text-align:center; margin-bottom:5px; animation:slideDown 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes slideDown{from{transform:translateY(-40px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .title {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1.2rem,2.5vw,1.9rem); color:white;
+    text-shadow:4px 4px 0 rgba(0,0,0,0.2),0 0 30px rgba(255,255,255,0.3); letter-spacing:1px;
+  }
+  .subtitle { font-size:clamp(0.65rem,1.2vw,0.85rem); color:rgba(255,255,255,0.92); font-weight:700; text-shadow:1px 1px 3px rgba(0,0,0,0.2); }
+  .level-badge {
+    display:inline-block; background:linear-gradient(135deg,#6d28d9,#4c1d95);
+    color:white; padding:2px 12px; border-radius:20px;
+    font-family:'Fredoka One',cursive; font-size:0.75rem; margin-top:2px;
+    box-shadow:0 4px 14px rgba(109,40,217,0.5); animation:pulse-badge 2s infinite;
+  }
+  @keyframes pulse-badge{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+  /* ── Topbar ── */
+  .topbar { display:flex; align-items:center; gap:10px; margin-bottom:5px; animation:slideDown 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s backwards; }
+  .score-panel { background:rgba(255,255,255,0.25); backdrop-filter:blur(10px); border-radius:12px; padding:4px 18px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow-soft); flex-shrink:0; }
+  .score-item{display:flex;align-items:center;gap:6px}
+  .score-icon{font-size:1.1rem;animation:bounce 2s infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .score-text{font-family:'Fredoka One',cursive;font-size:0.95rem;color:white;text-shadow:1px 1px 3px rgba(0,0,0,0.2)}
+  .progress-wrap{flex:1;background:rgba(255,255,255,0.3);height:7px;border-radius:10px;overflow:hidden}
+  .progress-bar{height:100%;border-radius:10px;width:0%;background:linear-gradient(90deg,#FFE66D,#FF9F1C);transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 0 8px rgba(255,230,109,0.7)}
+
+  /* ── Card ── */
+  .card {
+    background:linear-gradient(135deg,#ffffff 0%,#faf5ff 100%);
+    border-radius:20px; padding:14px 18px;
+    box-shadow:var(--shadow-strong);
+    display:flex; flex-direction:row; gap:16px; align-items:stretch;
+    animation:scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s backwards;
+    position:relative; overflow:hidden;
+  }
+  @keyframes scaleIn{from{transform:scale(0.88);opacity:0}to{transform:scale(1);opacity:1}}
+  .card::before{content:'';position:absolute;width:220px;height:220px;border-radius:50%;top:-110px;right:-110px;background:radial-gradient(circle,rgba(168,85,247,0.1) 0%,transparent 70%)}
+
+  /* ── LEFT: image + info ── */
+  .card-left {
+    flex:0 0 190px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px;
+    border-right:2px dashed rgba(168,85,247,0.25);
+    padding-right:14px; position:relative; z-index:1;
+  }
+
+  .img-label { font-size:clamp(0.65rem,1.2vw,0.82rem); color:#6b21a8; font-weight:800; text-transform:uppercase; }
+
+  .word-image {
+    font-size:clamp(4rem,9vw,6rem);
+    filter:drop-shadow(0 8px 18px rgba(0,0,0,0.15));
+    animation:float-img 3s ease-in-out infinite;
+  }
+  @keyframes float-img{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+  .syllable-info {
+    font-family:'Fredoka One',cursive; font-size:0.8rem;
+    color:#7c3aed; background:rgba(168,85,247,0.1);
+    padding:3px 12px; border-radius:20px; border:1.5px solid rgba(168,85,247,0.25);
+    text-align:center;
+  }
+
+  /* ── RIGHT: game area ── */
+  .card-right {
+    flex:1; display:flex; flex-direction:column;
+    gap:12px; justify-content:center; position:relative; z-index:1;
+  }
+
+  .section-label { font-size:clamp(0.65rem,1.2vw,0.82rem); color:#6b21a8; font-weight:800; text-transform:uppercase; text-align:center; }
+
+  /* ── Answer slots ── */
+  .answer-row {
+    display:flex; justify-content:center; align-items:center;
+    gap:8px; flex-wrap:nowrap;
+    min-height:70px;
+  }
+
+  .answer-slot {
+    width:clamp(48px,8vw,68px);
+    height:clamp(54px,9vw,74px);
+    border-radius:14px;
+    border:3px dashed rgba(168,85,247,0.4);
+    background:rgba(168,85,247,0.05);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1.4rem,3vw,2rem);
+    color:#5b21b6;
+    cursor:pointer;
+    transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    position:relative; user-select:none;
+  }
+  .answer-slot.filled {
+    background:linear-gradient(135deg,#a855f7,#7c3aed);
+    border-color:#7c3aed; color:white;
+    box-shadow:0 4px 14px rgba(168,85,247,0.4);
+    border-style:solid;
+  }
+  .answer-slot.filled:hover { transform:scale(1.08) translateY(-3px); box-shadow:0 8px 22px rgba(168,85,247,0.5); }
+  .answer-slot.correct { background:linear-gradient(135deg,#6BCB77,#4CAF50); border-color:#4CAF50; color:white; animation:correctPop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  .answer-slot.wrong   { background:linear-gradient(135deg,#FF6B6B,#FF4757); border-color:#FF4757; color:white; animation:shake 0.45s; }
+  @keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+  /* ── Letter tiles ── */
+  .tiles-row {
+    display:flex; justify-content:center; align-items:center;
+    gap:8px; flex-wrap:wrap;
+    padding:10px 8px;
+    background:rgba(168,85,247,0.06);
+    border-radius:16px;
+    border:2px dashed rgba(168,85,247,0.2);
+    min-height:70px;
+  }
+
+  .tile {
+    width:clamp(48px,8vw,68px);
+    height:clamp(54px,9vw,74px);
+    border-radius:14px;
+    background:linear-gradient(135deg,#fff,#faf5ff);
+    border:3px solid rgba(168,85,247,0.35);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1.4rem,3vw,2rem);
+    color:#5b21b6;
+    cursor:pointer;
+    user-select:none;
+    box-shadow:0 4px 12px rgba(168,85,247,0.15),inset 0 1px 0 rgba(255,255,255,0.8);
+    transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) backwards;
+  }
+  .tile:hover { transform:translateY(-6px) scale(1.08); box-shadow:0 10px 28px rgba(168,85,247,0.35); border-color:#a855f7; }
+  .tile:active { transform:translateY(-2px) scale(1.04); }
+  .tile.used   { opacity:0.2; pointer-events:none; border-style:dashed; }
+  @keyframes popIn{from{transform:scale(0) rotate(-180deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+
+  /* ── Feedback ── */
+  .feedback-row {
+    display:flex; align-items:center; justify-content:center;
+    gap:10px; min-height:40px;
+  }
+  .feedback-message {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(0.85rem,1.6vw,1.1rem);
+    color:transparent; opacity:0; transform:scale(0.5);
+    transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1); text-align:center;
+  }
+  .feedback-message.show { opacity:1; transform:scale(1); }
+  .feedback-message.correct { background:linear-gradient(135deg,#6BCB77,#4CAF50); -webkit-background-clip:text; background-clip:text; animation:wiggle 0.6s; }
+  .feedback-message.incorrect { background:linear-gradient(135deg,#FF6B6B,#FF4757); -webkit-background-clip:text; background-clip:text; }
+  @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+
+  /* ── Buttons ── */
+  .btn-row{display:flex;gap:7px;justify-content:center;flex-wrap:nowrap}
+  .btn {
+    font-family:'Fredoka One',cursive; font-size:clamp(1rem,1.8vw,1.3rem);
+    padding:6px 16px; border:none; border-radius:50px; cursor:pointer;
+    transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow:0 4px 14px rgba(0,0,0,0.15);
+    position:relative; overflow:hidden; min-width:42px;
+  }
+  .btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.3);opacity:0;transition:opacity 0.3s}
+  .btn:hover::before{opacity:1}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,0.2)}
+  .btn:active{transform:translateY(-1px)}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+  .btn-check { background:linear-gradient(135deg,#6BCB77,#4CAF50); color:white }
+  .btn-next  { background:linear-gradient(135deg,#a855f7,#7c3aed); color:white }
+  .btn-clear { background:linear-gradient(135deg,#FF9F1C,#FF8C00); color:white }
+  .btn-reset { background:linear-gradient(135deg,#FFE66D,#FFC837); color:#4c1d95 }
+
+  /* ── Confetti ── */
+  .confetti-container{position:fixed;inset:0;pointer-events:none;z-index:1000}
+  .confetti{position:absolute;width:9px;height:9px;background:var(--color);opacity:0;animation:confetti-fall 3s ease-out forwards}
+  @keyframes confetti-fall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+  .star-burst{position:fixed;pointer-events:none;font-size:1.8rem;animation:star-burst-anim 0.9s ease-out forwards;z-index:999}
+  @keyframes star-burst-anim{0%{opacity:1;transform:translate(-50%,-50%) scale(0)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}100%{opacity:0;transform:translate(-50%,-50%) scale(2) translateY(-80px)}}
+
+  /* ── Modal ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(5px);display:none;justify-content:center;align-items:center;z-index:2000}
+  .modal-overlay.show{display:flex}
+  .modal{background:linear-gradient(135deg,#fff,#faf5ff);border-radius:26px;padding:36px 44px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.3);animation:modalPop 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+  @keyframes modalPop{from{transform:scale(0.5) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  .modal-icon{font-size:4rem;margin-bottom:12px;animation:bounce 1s infinite}
+  .modal-title{font-family:'Fredoka One',cursive;font-size:2.2rem;background:linear-gradient(135deg,#a855f7,#f97316);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
+  .modal-text{font-size:1.1rem;color:#4c1d95;font-weight:700;margin-bottom:10px}
+  .modal-stars{font-size:2.5rem;margin-bottom:18px;letter-spacing:8px}
+
+  /* ── Home button ── */
+  .btn-home {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(102,126,234,0.5);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+  }
+  .btn-home:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 8px 20px rgba(102,126,234,0.6); }
+  .btn-home:active { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="shape"></div><div class="shape"></div>
+  <div class="shape"></div><div class="shape"></div>
+</div>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<div class="page">
+  <header class="header">
+    <h1 class="title">🔀 Ordena las Letras</h1>
+    <p class="subtitle">¡Tocá las letras en el orden correcto para formar la palabra!</p>
+    <div class="level-badge">🌟 NIVEL 9</div>
+  </header>
+
+  <div class="topbar">
+    <div class="score-panel">
+      <div class="score-item">
+        <span class="score-icon">⭐</span>
+        <span class="score-text" id="correctScore">0</span>
+      </div>
+      <div class="score-item">
+        <span class="score-icon">🎯</span>
+        <span class="score-text"><span id="currentRound">1</span>/<span id="totalRounds">15</span></span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <!-- LEFT: emoji clue -->
+    <div class="card-left">
+      <p class="img-label">🖼️ ¿Qué palabra es?</p>
+      <div class="word-image" id="wordImage">🐱</div>
+      <div class="syllable-info" id="syllableInfo">2 sílabas</div>
+    </div>
+
+    <!-- RIGHT: game -->
+    <div class="card-right">
+      <p class="section-label">📝 Armá la palabra</p>
+
+      <!-- Answer slots -->
+      <div class="answer-row" id="answerRow"></div>
+
+      <!-- Shuffled letter tiles -->
+      <p class="section-label">🔀 Letras disponibles</p>
+      <div class="tiles-row" id="tilesRow"></div>
+
+      <!-- Feedback + buttons -->
+      <div class="feedback-row">
+        <div class="feedback-message" id="feedbackMessage"></div>
+        <div class="btn-row">
+          <button class="btn btn-clear" id="btnClear">🗑️</button>
+          <button class="btn btn-check" id="btnCheck">✓</button>
+          <button class="btn btn-next"  id="btnNext"  disabled>➜</button>
+          <button class="btn btn-reset" id="btnReset">🔄</button>
+          <a class="btn btn-home" href="index.html" title="Volver al inicio">🏠</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Victory Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-icon">🏆</div>
+    <h2 class="modal-title">¡Brillante!</h2>
+    <div class="modal-stars">⭐⭐⭐</div>
+    <p class="modal-text">¡Ordenaste todas las palabras!</p>
+    <p class="modal-text">Aciertos: <strong id="finalScore"></strong></p>
+    <button class="btn btn-next" style="margin-top:10px" onclick="location.reload()">🎮 Jugar de nuevo</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// GAME DATA
+// syllables: 1, 2, 3
+// ═══════════════════════════════════════════════════════
+
+const WORDS = [
+  // 1 sílaba
+  { word:'SOL',      emoji:'☀️',  syllables:1 },
+  { word:'PAN',      emoji:'🍞',  syllables:1 },
+  { word:'PEZ',      emoji:'🐠',  syllables:1 },
+  { word:'FLOR',     emoji:'🌸',  syllables:1 },
+  { word:'TREN',     emoji:'🚂',  syllables:1 },
+  // 2 sílabas
+  { word:'GATO',     emoji:'🐱',  syllables:2 },
+  { word:'LUNA',     emoji:'🌙',  syllables:2 },
+  { word:'PATO',     emoji:'🦆',  syllables:2 },
+  { word:'CASA',     emoji:'🏠',  syllables:2 },
+  { word:'NUBE',     emoji:'☁️',  syllables:2 },
+  { word:'SAPO',     emoji:'🐸',  syllables:2 },
+  { word:'MANO',     emoji:'✋',  syllables:2 },
+  // 3 sílabas
+  { word:'TOMATE',   emoji:'🍅',  syllables:3 },
+  { word:'PALOMA',   emoji:'🕊️',  syllables:3 },
+  { word:'MALETA',   emoji:'🧳',  syllables:3 },
+  { word:'CAMELLO',  emoji:'🐪',  syllables:3 },
+  { word:'MANZANA',  emoji:'🍎',  syllables:3 },
+  { word:'MARIPOSA', emoji:'🦋',  syllables:3 },
+  { word:'TORTUGA',  emoji:'🐢',  syllables:3 },
+  { word:'ELEFANTE', emoji:'🐘',  syllables:3 },
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+
+let shuffledWords  = [];
+let currentRound   = 0;
+let correctAnswers = 0;
+let hasAnswered    = false;
+
+// Per-round state
+let currentWord    = '';      // e.g. "GATO"
+let shuffledLetters= [];      // e.g. ['T','A','G','O']
+let answerSlots    = [];      // array of letter or null per slot
+let tileUsed       = [];      // bool per tile index
+
+// ═══════════════════════════════════════════════════════
+// DOM
+// ═══════════════════════════════════════════════════════
+
+const wordImageEl    = document.getElementById('wordImage');
+const syllableInfoEl = document.getElementById('syllableInfo');
+const answerRowEl    = document.getElementById('answerRow');
+const tilesRowEl     = document.getElementById('tilesRow');
+const feedbackMsgEl  = document.getElementById('feedbackMessage');
+const btnCheck       = document.getElementById('btnCheck');
+const btnNext        = document.getElementById('btnNext');
+const btnClear       = document.getElementById('btnClear');
+const btnReset       = document.getElementById('btnReset');
+const correctScoreEl = document.getElementById('correctScore');
+const currentRoundEl = document.getElementById('currentRound');
+const totalRoundsEl  = document.getElementById('totalRounds');
+const progressBarEl  = document.getElementById('progressBar');
+const confettiCont   = document.getElementById('confettiContainer');
+const modalOverlay   = document.getElementById('modalOverlay');
+const finalScoreEl   = document.getElementById('finalScore');
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+
+function initGame(){
+  // Show one group of 1-syl, then 2-syl, then 3-syl, pick 5 from each
+  const ones   = shuffleArray(WORDS.filter(w => w.syllables === 1)).slice(0, 5);
+  const twos   = shuffleArray(WORDS.filter(w => w.syllables === 2)).slice(0, 5);
+  const threes = shuffleArray(WORDS.filter(w => w.syllables === 3)).slice(0, 5);
+  shuffledWords = [...ones, ...twos, ...threes];
+  totalRoundsEl.textContent = shuffledWords.length;
+  loadRound();
+}
+
+// ═══════════════════════════════════════════════════════
+// LOAD ROUND
+// ═══════════════════════════════════════════════════════
+
+function loadRound(){
+  if(currentRound >= shuffledWords.length){ showVictory(); return; }
+
+  hasAnswered = false;
+  btnCheck.disabled = false;
+  btnNext.disabled  = true;
+  feedbackMsgEl.className  = 'feedback-message';
+  feedbackMsgEl.textContent = '';
+
+  const item = shuffledWords[currentRound];
+  currentWord     = item.word;
+  shuffledLetters = shuffleArray([...currentWord]);
+  answerSlots     = Array(currentWord.length).fill(null);
+  tileUsed        = Array(currentWord.length).fill(false);
+
+  wordImageEl.textContent    = item.emoji;
+  syllableInfoEl.textContent = item.syllables === 1 ? '1 sílaba'
+                             : item.syllables === 2 ? '2 sílabas'
+                             :                        '3 sílabas';
+  currentRoundEl.textContent = currentRound + 1;
+  progressBarEl.style.width  = `${(currentRound / shuffledWords.length) * 100}%`;
+
+  renderSlots();
+  renderTiles();
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+
+function renderSlots(){
+  answerRowEl.innerHTML = '';
+  answerSlots.forEach((letter, idx) => {
+    const slot = document.createElement('div');
+    slot.className = 'answer-slot' + (letter ? ' filled' : '');
+    slot.textContent = letter || '';
+    if(letter && !hasAnswered){
+      slot.addEventListener('click', () => removeFromSlot(idx));
+    }
+    answerRowEl.appendChild(slot);
+  });
+}
+
+function renderTiles(){
+  tilesRowEl.innerHTML = '';
+  shuffledLetters.forEach((letter, idx) => {
+    const tile = document.createElement('div');
+    tile.className = 'tile' + (tileUsed[idx] ? ' used' : '');
+    tile.textContent = letter;
+    tile.style.animationDelay = `${idx * 0.06}s`;
+    if(!tileUsed[idx] && !hasAnswered){
+      tile.addEventListener('click', () => placeInSlot(idx));
+    }
+    tilesRowEl.appendChild(tile);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// TILE ↔ SLOT LOGIC
+// ═══════════════════════════════════════════════════════
+
+function placeInSlot(tileIdx){
+  if(hasAnswered || tileUsed[tileIdx]) return;
+  // Find first empty slot
+  const slotIdx = answerSlots.indexOf(null);
+  if(slotIdx === -1) return;
+
+  answerSlots[slotIdx] = shuffledLetters[tileIdx];
+  tileUsed[tileIdx]    = tileIdx;
+
+  // Store which tileIdx is in which slot for reversal
+  answerSlots._tileRefs = answerSlots._tileRefs || [];
+  answerSlots._tileRefs[slotIdx] = tileIdx;
+
+  renderSlots();
+  renderTiles();
+
+  // Auto-check when all slots filled
+  if(!answerSlots.includes(null)){
+    setTimeout(checkAnswer, 300);
+  }
+}
+
+function removeFromSlot(slotIdx){
+  if(hasAnswered || answerSlots[slotIdx] === null) return;
+  const tileIdx = (answerSlots._tileRefs || [])[slotIdx];
+  if(tileIdx !== undefined) tileUsed[tileIdx] = false;
+  answerSlots[slotIdx] = null;
+  if(answerSlots._tileRefs) answerSlots._tileRefs[slotIdx] = undefined;
+  renderSlots();
+  renderTiles();
+  // Re-enable check button
+  btnCheck.disabled = false;
+  feedbackMsgEl.className = 'feedback-message';
+}
+
+// ═══════════════════════════════════════════════════════
+// CHECK ANSWER
+// ═══════════════════════════════════════════════════════
+
+function checkAnswer(){
+  if(hasAnswered) return;
+  if(answerSlots.includes(null)){
+    feedbackMsgEl.className   = 'feedback-message show incorrect';
+    feedbackMsgEl.textContent = '¡Faltan letras! 👆';
+    return;
+  }
+
+  hasAnswered = true;
+  btnCheck.disabled = true;
+  btnNext.disabled  = false;
+
+  const formed = answerSlots.join('');
+  const correct = formed === currentWord;
+
+  // Colour each slot
+  const slots = answerRowEl.querySelectorAll('.answer-slot');
+  slots.forEach((slot, i) => {
+    slot.classList.remove('filled');
+    setTimeout(() => {
+      slot.classList.add(answerSlots[i] === currentWord[i] ? 'correct' : 'wrong');
+    }, i * 80);
+  });
+
+  progressBarEl.style.width = `${((currentRound+1) / shuffledWords.length) * 100}%`;
+
+  setTimeout(() => {
+    if(correct){
+      correctAnswers++;
+      correctScoreEl.textContent = correctAnswers;
+      feedbackMsgEl.className   = 'feedback-message show correct';
+      feedbackMsgEl.textContent = `¡Muy bien! ${currentWord} 🎉`;
+      createStarBurst();
+      createConfetti();
+      playSound(true);
+    } else {
+      feedbackMsgEl.className   = 'feedback-message show incorrect';
+      feedbackMsgEl.textContent = `¡Era: ${currentWord}! 💪`;
+      // Show correct word in slots after a beat
+      setTimeout(() => {
+        slots.forEach((slot, i) => {
+          slot.classList.remove('wrong','correct');
+          slot.textContent = currentWord[i];
+          slot.classList.add('correct');
+        });
+      }, 800);
+      playSound(false);
+    }
+  }, slots.length * 80 + 100);
+}
+
+// ═══════════════════════════════════════════════════════
+// BUTTONS
+// ═══════════════════════════════════════════════════════
+
+btnCheck.addEventListener('click', checkAnswer);
+
+btnClear.addEventListener('click', () => {
+  if(hasAnswered) return;
+  answerSlots     = Array(currentWord.length).fill(null);
+  answerSlots._tileRefs = [];
+  tileUsed        = Array(currentWord.length).fill(false);
+  feedbackMsgEl.className = 'feedback-message';
+  renderSlots();
+  renderTiles();
+});
+
+btnNext.addEventListener('click', () => { currentRound++; loadRound(); });
+
+btnReset.addEventListener('click', () => {
+  currentRound   = 0;
+  correctAnswers = 0;
+  correctScoreEl.textContent = '0';
+  initGame();
+});
+
+// ═══════════════════════════════════════════════════════
+// VICTORY
+// ═══════════════════════════════════════════════════════
+
+function showVictory(){
+  finalScoreEl.textContent = `${correctAnswers} de ${shuffledWords.length}`;
+  modalOverlay.classList.add('show');
+  createConfetti(60);
+}
+
+// ═══════════════════════════════════════════════════════
+// EFFECTS
+// ═══════════════════════════════════════════════════════
+
+function createConfetti(count=30){
+  const colors=['#a855f7','#ec4899','#FFE66D','#6BCB77','#4ECDC4','#FF9F1C'];
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div'); el.className='confetti';
+    el.style.setProperty('--color',colors[Math.floor(Math.random()*colors.length)]);
+    el.style.left=Math.random()*100+'%'; el.style.top=Math.random()*20+'%';
+    el.style.animationDelay=Math.random()*0.5+'s';
+    el.style.animationDuration=(Math.random()*2+2)+'s';
+    confettiCont.appendChild(el); setTimeout(()=>el.remove(),3000);
+  }
+}
+
+function createStarBurst(){
+  const r=answerRowEl.getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  ['⭐','✨','🌟','💫','🎉','🔀'].forEach((e,i)=>{
+    const s=document.createElement('div'); s.className='star-burst';
+    s.textContent=e; s.style.left=cx+'px'; s.style.top=cy+'px';
+    s.style.animationDelay=(i*0.09)+'s';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),1000);
+  });
+}
+
+function playSound(ok){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ac.createOscillator(), g=ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.frequency.value=ok?880:300; o.type=ok?'sine':'triangle';
+    g.gain.setValueAtTime(0.25,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.01,ac.currentTime+0.5);
+    o.start(ac.currentTime); o.stop(ac.currentTime+0.5);
+  }catch(e){}
+}
+
+function shuffleArray(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+window.addEventListener('DOMContentLoaded', initGame);
+</script>
+</body>
+</html>

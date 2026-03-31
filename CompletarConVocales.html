@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎵 Completa las Vocales - Nivel 5</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-primary: #F59E0B;
+    --color-secondary: #10B981;
+    --color-accent: #EC4899;
+    --color-success: #6BCB77;
+    --color-error: #FF6B6B;
+    --color-purple: #C77DFF;
+    --color-orange: #FF9F1C;
+    --color-blue: #4A90E2;
+    --shadow-soft: 0 8px 32px rgba(245, 158, 11, 0.15);
+    --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.12);
+    --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.2);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%);
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated background elements */
+  .bg-shapes {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+    animation: float-around 40s infinite ease-in-out;
+  }
+
+  .shape:nth-child(1) {
+    width: 160px; height: 160px;
+    background: #EC4899;
+    top: 8%; left: 5%;
+    animation-delay: 0s;
+  }
+
+  .shape:nth-child(2) {
+    width: 210px; height: 210px;
+    background: #10B981;
+    top: 60%; right: 8%;
+    animation-delay: 7s;
+  }
+
+  .shape:nth-child(3) {
+    width: 130px; height: 130px;
+    background: #8B5CF6;
+    bottom: 15%; left: 10%;
+    animation-delay: 14s;
+  }
+
+  .shape:nth-child(4) {
+    width: 180px; height: 180px;
+    background: #3B82F6;
+    top: 25%; right: 20%;
+    animation-delay: 21s;
+  }
+
+  @keyframes float-around {
+    0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    25% { transform: translate(60px, -60px) rotate(90deg) scale(1.2); }
+    50% { transform: translate(-50px, 50px) rotate(180deg) scale(0.8); }
+    75% { transform: translate(70px, 70px) rotate(270deg) scale(1.1); }
+  }
+
+  /* Main container */
+  .container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 980px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 4px;
+    animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+    color: white;
+    text-shadow: 
+      4px 4px 0 rgba(0, 0, 0, 0.2),
+      0 0 40px rgba(255, 255, 255, 0.4);
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .level-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #EC4899, #DB2777);
+    color: white;
+    padding: 2px 12px;
+    border-radius: 30px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.75rem;
+    margin-top: 2px;
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.5);
+    animation: pulse-badge 2s infinite;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Progress bar */
+  .progress-container {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    height: 7px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #10B981, #059669);
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+  }
+
+  /* Score panel */
+  .score-panel {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 4px 18px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 4px;
+    box-shadow: var(--shadow-soft);
+    animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
+  }
+
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .score-icon {
+    font-size: 1.1rem;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .score-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Card container */
+  .card {
+    background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+    border-radius: 20px;
+    padding: 14px 18px;
+    box-shadow: var(--shadow-strong);
+    position: relative;
+    overflow: hidden;
+    animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .card::before,
+  .card::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+  }
+
+  .card::before {
+    width: 250px;
+    height: 250px;
+    top: -125px;
+    right: -125px;
+  }
+
+  .card::after {
+    width: 200px;
+    height: 200px;
+    bottom: -100px;
+    left: -100px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.12) 0%, transparent 70%);
+  }
+
+  /* Column wrappers */
+  .card-left {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px dashed rgba(245,158,11,0.35);
+    padding-right: 14px;
+    gap: 10px;
+  }
+
+  .card-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  /* Image section */
+  .image-section {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .image-label {
+    font-size: clamp(0.7rem, 1.3vw, 0.88rem);
+    color: #92400e;
+    font-weight: 800;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .word-image {
+    font-size: clamp(3.5rem, 7vw, 5rem);
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+    animation: float-image 3s ease-in-out infinite;
+  }
+
+  @keyframes float-image {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* Instruction */
+  .instruction {
+    text-align: center;
+    font-size: clamp(0.7rem, 1.3vw, 0.88rem);
+    color: #92400e;
+    font-weight: 800;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Word display */
+  .word-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    border-radius: 14px;
+    position: relative;
+    z-index: 1;
+    flex-wrap: nowrap;
+    overflow: visible;
+  }
+
+  .letter-box {
+    width: clamp(36px, 6vw, 60px);
+    height: clamp(42px, 7vw, 68px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.2rem, 2.5vw, 2.2rem);
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    text-transform: uppercase;
+  }
+
+  .letter-box:nth-child(1) { animation-delay: 0.1s; }
+  .letter-box:nth-child(2) { animation-delay: 0.15s; }
+  .letter-box:nth-child(3) { animation-delay: 0.2s; }
+  .letter-box:nth-child(4) { animation-delay: 0.25s; }
+  .letter-box:nth-child(5) { animation-delay: 0.3s; }
+  .letter-box:nth-child(6) { animation-delay: 0.35s; }
+
+  @keyframes popIn {
+    from { transform: scale(0) rotate(-180deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  /* Consonant (shown) */
+  .letter-box.consonant {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    color: #92400e;
+    box-shadow: 
+      0 4px 15px rgba(0, 0, 0, 0.08),
+      inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    border: 3px solid #FCD34D;
+  }
+
+  /* Vowel slot (to fill) */
+  .letter-box.vowel {
+    background: linear-gradient(135deg, #ffffff 0%, #fef9f3 100%);
+    border: 3px dashed #EC4899;
+    box-shadow: 
+      0 4px 15px rgba(236, 72, 153, 0.15),
+      inset 0 2px 4px rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+  }
+
+  .letter-box.vowel:hover {
+    transform: scale(1.1);
+    border-color: #DB2777;
+    background: linear-gradient(135deg, #FCE7F3 0%, #FBCFE8 100%);
+  }
+
+  .letter-box.vowel.selected {
+    border-color: #F59E0B;
+    border-width: 4px;
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    box-shadow: 
+      0 6px 20px rgba(245, 158, 11, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    animation: pulse-selected 0.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-selected {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+
+  /* Filled vowel */
+  .letter-box.filled {
+    background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+    color: white;
+    box-shadow: 
+      0 6px 20px rgba(236, 72, 153, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    border: 3px solid #DB2777;
+  }
+
+  .letter-box.filled.correct {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    border-color: #059669;
+    animation: correctPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes correctPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25) rotate(8deg); }
+    100% { transform: scale(1); }
+  }
+
+  .letter-box.filled.incorrect {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
+    border-color: #FF4757;
+    animation: incorrectShake 0.5s;
+  }
+
+  @keyframes incorrectShake {
+    0%, 100% { transform: translateX(0) rotate(0); }
+    25% { transform: translateX(-10px) rotate(-5deg); }
+    75% { transform: translateX(10px) rotate(5deg); }
+  }
+
+  .letter-placeholder {
+    color: #EC4899;
+    opacity: 0.4;
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+  }
+
+  /* Vowel keyboard */
+  .vowel-keyboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .vowel-key {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    text-transform: uppercase;
+    min-width: clamp(52px, 9vw, 72px);
+  }
+
+  .vowel-key:hover {
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6);
+  }
+
+  .vowel-key:active {
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  .vowel-key:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .vowel-key.used {
+    background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
+    opacity: 0.4;
+  }
+
+  /* Feedback */
+  .feedback {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+    min-height: 38px;
+  }
+
+  .feedback-message {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+    color: transparent;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .feedback-message.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .feedback-message.correct {
+    background: linear-gradient(135deg, #10B981, #059669);
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: wiggle 0.6s;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+  }
+
+  .feedback-message.incorrect {
+    background: linear-gradient(135deg, #FF6B6B, #FF4757);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .feedback-message.incomplete {
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    color: #FF0000;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    animation: wiggle 0.5s;
+  }
+
+  /* Buttons */
+  .button-container {
+    display: flex;
+    gap: 7px;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    padding: 6px 14px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+    min-width: 40px;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .btn:hover::before {
+    opacity: 1;
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn:active {
+    transform: translateY(-1px);
+  }
+
+  .btn-check {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: white;
+  }
+
+  .btn-clear {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    color: white;
+  }
+
+  .btn-next {
+    background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+    color: white;
+  }
+
+  .btn-reset {
+    background: linear-gradient(135deg, #FFE66D 0%, #FFC837 100%);
+    color: #92400e;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Confetti */
+  .confetti-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--color);
+    opacity: 0;
+    animation: confetti-fall 3s ease-out forwards;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      opacity: 1;
+      transform: translateY(0) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(100vh) rotate(720deg);
+    }
+  }
+
+  .star-burst {
+    position: fixed;
+    pointer-events: none;
+    font-size: 2.5rem;
+    animation: star-burst-anim 1s ease-out forwards;
+    z-index: 999;
+  }
+
+  @keyframes star-burst-anim {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.5);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(2) translateY(-100px);
+    }
+  }
+
+  /* Victory Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s;
+  }
+
+  .modal-overlay.show {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal {
+    background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+    animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes modalPop {
+    from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  .modal-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite;
+  }
+
+  .modal-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #F59E0B, #EC4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 15px;
+  }
+
+  .modal-text {
+    font-size: 1.3rem;
+    color: #92400e;
+    font-weight: 700;
+    margin-bottom: 25px;
+  }
+
+  .modal-stars {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    letter-spacing: 10px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .word-display {
+      gap: 6px;
+      padding: 20px;
+    }
+
+    .vowel-keyboard {
+      gap: 8px;
+    }
+
+    .card {
+      padding: 25px;
+    }
+
+    .score-panel {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  /* ── Home button ── */
+  .btn-home {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(102,126,234,0.5);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+  }
+  .btn-home:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 8px 20px rgba(102,126,234,0.6); }
+  .btn-home:active { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<!-- Animated background shapes -->
+<div class="bg-shapes">
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<!-- Main container -->
+<div class="container">
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">🎵 Completa las Vocales</h1>
+    <p class="subtitle">¡Encuentra las vocales que faltan!</p>
+    <div class="level-badge">🌟 NIVEL 5</div>
+  </header>
+
+  <!-- Progress bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+  </div>
+
+  <!-- Score panel -->
+  <div class="score-panel">
+    <div class="score-item">
+      <span class="score-icon">⭐</span>
+      <span class="score-text" id="correctScore">0</span>
+    </div>
+    <div class="score-item">
+      <span class="score-icon">🎯</span>
+      <span class="score-text"><span id="currentRound">1</span>/<span id="totalRounds">10</span></span>
+    </div>
+  </div>
+
+  <!-- Game card -->
+  <div class="card">
+    <!-- LEFT: imagen + instrucción + casillas de la palabra -->
+    <div class="card-left">
+      <div class="image-section">
+        <p class="image-label">🖼️ ¿Qué palabra es?</p>
+        <div class="word-image" id="wordImage">🐱</div>
+      </div>
+      <p class="instruction">🎵 Completa con las vocales correctas</p>
+      <div class="word-display" id="wordDisplay">
+        <!-- Letters will be inserted here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- RIGHT: teclado de vocales + feedback + botones -->
+    <div class="card-right">
+      <div class="vowel-keyboard" id="vowelKeyboard">
+        <!-- Vowels will be generated by JavaScript -->
+      </div>
+      <div class="feedback">
+        <div class="feedback-message" id="feedbackMessage"></div>
+        <div class="button-container">
+          <button class="btn btn-check" id="btnCheck">✓</button>
+          <button class="btn btn-clear" id="btnClear">🗑️</button>
+          <button class="btn btn-next" id="btnNext" disabled>➜</button>
+          <button class="btn btn-reset" id="btnReset">🔄</button>
+          <a class="btn btn-home" href="index.html" title="Volver al inicio">🏠</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Victory Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <h2 class="modal-title">¡Excelente!</h2>
+    <div class="modal-stars">⭐⭐⭐</div>
+    <p class="modal-text">¡Completaste todas las palabras!</p>
+    <p class="modal-text">Respuestas correctas: <strong id="finalScore">0</strong></p>
+    <button class="btn btn-next" onclick="location.reload()">
+      🎮
+    </button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// GAME DATA - Words with missing vowels
+// ═══════════════════════════════════════════════════════════════
+
+const gameData = [
+  { word: 'GATO', emoji: '🐱' },
+  { word: 'CASA', emoji: '🏠' },
+  { word: 'LUNA', emoji: '🌙' },
+  { word: 'PATO', emoji: '🦆' },
+  { word: 'PERA', emoji: '🍐' },
+  { word: 'CAMA', emoji: '🛏️' },
+  { word: 'MANO', emoji: '✋' },
+  { word: 'TIJERA', emoji: '✂️' },
+  { word: 'MONO', emoji: '🐵' },
+  { word: 'NUBE', emoji: '☁️' }
+];
+
+const vowels = ['A', 'E', 'I', 'O', 'U'];
+
+// ═══════════════════════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════════════════════
+
+let currentRound = 0;
+let correctAnswers = 0;
+let hasAnswered = false;
+let shuffledGameData = [];
+let currentWord = '';
+let wordStructure = [];
+let userAnswers = {};
+let selectedSlotIndex = null;
+
+// ═══════════════════════════════════════════════════════════════
+// DOM ELEMENTS
+// ═══════════════════════════════════════════════════════════════
+
+const wordImageEl = document.getElementById('wordImage');
+const wordDisplayEl = document.getElementById('wordDisplay');
+const vowelKeyboardEl = document.getElementById('vowelKeyboard');
+const feedbackMessageEl = document.getElementById('feedbackMessage');
+const btnCheck = document.getElementById('btnCheck');
+const btnClear = document.getElementById('btnClear');
+const btnNext = document.getElementById('btnNext');
+const btnReset = document.getElementById('btnReset');
+const correctScoreEl = document.getElementById('correctScore');
+const currentRoundEl = document.getElementById('currentRound');
+const totalRoundsEl = document.getElementById('totalRounds');
+const progressBarEl = document.getElementById('progressBar');
+const confettiContainerEl = document.getElementById('confettiContainer');
+const modalOverlay = document.getElementById('modalOverlay');
+const finalScoreEl = document.getElementById('finalScore');
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function isVowel(letter) {
+  return vowels.includes(letter.toUpperCase());
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INITIALIZE GAME
+// ═══════════════════════════════════════════════════════════════
+
+function initGame() {
+  shuffledGameData = shuffleArray(gameData);
+  totalRoundsEl.textContent = shuffledGameData.length;
+  createVowelKeyboard();
+  loadRound();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CREATE VOWEL KEYBOARD
+// ═══════════════════════════════════════════════════════════════
+
+function createVowelKeyboard() {
+  vowelKeyboardEl.innerHTML = '';
+  
+  vowels.forEach(vowel => {
+    const key = document.createElement('button');
+    key.className = 'vowel-key';
+    key.textContent = vowel;
+    key.dataset.vowel = vowel;
+    key.addEventListener('click', () => handleVowelClick(vowel));
+    vowelKeyboardEl.appendChild(key);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOAD ROUND
+// ═══════════════════════════════════════════════════════════════
+
+function loadRound() {
+  if (currentRound >= shuffledGameData.length) {
+    showVictoryModal();
+    return;
+  }
+
+  hasAnswered = false;
+  userAnswers = {};
+  selectedSlotIndex = null;
+  btnCheck.disabled = false;
+  btnNext.disabled = true;
+  feedbackMessageEl.classList.remove('show', 'correct', 'incorrect');
+  feedbackMessageEl.textContent = '';
+
+  const roundData = shuffledGameData[currentRound];
+  currentWord = roundData.word;
+  currentRoundEl.textContent = currentRound + 1;
+  
+  updateProgressBar();
+  
+  // Set image
+  wordImageEl.textContent = roundData.emoji;
+  
+  // Create word structure
+  createWordStructure();
+  renderWord();
+  updateVowelKeyboard();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CREATE WORD STRUCTURE
+// ═══════════════════════════════════════════════════════════════
+
+function createWordStructure() {
+  wordStructure = [];
+  
+  for (let i = 0; i < currentWord.length; i++) {
+    const letter = currentWord[i];
+    wordStructure.push({
+      letter: letter,
+      isVowel: isVowel(letter),
+      index: i
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER WORD
+// ═══════════════════════════════════════════════════════════════
+
+function renderWord() {
+  wordDisplayEl.innerHTML = '';
+  
+  wordStructure.forEach((letterData, index) => {
+    const box = document.createElement('div');
+    box.className = 'letter-box';
+    
+    if (letterData.isVowel) {
+      box.classList.add('vowel');
+      box.dataset.index = index;
+      const placeholder = document.createElement('span');
+      placeholder.className = 'letter-placeholder';
+      placeholder.textContent = '_';
+      box.appendChild(placeholder);
+      
+      box.addEventListener('click', () => selectSlot(index));
+    } else {
+      box.classList.add('consonant');
+      box.textContent = letterData.letter;
+    }
+    
+    wordDisplayEl.appendChild(box);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SELECT SLOT
+// ═══════════════════════════════════════════════════════════════
+
+function selectSlot(index) {
+  if (hasAnswered) return;
+  
+  // Remove previous selection
+  document.querySelectorAll('.letter-box.selected').forEach(box => {
+    box.classList.remove('selected');
+  });
+  
+  selectedSlotIndex = index;
+  
+  // Highlight selected slot
+  const boxes = wordDisplayEl.children;
+  const targetBox = Array.from(boxes).find(box => box.dataset.index == index);
+  if (targetBox) {
+    targetBox.classList.add('selected');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HANDLE VOWEL CLICK
+// ═══════════════════════════════════════════════════════════════
+
+function handleVowelClick(vowel) {
+  if (hasAnswered || selectedSlotIndex === null) return;
+  
+  // Fill the selected slot
+  userAnswers[selectedSlotIndex] = vowel;
+  
+  const boxes = wordDisplayEl.children;
+  const targetBox = Array.from(boxes).find(box => box.dataset.index == selectedSlotIndex);
+  
+  if (targetBox) {
+    targetBox.classList.remove('vowel', 'selected');
+    targetBox.classList.add('filled');
+    targetBox.textContent = vowel;
+  }
+  
+  // Reset selection
+  selectedSlotIndex = null;
+  
+  // Auto-select next empty vowel slot if any
+  autoSelectNextVowel();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUTO SELECT NEXT VOWEL
+// ═══════════════════════════════════════════════════════════════
+
+function autoSelectNextVowel() {
+  const emptyVowel = wordStructure.find(ld => ld.isVowel && !userAnswers[ld.index]);
+  if (emptyVowel) {
+    setTimeout(() => selectSlot(emptyVowel.index), 100);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UPDATE VOWEL KEYBOARD
+// ═══════════════════════════════════════════════════════════════
+
+function updateVowelKeyboard() {
+  document.querySelectorAll('.vowel-key').forEach(key => {
+    key.classList.remove('used');
+    key.disabled = hasAnswered;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHECK ANSWER
+// ═══════════════════════════════════════════════════════════════
+
+btnCheck.addEventListener('click', checkAnswer);
+
+function checkAnswer() {
+  if (hasAnswered) return;
+  
+  // Check if all vowels are filled
+  const vowelCount = wordStructure.filter(ld => ld.isVowel).length;
+  if (Object.keys(userAnswers).length !== vowelCount) {
+    feedbackMessageEl.textContent = '❗';
+    feedbackMessageEl.classList.remove('correct', 'incorrect');
+    feedbackMessageEl.classList.add('show', 'incomplete');
+    return;
+  }
+  feedbackMessageEl.classList.remove('show', 'incomplete');
+
+  hasAnswered = true;
+  btnCheck.disabled = true;
+  btnNext.disabled = false;
+  updateVowelKeyboard();
+
+  // Check each answer
+  let allCorrect = true;
+  const boxes = wordDisplayEl.children;
+  
+  wordStructure.forEach(letterData => {
+    if (letterData.isVowel) {
+      const userAnswer = userAnswers[letterData.index];
+      const isCorrect = userAnswer === letterData.letter;
+      
+      if (!isCorrect) {
+        allCorrect = false;
+      }
+      
+      const targetBox = Array.from(boxes).find(box => box.dataset.index == letterData.index);
+      if (targetBox) {
+        if (isCorrect) {
+          targetBox.classList.add('correct');
+        } else {
+          targetBox.classList.add('incorrect');
+          // Show correct answer after delay
+          setTimeout(() => {
+            targetBox.textContent = letterData.letter;
+            targetBox.classList.remove('incorrect');
+            targetBox.classList.add('correct');
+          }, 1000);
+        }
+      }
+    }
+  });
+
+  if (allCorrect) {
+    // ALL CORRECT
+    correctAnswers++;
+    correctScoreEl.textContent = correctAnswers;
+    
+    feedbackMessageEl.textContent = `¡Excelente! ${currentWord} 🎉`;
+    feedbackMessageEl.classList.add('show', 'correct');
+
+    // Visual effects
+    createStarBurst();
+    createConfetti();
+    playSuccessSound();
+  } else {
+    // SOME INCORRECT
+    feedbackMessageEl.textContent = `¡Intenta de nuevo! La palabra es ${currentWord} 💪`;
+    feedbackMessageEl.classList.add('show', 'incorrect');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLEAR BUTTON
+// ═══════════════════════════════════════════════════════════════
+
+btnClear.addEventListener('click', () => {
+  if (hasAnswered) return;
+  
+  userAnswers = {};
+  selectedSlotIndex = null;
+  
+  const boxes = wordDisplayEl.children;
+  wordStructure.forEach(letterData => {
+    if (letterData.isVowel) {
+      const targetBox = Array.from(boxes).find(box => box.dataset.index == letterData.index);
+      if (targetBox) {
+        targetBox.classList.remove('filled', 'selected');
+        targetBox.classList.add('vowel');
+        targetBox.innerHTML = '<span class="letter-placeholder">_</span>';
+      }
+    }
+  });
+  
+  updateVowelKeyboard();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// NEXT ROUND
+// ═══════════════════════════════════════════════════════════════
+
+btnNext.addEventListener('click', () => {
+  currentRound++;
+  loadRound();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// RESET GAME
+// ═══════════════════════════════════════════════════════════════
+
+btnReset.addEventListener('click', () => {
+  currentRound = 0;
+  correctAnswers = 0;
+  correctScoreEl.textContent = '0';
+  shuffledGameData = shuffleArray(gameData);
+  loadRound();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// UPDATE PROGRESS BAR
+// ═══════════════════════════════════════════════════════════════
+
+function updateProgressBar() {
+  const progress = ((currentRound + 1) / shuffledGameData.length) * 100;
+  progressBarEl.style.width = `${progress}%`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SHOW VICTORY MODAL
+// ═══════════════════════════════════════════════════════════════
+
+function showVictoryModal() {
+  finalScoreEl.textContent = `${correctAnswers} de ${shuffledGameData.length}`;
+  modalOverlay.classList.add('show');
+  createConfetti(50);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VISUAL EFFECTS
+// ═══════════════════════════════════════════════════════════════
+
+function createConfetti(count = 30) {
+  const colors = ['#F59E0B', '#EC4899', '#10B981', '#8B5CF6', '#3B82F6', '#FFE66D'];
+  
+  for (let i = 0; i < count; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
+    confetti.style.left = Math.random() * 100 + '%';
+    confetti.style.top = Math.random() * 20 + '%';
+    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    
+    confettiContainerEl.appendChild(confetti);
+
+    setTimeout(() => confetti.remove(), 3000);
+  }
+}
+
+function createStarBurst() {
+  const rect = wordDisplayEl.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+
+  const emojis = ['⭐', '✨', '🌟', '💫', '🎯', '🎵'];
+  
+  for (let i = 0; i < 8; i++) {
+    const star = document.createElement('div');
+    star.className = 'star-burst';
+    star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    star.style.left = x + 'px';
+    star.style.top = y + 'px';
+    star.style.animationDelay = (i * 0.08) + 's';
+    
+    document.body.appendChild(star);
+
+    setTimeout(() => star.remove(), 1000);
+  }
+}
+
+function playSuccessSound() {
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.value = 800;
+  oscillator.type = 'sine';
+  
+  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.5);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// START GAME
+// ═══════════════════════════════════════════════════════════════
+
+window.addEventListener('DOMContentLoaded', initGame);
+</script>
+
+</body>
+</html>

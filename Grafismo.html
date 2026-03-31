@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✏️ Grafismo - Sigue el Camino</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --shadow-soft: 0 8px 32px rgba(99,102,241,0.15);
+    --shadow-strong: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+    height: 100vh; width: 100vw;
+    display: flex; justify-content: center; align-items: center;
+    padding: 8px 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg-shapes { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .shape {
+    position:absolute; border-radius:50%; opacity:0.1;
+    animation: float-around 25s infinite ease-in-out;
+  }
+  .shape:nth-child(1){width:130px;height:130px;background:#FFE66D;top:8%;left:4%;animation-delay:0s}
+  .shape:nth-child(2){width:170px;height:170px;background:#FF6B9D;top:55%;right:6%;animation-delay:5s}
+  .shape:nth-child(3){width:90px;height:90px;background:#6BCB77;bottom:12%;left:10%;animation-delay:10s}
+  .shape:nth-child(4){width:150px;height:150px;background:#FFE66D;top:20%;right:16%;animation-delay:15s}
+  @keyframes float-around {
+    0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}
+    25%{transform:translate(35px,-35px) rotate(90deg) scale(1.1)}
+    50%{transform:translate(-25px,25px) rotate(180deg) scale(0.9)}
+    75%{transform:translate(45px,45px) rotate(270deg) scale(1.05)}
+  }
+
+  /* ── Page layout ── */
+  .page {
+    position:relative; z-index:10;
+    width:100%; max-width:1050px; height:100%;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align:center; margin-bottom:5px;
+    animation: slideDown 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes slideDown{from{transform:translateY(-40px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+  .title {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1.2rem,2.5vw,1.9rem);
+    color:white;
+    text-shadow:4px 4px 0 rgba(0,0,0,0.2),0 0 30px rgba(255,255,255,0.3);
+    letter-spacing:1px;
+  }
+  .subtitle {
+    font-size:clamp(0.65rem,1.2vw,0.85rem);
+    color:rgba(255,255,255,0.92); font-weight:700;
+    text-shadow:1px 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* ── Progress & Score bar ── */
+  .topbar {
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:5px;
+    animation: slideDown 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s backwards;
+  }
+  .score-panel {
+    background:rgba(255,255,255,0.25); backdrop-filter:blur(10px);
+    border-radius:12px; padding:4px 18px;
+    display:flex; align-items:center; gap:14px;
+    box-shadow:var(--shadow-soft); flex-shrink:0;
+  }
+  .score-item { display:flex; align-items:center; gap:6px; }
+  .score-icon { font-size:1.1rem; animation:bounce 2s infinite; }
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .score-text {
+    font-family:'Fredoka One',cursive; font-size:0.95rem;
+    color:white; text-shadow:1px 1px 3px rgba(0,0,0,0.2);
+  }
+  .progress-wrap {
+    flex:1; background:rgba(255,255,255,0.3); backdrop-filter:blur(10px);
+    height:7px; border-radius:10px; overflow:hidden;
+  }
+  .progress-bar {
+    height:100%; border-radius:10px; width:0%;
+    background:linear-gradient(90deg,#FFE66D,#FF9F1C);
+    transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow:0 0 8px rgba(255,230,109,0.7);
+  }
+
+  /* ── Main card ── */
+  .card {
+    background:linear-gradient(135deg,#ffffff 0%,#f0f9ff 100%);
+    border-radius:20px; padding:12px 16px;
+    box-shadow:var(--shadow-strong);
+    display:flex; flex-direction:row; gap:14px; align-items:stretch;
+    animation: scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s backwards;
+    position:relative; overflow:hidden;
+  }
+  @keyframes scaleIn{from{transform:scale(0.88);opacity:0}to{transform:scale(1);opacity:1}}
+  .card::before {
+    content:''; position:absolute; width:220px; height:220px;
+    border-radius:50%; top:-110px; right:-110px;
+    background:radial-gradient(circle,rgba(99,102,241,0.1) 0%,transparent 70%);
+  }
+
+  /* ── LEFT column ── */
+  .card-left {
+    flex:0 0 200px; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; gap:8px;
+    border-right:2px dashed rgba(99,102,241,0.2); padding-right:14px;
+    position:relative; z-index:1;
+  }
+
+  .activity-label {
+    font-size:clamp(0.65rem,1.2vw,0.82rem);
+    color:#3730a3; font-weight:800; text-transform:uppercase;
+    text-align:center;
+  }
+
+  /* Thumbnail preview */
+  .thumb-wrap {
+    width:140px; height:100px;
+    background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.08));
+    border:2px dashed rgba(99,102,241,0.3); border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .thumb-wrap svg { width:130px; height:90px; }
+
+  .path-name {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(0.9rem,1.8vw,1.15rem);
+    color:#4338ca; text-align:center;
+  }
+  .path-emoji { font-size:1.8rem; animation:bounce 2s ease-in-out infinite; }
+
+  /* Nav buttons */
+  .nav-row { display:flex; gap:8px; align-items:center; }
+  .btn-nav {
+    font-family:'Fredoka One',cursive; font-size:1rem;
+    padding:5px 14px; border:none; border-radius:30px; cursor:pointer;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white;
+    box-shadow:0 4px 12px rgba(99,102,241,0.35);
+    transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .btn-nav:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(99,102,241,0.45)}
+  .btn-nav:active{transform:translateY(-1px)}
+
+  .round-badge {
+    font-family:'Fredoka One',cursive; font-size:0.78rem;
+    color:#6366f1; background:rgba(99,102,241,0.1);
+    padding:3px 10px; border-radius:20px; border:1.5px solid rgba(99,102,241,0.25);
+  }
+
+  /* ── RIGHT column ── */
+  .card-right {
+    flex:1; display:flex; flex-direction:column;
+    gap:8px; justify-content:center; min-width:0; position:relative; z-index:1;
+  }
+
+  .canvas-label {
+    font-size:clamp(0.65rem,1.2vw,0.82rem);
+    color:#3730a3; font-weight:800; text-transform:uppercase;
+    text-align:center;
+  }
+
+  /* Canvas wrapper */
+  .canvas-wrap {
+    position:relative; border-radius:16px; overflow:hidden;
+    border:3px solid rgba(99,102,241,0.25);
+    box-shadow:0 4px 20px rgba(99,102,241,0.1);
+    background:#fff;
+    flex:1;
+  }
+
+  canvas {
+    display:block; width:100%; height:100%;
+    cursor:none;
+    touch-action:none;
+  }
+
+  /* Feedback overlay */
+  .feedback-overlay {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    pointer-events:none; opacity:0;
+    transition:opacity 0.4s;
+    border-radius:14px;
+  }
+  .feedback-overlay.show{ opacity:1; }
+  .feedback-overlay.correct{ background:rgba(107,203,119,0.18); }
+  .feedback-overlay.incorrect{ background:rgba(255,107,107,0.15); }
+
+  .feedback-msg {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1rem,2vw,1.5rem);
+    color:transparent; transform:scale(0.5);
+    transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .feedback-overlay.show .feedback-msg{ transform:scale(1); }
+  .feedback-overlay.correct .feedback-msg{
+    background:linear-gradient(135deg,#6BCB77,#4CAF50);
+    -webkit-background-clip:text; background-clip:text;
+  }
+  .feedback-overlay.incorrect .feedback-msg{
+    background:linear-gradient(135deg,#FF6B6B,#FF4757);
+    -webkit-background-clip:text; background-clip:text;
+  }
+
+  /* Action buttons row */
+  .btn-row {
+    display:flex; gap:8px; justify-content:center; flex-wrap:nowrap;
+  }
+  .btn {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(0.95rem,1.8vw,1.3rem);
+    padding:6px 16px; border:none; border-radius:50px; cursor:pointer;
+    transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow:0 4px 14px rgba(0,0,0,0.15);
+    font-weight:700; position:relative; overflow:hidden; min-width:42px;
+  }
+  .btn::before{
+    content:''; position:absolute; inset:0;
+    background:rgba(255,255,255,0.3); opacity:0; transition:opacity 0.3s;
+  }
+  .btn:hover::before{opacity:1}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,0.2)}
+  .btn:active{transform:translateY(-1px)}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+
+  .btn-clear { background:linear-gradient(135deg,#FF9F1C,#FF8C00); color:white; }
+  .btn-check { background:linear-gradient(135deg,#6BCB77,#4CAF50); color:white; }
+  .btn-next  { background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; }
+  .btn-reset { background:linear-gradient(135deg,#FFE66D,#FFC837); color:#5a189a; }
+
+  /* confetti */
+  .confetti-container{position:fixed;inset:0;pointer-events:none;z-index:1000}
+  .confetti{
+    position:absolute;width:9px;height:9px;background:var(--color);
+    opacity:0;animation:confetti-fall 3s ease-out forwards;
+  }
+  @keyframes confetti-fall{
+    0%{opacity:1;transform:translateY(0) rotate(0deg)}
+    100%{opacity:0;transform:translateY(100vh) rotate(720deg)}
+  }
+
+  /* Victory Modal */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(5px);
+    display:none;justify-content:center;align-items:center;z-index:2000;
+  }
+  .modal-overlay.show{display:flex}
+  .modal{
+    background:linear-gradient(135deg,#fff 0%,#f0f9ff 100%);
+    border-radius:26px;padding:36px 44px;text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,0.3);
+    animation:modalPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes modalPop{from{transform:scale(0.5) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  .modal-icon{font-size:4rem;margin-bottom:12px;animation:bounce 1s infinite}
+  .modal-title{
+    font-family:'Fredoka One',cursive;font-size:2.2rem;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;
+  }
+  .modal-text{font-size:1.1rem;color:#3730a3;font-weight:700;margin-bottom:10px}
+  .modal-stars{font-size:2.5rem;margin-bottom:18px;letter-spacing:8px}
+  /* ── Emoji cursor ── */
+  #emojiCursor {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    font-size: 26px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+    display: none;
+    user-select: none;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+
+  /* ── Home button ── */
+  .btn-home {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(102,126,234,0.5);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+  }
+  .btn-home:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 8px 20px rgba(102,126,234,0.6); }
+  .btn-home:active { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<div id="emojiCursor">🐱</div>
+
+<div class="bg-shapes">
+  <div class="shape"></div><div class="shape"></div>
+  <div class="shape"></div><div class="shape"></div>
+</div>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">✏️ Sigue el Camino</h1>
+    <p class="subtitle">¡Dibuja con el mouse desde el inicio hasta la meta!</p>
+  </header>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="score-panel">
+      <div class="score-item">
+        <span class="score-icon">⭐</span>
+        <span class="score-text" id="correctScore">0</span>
+      </div>
+      <div class="score-item">
+        <span class="score-icon">🎯</span>
+        <span class="score-text"><span id="currentRound">1</span>/<span id="totalRounds">6</span></span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- LEFT -->
+    <div class="card-left">
+      <p class="activity-label">🗺️ Tipo de recorrido</p>
+      <div class="thumb-wrap">
+        <svg id="thumbSvg" viewBox="0 0 130 90" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="path-emoji" id="pathEmoji">⚡</div>
+      <div class="path-name" id="pathName">Zigzag</div>
+      <div class="nav-row">
+        <button class="btn-nav" id="btnPrev">◀</button>
+        <span class="round-badge" id="roundBadge">1 / 6</span>
+        <button class="btn-nav" id="btnNextPath">▶</button>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card-right">
+      <p class="canvas-label" id="canvasLabel">🖊️ Empieza desde 🟢 y llega hasta 🔴</p>
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="gameCanvas"></canvas>
+        <div class="feedback-overlay" id="feedbackOverlay">
+          <div class="feedback-msg" id="feedbackMsg"></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-clear" id="btnClear">🗑️ Borrar</button>
+        <button class="btn btn-check" id="btnCheck">✓ Verificar</button>
+        <button class="btn btn-next" id="btnNext" disabled>➜ Siguiente</button>
+        <button class="btn btn-reset" id="btnReset">🔄</button>
+          <a class="btn btn-home" href="index.html" title="Volver al inicio">🏠</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Victory Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-icon">🏆</div>
+    <h2 class="modal-title">¡Excelente!</h2>
+    <div class="modal-stars">⭐⭐⭐</div>
+    <p class="modal-text">¡Completaste todos los recorridos!</p>
+    <p class="modal-text">Aciertos: <strong id="finalScore"></strong></p>
+    <button class="btn btn-next" style="margin-top:10px" onclick="location.reload()">🎮 Jugar de nuevo</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// PATH DEFINITIONS
+// ═══════════════════════════════════════════════════════
+
+const PATHS = [
+  {
+    name: 'Zigzag',
+    emoji: '⚡',
+    color: '#6366f1',
+    // Guide points as ratios [x, y] of canvas size
+    guide: (W,H) => {
+      const pts = [];
+      const cols = 7; const rows = 4;
+      for(let c=0; c<cols; c++){
+        const x = 0.08 + (c/(cols-1))*0.84;
+        const y = (c%2===0) ? 0.2 : 0.8;
+        pts.push([x*W, y*H]);
+      }
+      return pts;
+    },
+    thumb: (svg,W,H) => polyline(svg, thumbPts(7,(c)=>({
+      x: 0.08+(c/6)*0.84, y: c%2===0?0.15:0.85
+    }),W,H), '#6366f1'),
+  },
+  {
+    name: 'Ondulado',
+    emoji: '🌊',
+    color: '#0ea5e9',
+    guide: (W,H) => {
+      const pts = [];
+      for(let i=0;i<=40;i++){
+        const t = i/40;
+        const x = 0.07 + t*0.86;
+        const y = 0.5 + Math.sin(t*Math.PI*4)*0.32;
+        pts.push([x*W, y*H]);
+      }
+      return pts;
+    },
+    thumb: (svg,W,H) => {
+      const pts=[];
+      for(let i=0;i<=30;i++){const t=i/30;pts.push({x:(0.07+t*0.86)*W,y:(0.5+Math.sin(t*Math.PI*4)*0.35)*H});}
+      polyline(svg,pts,'#0ea5e9');
+    },
+  },
+  {
+    name: 'Espiral',
+    emoji: '🌀',
+    color: '#ec4899',
+    guide: (W,H) => {
+      const cx=W/2, cy=H/2;
+      const pts=[];
+      const turns=3;
+      for(let i=0;i<=turns*60;i++){
+        const t=i/(turns*60);
+        const angle = t*Math.PI*2*turns;
+        const r = (0.05 + t*0.38)*Math.min(W,H);
+        pts.push([cx+Math.cos(angle)*r, cy+Math.sin(angle)*r]);
+      }
+      return pts;
+    },
+    thumb: (svg,W,H) => {
+      const cx=W/2,cy=H/2,pts=[];
+      for(let i=0;i<=90;i++){const t=i/90;const a=t*Math.PI*2*3;const r=(0.05+t*0.38)*Math.min(W,H);pts.push({x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r});}
+      polyline(svg,pts,'#ec4899');
+    },
+  },
+  {
+    name: 'Escalera',
+    emoji: '🪜',
+    color: '#f59e0b',
+    guide: (W,H) => {
+      const steps=5;
+      const pts=[];
+      pts.push([W*0.08, H*0.85]);
+      for(let s=0;s<steps;s++){
+        const x0=W*(0.08+s*0.16), x1=W*(0.08+(s+1)*0.16);
+        const y = H*(0.85-s*0.14);
+        const yn = H*(0.85-(s+1)*0.14);
+        pts.push([x1, y]);
+        pts.push([x1, yn]);
+      }
+      return pts;
+    },
+    thumb: (svg,W,H) => {
+      const steps=5, pts=[];
+      pts.push({x:W*0.08,y:H*0.88});
+      for(let s=0;s<steps;s++){
+        const x0=W*(0.08+s*0.16),x1=W*(0.08+(s+1)*0.16);
+        const y=H*(0.88-s*0.14), yn=H*(0.88-(s+1)*0.14);
+        pts.push({x:x1,y});pts.push({x:x1,y:yn});
+      }
+      polyline(svg,pts,'#f59e0b');
+    },
+  },
+  {
+    name: 'Bucles',
+    emoji: '∞',
+    color: '#10b981',
+    guide: (W,H) => {
+      const pts=[];
+      const loops=3;
+      for(let l=0;l<loops;l++){
+        const cx=W*(0.18+l*0.28), cy=H*0.5;
+        const rx=W*0.1, ry=H*0.3;
+        for(let i=0;i<=40;i++){
+          const a=(i/40)*Math.PI*2 - Math.PI/2;
+          pts.push([cx+Math.cos(a)*rx, cy+Math.sin(a)*ry]);
+        }
+      }
+      return pts;
+    },
+    thumb: (svg,W,H) => {
+      for(let l=0;l<3;l++){
+        const cx=W*(0.18+l*0.28),cy=H*0.5,rx=W*0.1,ry=H*0.3,pts=[];
+        for(let i=0;i<=30;i++){const a=(i/30)*Math.PI*2-Math.PI/2;pts.push({x:cx+Math.cos(a)*rx,y:cy+Math.sin(a)*ry});}
+        polyline(svg,pts,'#10b981');
+      }
+    },
+  },
+  {
+    name: 'Montañas',
+    emoji: '⛰️',
+    color: '#8b5cf6',
+    guide: (W,H) => {
+      const pts=[];
+      const peaks=4;
+      pts.push([W*0.05, H*0.82]);
+      for(let p=0;p<peaks;p++){
+        const x0=W*(0.05+p*0.23);
+        const x1=W*(0.05+(p+0.5)*0.23);
+        const x2=W*(0.05+(p+1)*0.23);
+        pts.push([x1, H*0.18]);
+        pts.push([x2, H*0.82]);
+      }
+      return pts;
+    },
+    thumb: (svg,W,H) => {
+      const peaks=4,pts=[];
+      pts.push({x:W*0.05,y:H*0.88});
+      for(let p=0;p<peaks;p++){
+        pts.push({x:W*(0.05+(p+0.5)*0.23),y:H*0.12});
+        pts.push({x:W*(0.05+(p+1)*0.23),y:H*0.88});
+      }
+      polyline(svg,pts,'#8b5cf6');
+    },
+  },
+];
+
+// ── Thumb helpers ──
+function thumbPts(n, fn, W, H){ return Array.from({length:n},(_,i)=>({x:fn(i).x*W,y:fn(i).y*H})); }
+function polyline(svg, pts, color){
+  const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  pl.setAttribute('points',pts.map(p=>`${p.x},${p.y}`).join(' '));
+  pl.setAttribute('fill','none'); pl.setAttribute('stroke',color);
+  pl.setAttribute('stroke-width','3'); pl.setAttribute('stroke-linecap','round');
+  pl.setAttribute('stroke-linejoin','round');
+  svg.appendChild(pl);
+  // start dot
+  const c1=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c1.setAttribute('cx',pts[0].x); c1.setAttribute('cy',pts[0].y);
+  c1.setAttribute('r','5'); c1.setAttribute('fill','#22c55e');
+  svg.appendChild(c1);
+  // end dot
+  const c2=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  const last=pts[pts.length-1];
+  c2.setAttribute('cx',last.x); c2.setAttribute('cy',last.y);
+  c2.setAttribute('r','5'); c2.setAttribute('fill','#ef4444');
+  svg.appendChild(c2);
+}
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+
+let currentPath = 0;
+let correctAnswers = 0;
+let hasAnswered = false;
+let isDrawing = false;
+let userPoints = [];    // [{x,y}] raw user stroke
+let guidePoints = [];   // [{x,y}] computed guide path
+
+// ═══════════════════════════════════════════════════════
+// DOM
+// ═══════════════════════════════════════════════════════
+
+const canvas       = document.getElementById('gameCanvas');
+const ctx          = canvas.getContext('2d');
+const canvasWrap   = document.getElementById('canvasWrap');
+const thumbSvg     = document.getElementById('thumbSvg');
+const pathEmoji    = document.getElementById('pathEmoji');
+const pathNameEl   = document.getElementById('pathName');
+const roundBadge   = document.getElementById('roundBadge');
+const progressBar  = document.getElementById('progressBar');
+const correctScoreEl = document.getElementById('correctScore');
+const currentRoundEl = document.getElementById('currentRound');
+const totalRoundsEl  = document.getElementById('totalRounds');
+const feedbackOverlay= document.getElementById('feedbackOverlay');
+const feedbackMsg    = document.getElementById('feedbackMsg');
+const btnClear     = document.getElementById('btnClear');
+const btnCheck     = document.getElementById('btnCheck');
+const btnNext      = document.getElementById('btnNext');
+const btnReset     = document.getElementById('btnReset');
+const btnPrev      = document.getElementById('btnPrev');
+const btnNextPath  = document.getElementById('btnNextPath');
+const modalOverlay = document.getElementById('modalOverlay');
+const finalScoreEl = document.getElementById('finalScore');
+const confettiCont = document.getElementById('confettiContainer');
+
+// ═══════════════════════════════════════════════════════
+// RESIZE
+// ═══════════════════════════════════════════════════════
+
+function resizeCanvas(){
+  const rect = canvasWrap.getBoundingClientRect();
+  canvas.width  = rect.width;
+  canvas.height = rect.height;
+  guidePoints = PATHS[currentPath].guide(canvas.width, canvas.height);
+  drawScene();
+}
+
+window.addEventListener('resize', resizeCanvas);
+
+// ═══════════════════════════════════════════════════════
+// LOAD PATH
+// ═══════════════════════════════════════════════════════
+
+function loadPath(){
+  hasAnswered = false;
+  userPoints  = [];
+  isDrawing   = false;
+  btnCheck.disabled = false;
+  btnNext.disabled  = true;
+  feedbackOverlay.className = 'feedback-overlay';
+  feedbackMsg.textContent   = '';
+
+  const p = PATHS[currentPath];
+  pathEmoji.textContent = p.emoji;
+  pathNameEl.textContent = p.name;
+  roundBadge.textContent = `${currentPath+1} / ${PATHS.length}`;
+  currentRoundEl.textContent = currentPath+1;
+  totalRoundsEl.textContent  = PATHS.length;
+  progressBar.style.width = `${((currentPath)/PATHS.length)*100}%`;
+
+  // Update cursor animal to match current path
+  if(typeof updateCursorAnimal === 'function') updateCursorAnimal();
+
+  // Thumb
+  thumbSvg.innerHTML = '';
+  p.thumb(thumbSvg, 130, 90);
+
+  resizeCanvas();
+}
+
+// ═══════════════════════════════════════════════════════
+// DRAWING
+// ═══════════════════════════════════════════════════════
+
+function drawScene(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawGuide();
+  drawUserStroke();
+  drawEndpoints();
+}
+
+function drawGuide(){
+  if(guidePoints.length < 2) return;
+  ctx.save();
+  ctx.setLineDash([10,8]);
+  ctx.lineDashOffset = 0;
+  ctx.strokeStyle = 'rgba(99,102,241,0.25)';
+  ctx.lineWidth = 18;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(guidePoints[0][0], guidePoints[0][1]);
+  for(let i=1;i<guidePoints.length;i++) ctx.lineTo(guidePoints[i][0],guidePoints[i][1]);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawUserStroke(){
+  if(userPoints.length < 2) return;
+  ctx.save();
+  ctx.strokeStyle = PATHS[currentPath].color;
+  ctx.lineWidth = 8;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.globalAlpha = 0.85;
+  ctx.shadowColor = PATHS[currentPath].color;
+  ctx.shadowBlur  = 8;
+  ctx.beginPath();
+  ctx.moveTo(userPoints[0].x, userPoints[0].y);
+  for(let i=1;i<userPoints.length;i++) ctx.lineTo(userPoints[i].x,userPoints[i].y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawEndpoints(){
+  if(guidePoints.length < 2) return;
+  const start = guidePoints[0];
+  const end   = guidePoints[guidePoints.length-1];
+  const R = 22;
+
+  // Glow aura start
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(start[0],start[1],R+8,0,Math.PI*2);
+  ctx.fillStyle = 'rgba(34,197,94,0.2)';
+  ctx.fill();
+  ctx.restore();
+
+  // White circle background for start
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(start[0],start[1],R,0,Math.PI*2);
+  ctx.fillStyle = 'white';
+  ctx.shadowColor = '#22c55e'; ctx.shadowBlur = 14;
+  ctx.fill();
+  ctx.strokeStyle = '#22c55e'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.restore();
+
+  // House emoji at start
+  ctx.save();
+  ctx.font = `${R*1.5}px serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('🏠', start[0], start[1]);
+  ctx.restore();
+
+  // Glow aura end
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(end[0],end[1],R+8,0,Math.PI*2);
+  ctx.fillStyle = 'rgba(239,68,68,0.2)';
+  ctx.fill();
+  ctx.restore();
+
+  // White circle background for end
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(end[0],end[1],R,0,Math.PI*2);
+  ctx.fillStyle = 'white';
+  ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 14;
+  ctx.fill();
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.restore();
+
+  // Food emoji at end — one per path
+  const foods = ['🍎','🧀','🐟','🥕','🍯','🌽'];
+  ctx.save();
+  ctx.font = `${R*1.5}px serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(foods[currentPath % foods.length], end[0], end[1]);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════
+// MOUSE / TOUCH INPUT
+// ═══════════════════════════════════════════════════════
+
+function getPos(e){
+  const r = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - r.left, y: src.clientY - r.top };
+}
+
+function onStart(e){
+  if(hasAnswered) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  // Must start near the GO point
+  const [sx,sy] = guidePoints[0];
+  const dist = Math.hypot(pos.x-sx, pos.y-sy);
+  if(dist > 40){
+    // Flash start point
+    animateStartHint();
+    return;
+  }
+  isDrawing = true;
+  userPoints = [pos];
+  drawScene();
+}
+
+function onMove(e){
+  if(!isDrawing || hasAnswered) return;
+  e.preventDefault();
+  userPoints.push(getPos(e));
+  drawScene();
+}
+
+function onEnd(e){
+  if(!isDrawing) return;
+  e.preventDefault();
+  isDrawing = false;
+}
+
+canvas.addEventListener('mousedown',  onStart);
+canvas.addEventListener('mousemove',  onMove);
+canvas.addEventListener('mouseup',    onEnd);
+canvas.addEventListener('touchstart', onStart, {passive:false});
+canvas.addEventListener('touchmove',  onMove,  {passive:false});
+canvas.addEventListener('touchend',   onEnd);
+
+// ═══════════════════════════════════════════════════════
+// START HINT
+// ═══════════════════════════════════════════════════════
+
+let hintAnim = null;
+function animateStartHint(){
+  if(hintAnim) return;
+  let frame=0;
+  hintAnim = setInterval(()=>{
+    const [sx,sy] = guidePoints[0];
+    ctx.save();
+    ctx.beginPath();
+    const r = 18 + Math.sin(frame*0.3)*8;
+    ctx.arc(sx,sy,r,0,Math.PI*2);
+    ctx.strokeStyle = '#22c55e';
+    ctx.lineWidth = 3;
+    ctx.globalAlpha = 0.6;
+    ctx.stroke();
+    ctx.restore();
+    frame++;
+    if(frame>20){ clearInterval(hintAnim); hintAnim=null; drawScene(); }
+  }, 40);
+}
+
+// ═══════════════════════════════════════════════════════
+// VERIFICATION — robust bidirectional check
+// ═══════════════════════════════════════════════════════
+
+/**
+ * Minimum distance from point (px,py) to the closest point
+ * ON any segment of guidePoints (not just the vertices).
+ */
+function distPointToGuide(px, py){
+  let minD = Infinity;
+  for(let i = 0; i < guidePoints.length - 1; i++){
+    const ax = guidePoints[i][0],   ay = guidePoints[i][1];
+    const bx = guidePoints[i+1][0], by = guidePoints[i+1][1];
+    const dx = bx - ax, dy = by - ay;
+    const lenSq = dx*dx + dy*dy;
+    // Project p onto segment ab, clamp to [0,1]
+    const t = lenSq > 0 ? Math.max(0, Math.min(1, ((px-ax)*dx + (py-ay)*dy) / lenSq)) : 0;
+    const d = Math.hypot(px - (ax + t*dx), py - (ay + t*dy));
+    if(d < minD) minD = d;
+  }
+  return minD;
+}
+
+/**
+ * Minimum distance from guide segment i to the closest user point.
+ * Used to check if the user actually passed near a guide segment.
+ */
+function distSegmentToUser(i){
+  const ax = guidePoints[i][0],   ay = guidePoints[i][1];
+  const bx = guidePoints[i+1][0], by = guidePoints[i+1][1];
+  const dx = bx - ax, dy = by - ay;
+  const lenSq = dx*dx + dy*dy;
+  let minD = Infinity;
+  for(const up of userPoints){
+    const t = lenSq > 0 ? Math.max(0, Math.min(1, ((up.x-ax)*dx + (up.y-ay)*dy) / lenSq)) : 0;
+    const d = Math.hypot(up.x - (ax + t*dx), up.y - (ay + t*dy));
+    if(d < minD) minD = d;
+  }
+  return minD;
+}
+
+function checkAnswer(){
+  if(hasAnswered || userPoints.length < 10) return;
+  hasAnswered = true;
+  btnCheck.disabled = true;
+  btnNext.disabled  = false;
+
+  // Adaptive tolerance: 8% of the shorter canvas dimension
+  // (feels like a generous pencil stroke for kids)
+  const tolerance = Math.min(canvas.width, canvas.height) * 0.10;
+
+  // ── TEST 1: accuracy ──────────────────────────────────
+  // What % of USER points lie within the tolerance band?
+  // Penalises drawing outside the path.
+  let insideCount = 0;
+  for(const up of userPoints){
+    if(distPointToGuide(up.x, up.y) <= tolerance) insideCount++;
+  }
+  const accuracyRatio = insideCount / userPoints.length;
+
+  // ── TEST 2: segment coverage ──────────────────────────
+  // What % of GUIDE SEGMENTS were visited by the user?
+  // Checks each segment individually (not just vertices),
+  // so it works even when guide points are sparse.
+  let coveredSegs = 0;
+  const totalSegs = guidePoints.length - 1;
+  for(let i = 0; i < totalSegs; i++){
+    if(distSegmentToUser(i) <= tolerance) coveredSegs++;
+  }
+  const coverageRatio = coveredSegs / totalSegs;
+
+  // ── TEST 3: reached end ───────────────────────────────
+  // At least ONE user point must have come close to the end,
+  // not just the very last point (handles lifting the mouse early).
+  const endPt = guidePoints[guidePoints.length - 1];
+  let reachedEnd = false;
+  for(let i = userPoints.length - 1; i >= Math.max(0, userPoints.length - 30); i--){
+    if(Math.hypot(userPoints[i].x - endPt[0], userPoints[i].y - endPt[1]) <= tolerance * 1.5){
+      reachedEnd = true; break;
+    }
+  }
+
+  // ── RESULT ────────────────────────────────────────────
+  const success = accuracyRatio > 0.72 && coverageRatio > 0.65 && reachedEnd;
+
+  // Redraw stroke with colour-coded accuracy feedback
+  redrawWithValidation(tolerance);
+
+  feedbackOverlay.className = 'feedback-overlay show ' + (success ? 'correct' : 'incorrect');
+  if(success){
+    feedbackMsg.textContent = '¡Muy bien! 🎉';
+    correctAnswers++;
+    correctScoreEl.textContent = correctAnswers;
+    createConfetti();
+    playSound(true);
+  } else {
+    if(!reachedEnd)
+      feedbackMsg.textContent = '¡No llegaste a la meta! 🏁';
+    else if(accuracyRatio <= 0.72)
+      feedbackMsg.textContent = '¡Te fuiste del camino! ✏️';
+    else
+      feedbackMsg.textContent = '¡Faltó recorrer más partes! 💪';
+    playSound(false);
+  }
+
+  progressBar.style.width = `${((currentPath+1)/PATHS.length)*100}%`;
+}
+
+// Redraw stroke colouring off-path segments red
+function redrawWithValidation(tolerance){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawGuide();
+
+  for(let i = 1; i < userPoints.length; i++){
+    // Check the midpoint of this mini-segment for accuracy
+    const mx = (userPoints[i-1].x + userPoints[i].x) / 2;
+    const my = (userPoints[i-1].y + userPoints[i].y) / 2;
+    const onPath = distPointToGuide(mx, my) <= tolerance;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(userPoints[i-1].x, userPoints[i-1].y);
+    ctx.lineTo(userPoints[i].x,   userPoints[i].y);
+    ctx.strokeStyle = onPath ? PATHS[currentPath].color : '#ef4444';
+    ctx.lineWidth   = 8;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+    ctx.globalAlpha = 0.85;
+    ctx.shadowColor = onPath ? PATHS[currentPath].color : '#ef4444';
+    ctx.shadowBlur  = 8;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  drawEndpoints();
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+
+btnCheck.addEventListener('click', checkAnswer);
+
+btnClear.addEventListener('click', ()=>{
+  if(hasAnswered) return;
+  userPoints = [];
+  feedbackOverlay.className = 'feedback-overlay';
+  drawScene();
+});
+
+btnNext.addEventListener('click', ()=>{
+  currentPath++;
+  if(currentPath >= PATHS.length){ showVictory(); return; }
+  loadPath();
+});
+
+btnReset.addEventListener('click', ()=>{
+  currentPath = 0;
+  correctAnswers = 0;
+  correctScoreEl.textContent = '0';
+  loadPath();
+});
+
+btnPrev.addEventListener('click', ()=>{
+  currentPath = (currentPath - 1 + PATHS.length) % PATHS.length;
+  loadPath();
+});
+
+btnNextPath.addEventListener('click', ()=>{
+  currentPath = (currentPath + 1) % PATHS.length;
+  loadPath();
+});
+
+// ═══════════════════════════════════════════════════════
+// VICTORY
+// ═══════════════════════════════════════════════════════
+
+function showVictory(){
+  finalScoreEl.textContent = `${correctAnswers} de ${PATHS.length}`;
+  modalOverlay.classList.add('show');
+  createConfetti(60);
+}
+
+// ═══════════════════════════════════════════════════════
+// EFFECTS
+// ═══════════════════════════════════════════════════════
+
+function createConfetti(count=30){
+  const colors=['#6366f1','#ec4899','#10b981','#f59e0b','#0ea5e9','#FFE66D'];
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='confetti';
+    el.style.setProperty('--color',colors[Math.floor(Math.random()*colors.length)]);
+    el.style.left=Math.random()*100+'%';
+    el.style.top=Math.random()*20+'%';
+    el.style.animationDelay=Math.random()*0.5+'s';
+    el.style.animationDuration=(Math.random()*2+2)+'s';
+    confettiCont.appendChild(el);
+    setTimeout(()=>el.remove(),3000);
+  }
+}
+
+function playSound(success){
+  try{
+    const ac=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ac.createOscillator();
+    const gain=ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
+    osc.frequency.value = success ? 880 : 300;
+    osc.type = success ? 'sine' : 'triangle';
+    gain.gain.setValueAtTime(0.25, ac.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ac.currentTime+0.5);
+    osc.start(ac.currentTime); osc.stop(ac.currentTime+0.5);
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════
+// EMOJI CURSOR
+// ═══════════════════════════════════════════════════════
+
+const CURSOR_ANIMALS = ['🐱','🐶','🐭','🐰','🦊','🐻'];
+const emojiCursor = document.getElementById('emojiCursor');
+
+function updateCursorAnimal(){
+  emojiCursor.textContent = CURSOR_ANIMALS[currentPath % CURSOR_ANIMALS.length];
+}
+
+canvas.addEventListener('mousemove', e => {
+  emojiCursor.style.display = 'block';
+  emojiCursor.style.left = e.clientX + 'px';
+  emojiCursor.style.top  = e.clientY + 'px';
+});
+canvas.addEventListener('mouseleave', () => {
+  emojiCursor.style.display = 'none';
+});
+canvas.addEventListener('mouseenter', () => {
+  emojiCursor.style.display = 'block';
+});
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+
+window.addEventListener('DOMContentLoaded', ()=>{
+  totalRoundsEl.textContent = PATHS.length;
+  updateCursorAnimal();
+  loadPath();
+  setTimeout(resizeCanvas, 100);
+});
+</script>
+</body>
+</html>

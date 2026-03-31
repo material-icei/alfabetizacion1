@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔤 Completa el Abecedario - Nivel 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-primary: #FF6B9D;
+    --color-secondary: #4ECDC4;
+    --color-accent: #FFE66D;
+    --color-success: #6BCB77;
+    --color-error: #FF6B6B;
+    --color-purple: #C77DFF;
+    --color-orange: #FF9F1C;
+    --color-blue: #4A90E2;
+    --shadow-soft: 0 8px 32px rgba(74, 144, 226, 0.15);
+    --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.12);
+    --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.2);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #5B86E5 0%, #36D1DC 50%, #4ECDC4 100%);
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated background elements */
+  .bg-shapes {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float-around 35s infinite ease-in-out;
+  }
+
+  .shape:nth-child(1) {
+    width: 140px; height: 140px;
+    background: #FFE66D;
+    top: 12%; left: 7%;
+    animation-delay: 0s;
+  }
+
+  .shape:nth-child(2) {
+    width: 190px; height: 190px;
+    background: #FF6B9D;
+    top: 58%; right: 10%;
+    animation-delay: 6s;
+  }
+
+  .shape:nth-child(3) {
+    width: 110px; height: 110px;
+    background: #C77DFF;
+    bottom: 18%; left: 12%;
+    animation-delay: 12s;
+  }
+
+  .shape:nth-child(4) {
+    width: 170px; height: 170px;
+    background: #6BCB77;
+    top: 28%; right: 18%;
+    animation-delay: 18s;
+  }
+
+  @keyframes float-around {
+    0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    25% { transform: translate(55px, -55px) rotate(90deg) scale(1.15); }
+    50% { transform: translate(-45px, 45px) rotate(180deg) scale(0.85); }
+    75% { transform: translate(65px, 65px) rotate(270deg) scale(1.05); }
+  }
+
+  /* Main container */
+  .container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1050px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 4px;
+    animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+    color: white;
+    text-shadow: 
+      4px 4px 0 rgba(0, 0, 0, 0.2),
+      0 0 40px rgba(255, 255, 255, 0.4);
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .level-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    color: white;
+    padding: 2px 12px;
+    border-radius: 30px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.75rem;
+    margin-top: 2px;
+    box-shadow: 0 4px 14px rgba(74, 144, 226, 0.5);
+    animation: pulse-badge 2s infinite;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Progress bar */
+  .progress-container {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    height: 7px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4A90E2, #357ABD);
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
+  }
+
+  /* Score panel */
+  .score-panel {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 4px 18px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 4px;
+    box-shadow: var(--shadow-soft);
+    animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
+  }
+
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .score-icon {
+    font-size: 1.1rem;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .score-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Card container */
+  .card {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+    border-radius: 20px;
+    padding: 12px 16px;
+    box-shadow: var(--shadow-strong);
+    position: relative;
+    overflow: hidden;
+    animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .card::before,
+  .card::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(74, 144, 226, 0.12) 0%, transparent 70%);
+  }
+
+  .card::before {
+    width: 250px;
+    height: 250px;
+    top: -125px;
+    right: -125px;
+  }
+
+  .card::after {
+    width: 200px;
+    height: 200px;
+    bottom: -100px;
+    left: -100px;
+    background: radial-gradient(circle, rgba(78, 205, 196, 0.12) 0%, transparent 70%);
+  }
+
+  /* Instruction */
+  .instruction {
+    text-align: center;
+    font-size: clamp(0.7rem, 1.3vw, 0.88rem);
+    color: #1e3a8a;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Column wrappers */
+  .card-left {
+    flex: 0 0 310px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 2px dashed rgba(74,144,226,0.25);
+    padding-right: 12px;
+  }
+
+  .card-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  /* Alphabet grid */
+  .alphabet-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 7px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+    border-radius: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .letter-slot {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  }
+
+  .letter-slot:nth-child(1) { animation-delay: 0.05s; }
+  .letter-slot:nth-child(2) { animation-delay: 0.1s; }
+  .letter-slot:nth-child(3) { animation-delay: 0.15s; }
+  .letter-slot:nth-child(4) { animation-delay: 0.2s; }
+  .letter-slot:nth-child(5) { animation-delay: 0.25s; }
+  .letter-slot:nth-child(6) { animation-delay: 0.3s; }
+  .letter-slot:nth-child(7) { animation-delay: 0.35s; }
+  .letter-slot:nth-child(8) { animation-delay: 0.4s; }
+  .letter-slot:nth-child(9) { animation-delay: 0.45s; }
+  .letter-slot:nth-child(10) { animation-delay: 0.5s; }
+
+  @keyframes popIn {
+    from { transform: scale(0) rotate(-180deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  /* Fixed letter (shown) */
+  .letter-slot.fixed {
+    background: linear-gradient(135deg, #E8F4F8 0%, #D1E7ED 100%);
+    color: #1e3a8a;
+    box-shadow: 
+      0 4px 15px rgba(0, 0, 0, 0.08),
+      inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    border: 3px solid #B8D4E0;
+  }
+
+  /* Empty slot (to fill) */
+  .letter-slot.empty {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+    border: 3px dashed #4A90E2;
+    box-shadow: 
+      0 4px 15px rgba(74, 144, 226, 0.15),
+      inset 0 2px 4px rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+  }
+
+  .letter-slot.empty:hover {
+    transform: scale(1.08);
+    border-color: #357ABD;
+    background: linear-gradient(135deg, #EBF5FB 0%, #D6EAF8 100%);
+  }
+
+  .letter-slot.empty.selected {
+    border-color: #FF6B9D;
+    border-width: 4px;
+    background: linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 100%);
+    box-shadow: 
+      0 6px 20px rgba(255, 107, 157, 0.3),
+      inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    animation: pulse-selected 0.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-selected {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Filled slot (user input) */
+  .letter-slot.filled {
+    background: linear-gradient(135deg, #C77DFF 0%, #9D4EDD 100%);
+    color: white;
+    box-shadow: 
+      0 6px 20px rgba(199, 125, 255, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    border: 3px solid #9D4EDD;
+  }
+
+  .letter-slot.filled.correct {
+    background: linear-gradient(135deg, #6BCB77 0%, #4CAF50 100%);
+    border-color: #4CAF50;
+    animation: correctPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes correctPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1); }
+  }
+
+  .letter-slot.filled.incorrect {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%);
+    border-color: #FF4757;
+    animation: incorrectShake 0.5s;
+  }
+
+  @keyframes incorrectShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px) rotate(-3deg); }
+    75% { transform: translateX(8px) rotate(3deg); }
+  }
+
+  .letter-placeholder {
+    color: #4A90E2;
+    opacity: 0.3;
+    font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+  }
+
+  /* Virtual keyboard */
+  .keyboard-section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .keyboard-label {
+    text-align: center;
+    font-size: clamp(0.65rem, 1.2vw, 0.82rem);
+    color: #1e3a8a;
+    font-weight: 800;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+
+  .keyboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(34px, 1fr));
+    gap: 5px;
+  }
+
+  .key {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.7rem, 1.3vw, 0.9rem);
+    padding: 5px 3px;
+    background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 3px 8px rgba(78, 205, 196, 0.3);
+    text-transform: uppercase;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .key:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.5);
+  }
+
+  .key:active {
+    transform: translateY(-2px);
+  }
+
+  .key:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .key.used {
+    background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%);
+    opacity: 0.4;
+  }
+
+  /* Feedback */
+  .feedback {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+    min-height: 38px;
+  }
+
+  .feedback-message {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.85rem, 1.6vw, 1.1rem);
+    color: transparent;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .feedback-message.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .feedback-message.correct {
+    background: linear-gradient(135deg, #6BCB77, #4CAF50);
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: wiggle 0.6s;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+  }
+
+  .feedback-message.incorrect {
+    background: linear-gradient(135deg, #FF6B6B, #FF4757);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Buttons */
+  .button-container {
+    display: flex;
+    gap: 7px;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    padding: 6px 14px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+    min-width: 40px;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .btn:hover::before {
+    opacity: 1;
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn:active {
+    transform: translateY(-1px);
+  }
+
+  .btn-check {
+    background: linear-gradient(135deg, #FF9F1C 0%, #FF8C00 100%);
+    color: white;
+  }
+
+  .btn-clear {
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    color: white;
+  }
+
+  .btn-next {
+    background: linear-gradient(135deg, #C77DFF 0%, #9D4EDD 100%);
+    color: white;
+  }
+
+  .btn-reset {
+    background: linear-gradient(135deg, #FFE66D 0%, #FFC837 100%);
+    color: #5a189a;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Confetti */
+  .confetti-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--color);
+    opacity: 0;
+    animation: confetti-fall 3s ease-out forwards;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      opacity: 1;
+      transform: translateY(0) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(100vh) rotate(720deg);
+    }
+  }
+
+  .star-burst {
+    position: fixed;
+    pointer-events: none;
+    font-size: 2.5rem;
+    animation: star-burst-anim 1s ease-out forwards;
+    z-index: 999;
+  }
+
+  @keyframes star-burst-anim {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.5);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(2) translateY(-100px);
+    }
+  }
+
+  /* Victory Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s;
+  }
+
+  .modal-overlay.show {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+    animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes modalPop {
+    from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  .modal-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite;
+  }
+
+  .modal-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #4A90E2, #4ECDC4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 15px;
+  }
+
+  .modal-text {
+    font-size: 1.3rem;
+    color: #1e3a8a;
+    font-weight: 700;
+    margin-bottom: 25px;
+  }
+
+  .modal-stars {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    letter-spacing: 10px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .alphabet-grid {
+      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+      gap: 6px;
+      padding: 20px;
+    }
+
+    .keyboard {
+      gap: 6px;
+    }
+
+    .card {
+      padding: 25px;
+    }
+
+    .score-panel {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .alphabet-grid {
+      grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+    }
+  }
+
+  /* ── Home button ── */
+  .btn-home {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(102,126,234,0.5);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+  }
+  .btn-home:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 8px 20px rgba(102,126,234,0.6); }
+  .btn-home:active { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<!-- Animated background shapes -->
+<div class="bg-shapes">
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
+
+<!-- Main container -->
+<div class="container">
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">🔤 Completa el Abecedario</h1>
+    <p class="subtitle">¡Encuentra las letras que faltan!</p>
+    <div class="level-badge">🌟 NIVEL 4</div>
+  </header>
+
+  <!-- Progress bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+  </div>
+
+  <!-- Score panel -->
+  <div class="score-panel">
+    <div class="score-item">
+      <span class="score-icon">⭐</span>
+      <span class="score-text" id="correctScore">0</span>
+    </div>
+    <div class="score-item">
+      <span class="score-icon">🎯</span>
+      <span class="score-text"><span id="currentRound">1</span>/<span id="totalRounds">10</span></span>
+    </div>
+  </div>
+
+  <!-- Game card -->
+  <div class="card">
+    <!-- LEFT: instrucción + grilla abecedario -->
+    <div class="card-left">
+      <p class="instruction">🔍 Completa las letras que faltan</p>
+      <div class="alphabet-grid" id="alphabetGrid">
+        <!-- Letters will be inserted here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- RIGHT: teclado + feedback + botones -->
+    <div class="card-right">
+      <div class="keyboard-section">
+        <p class="keyboard-label">⌨️ Selecciona la letra correcta</p>
+        <div class="keyboard" id="keyboard">
+          <!-- Keyboard will be generated by JavaScript -->
+        </div>
+      </div>
+      <div class="feedback">
+        <div class="feedback-message" id="feedbackMessage"></div>
+        <div class="button-container">
+          <button class="btn btn-check" id="btnCheck">✓</button>
+          <button class="btn btn-clear" id="btnClear">🗑️</button>
+          <button class="btn btn-next" id="btnNext" disabled>➜</button>
+          <button class="btn btn-reset" id="btnReset">🔄</button>
+          <a class="btn btn-home" href="index.html" title="Volver al inicio">🏠</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Victory Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-icon">🎊</div>
+    <h2 class="modal-title">¡Genial!</h2>
+    <div class="modal-stars">⭐⭐⭐</div>
+    <p class="modal-text">¡Completaste todos los abecedarios!</p>
+    <p class="modal-text">Respuestas correctas: <strong id="finalScore">0</strong></p>
+    <button class="btn btn-next" onclick="location.reload()">
+      🎮
+    </button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// GAME DATA - Alphabet sequences with missing letters
+// ═══════════════════════════════════════════════════════════════
+
+const fullAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+// Predefined sequences with different missing letters
+const sequenceTemplates = [
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], // A-J (missing some)
+  [5, 6, 7, 8, 9, 10, 11, 12, 13, 14], // F-O
+  [10, 11, 12, 13, 14, 15, 16, 17, 18, 19], // K-T
+  [15, 16, 17, 18, 19, 20, 21, 22, 23, 24], // P-Y
+  [3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // D-M
+  [8, 9, 10, 11, 12, 13, 14, 15, 16, 17], // I-R
+  [12, 13, 14, 15, 16, 17, 18, 19, 20, 21], // M-V
+  [19, 20, 21, 22, 23, 24, 25] // T-Z
+];
+
+// ═══════════════════════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════════════════════
+
+let currentRound = 0;
+let correctAnswers = 0;
+let hasAnswered = false;
+let currentSequence = [];
+let missingLetters = [];
+let userAnswers = {};
+let selectedSlotIndex = null;
+let usedLetters = new Set();
+
+// ═══════════════════════════════════════════════════════════════
+// DOM ELEMENTS
+// ═══════════════════════════════════════════════════════════════
+
+const alphabetGridEl = document.getElementById('alphabetGrid');
+const keyboardEl = document.getElementById('keyboard');
+const feedbackMessageEl = document.getElementById('feedbackMessage');
+const btnCheck = document.getElementById('btnCheck');
+const btnClear = document.getElementById('btnClear');
+const btnNext = document.getElementById('btnNext');
+const btnReset = document.getElementById('btnReset');
+const correctScoreEl = document.getElementById('correctScore');
+const currentRoundEl = document.getElementById('currentRound');
+const totalRoundsEl = document.getElementById('totalRounds');
+const progressBarEl = document.getElementById('progressBar');
+const confettiContainerEl = document.getElementById('confettiContainer');
+const modalOverlay = document.getElementById('modalOverlay');
+const finalScoreEl = document.getElementById('finalScore');
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INITIALIZE GAME
+// ═══════════════════════════════════════════════════════════════
+
+function initGame() {
+  totalRoundsEl.textContent = sequenceTemplates.length;
+  createKeyboard();
+  loadRound();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CREATE VIRTUAL KEYBOARD
+// ═══════════════════════════════════════════════════════════════
+
+function createKeyboard() {
+  keyboardEl.innerHTML = '';
+  
+  fullAlphabet.forEach(letter => {
+    const key = document.createElement('button');
+    key.className = 'key';
+    key.textContent = letter;
+    key.dataset.letter = letter;
+    key.addEventListener('click', () => handleKeyClick(letter));
+    keyboardEl.appendChild(key);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOAD ROUND
+// ═══════════════════════════════════════════════════════════════
+
+function loadRound() {
+  if (currentRound >= sequenceTemplates.length) {
+    showVictoryModal();
+    return;
+  }
+
+  hasAnswered = false;
+  userAnswers = {};
+  selectedSlotIndex = null;
+  usedLetters.clear();
+  btnCheck.disabled = false;
+  btnNext.disabled = true;
+  feedbackMessageEl.classList.remove('show', 'correct', 'incorrect');
+  feedbackMessageEl.textContent = '';
+
+  currentRoundEl.textContent = currentRound + 1;
+  updateProgressBar();
+
+  // Generate sequence with missing letters
+  generateSequence();
+  renderAlphabet();
+  updateKeyboardState();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GENERATE SEQUENCE
+// ═══════════════════════════════════════════════════════════════
+
+function generateSequence() {
+  const template = sequenceTemplates[currentRound];
+  currentSequence = template.map(index => fullAlphabet[index]);
+  
+  // Determine which positions will be missing (2-3 random positions)
+  const numMissing = Math.random() < 0.5 ? 2 : 3;
+  const positionsToHide = [];
+  
+  while (positionsToHide.length < numMissing) {
+    const randomPos = Math.floor(Math.random() * currentSequence.length);
+    if (!positionsToHide.includes(randomPos)) {
+      positionsToHide.push(randomPos);
+    }
+  }
+  
+  missingLetters = positionsToHide.map(pos => ({
+    index: pos,
+    letter: currentSequence[pos]
+  }));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER ALPHABET
+// ═══════════════════════════════════════════════════════════════
+
+function renderAlphabet() {
+  alphabetGridEl.innerHTML = '';
+  
+  currentSequence.forEach((letter, index) => {
+    const slot = document.createElement('div');
+    slot.className = 'letter-slot';
+    
+    const isMissing = missingLetters.some(ml => ml.index === index);
+    
+    if (isMissing) {
+      slot.classList.add('empty');
+      slot.dataset.index = index;
+      const placeholder = document.createElement('span');
+      placeholder.className = 'letter-placeholder';
+      placeholder.textContent = '?';
+      slot.appendChild(placeholder);
+      
+      slot.addEventListener('click', () => selectSlot(index));
+    } else {
+      slot.classList.add('fixed');
+      slot.textContent = letter;
+    }
+    
+    alphabetGridEl.appendChild(slot);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SELECT SLOT
+// ═══════════════════════════════════════════════════════════════
+
+function selectSlot(index) {
+  if (hasAnswered) return;
+  
+  // Remove previous selection
+  document.querySelectorAll('.letter-slot.selected').forEach(slot => {
+    slot.classList.remove('selected');
+  });
+  
+  selectedSlotIndex = index;
+  
+  // Highlight selected slot
+  const slots = alphabetGridEl.children;
+  const targetSlot = Array.from(slots).find(slot => slot.dataset.index == index);
+  if (targetSlot) {
+    targetSlot.classList.add('selected');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HANDLE KEY CLICK
+// ═══════════════════════════════════════════════════════════════
+
+function handleKeyClick(letter) {
+  if (hasAnswered || selectedSlotIndex === null) return;
+  if (usedLetters.has(letter)) return;
+  
+  // Fill the selected slot
+  userAnswers[selectedSlotIndex] = letter;
+  usedLetters.add(letter);
+  
+  const slots = alphabetGridEl.children;
+  const targetSlot = Array.from(slots).find(slot => slot.dataset.index == selectedSlotIndex);
+  
+  if (targetSlot) {
+    targetSlot.classList.remove('empty', 'selected');
+    targetSlot.classList.add('filled');
+    targetSlot.textContent = letter;
+  }
+  
+  // Reset selection
+  selectedSlotIndex = null;
+  updateKeyboardState();
+  
+  // Auto-select next empty slot if any
+  autoSelectNextSlot();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUTO SELECT NEXT SLOT
+// ═══════════════════════════════════════════════════════════════
+
+function autoSelectNextSlot() {
+  const emptySlot = missingLetters.find(ml => !userAnswers[ml.index]);
+  if (emptySlot) {
+    setTimeout(() => selectSlot(emptySlot.index), 100);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UPDATE KEYBOARD STATE
+// ═══════════════════════════════════════════════════════════════
+
+function updateKeyboardState() {
+  document.querySelectorAll('.key').forEach(key => {
+    const letter = key.dataset.letter;
+    if (usedLetters.has(letter)) {
+      key.classList.add('used');
+      key.disabled = true;
+    } else {
+      key.classList.remove('used');
+      key.disabled = hasAnswered;
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHECK ANSWER
+// ═══════════════════════════════════════════════════════════════
+
+btnCheck.addEventListener('click', checkAnswer);
+
+function checkAnswer() {
+  if (hasAnswered) return;
+  
+  // Check if all slots are filled
+  if (Object.keys(userAnswers).length !== missingLetters.length) {
+    return;
+  }
+
+  hasAnswered = true;
+  btnCheck.disabled = true;
+  btnNext.disabled = false;
+  updateKeyboardState();
+
+  // Check each answer
+  let allCorrect = true;
+  const slots = alphabetGridEl.children;
+  
+  missingLetters.forEach(ml => {
+    const userAnswer = userAnswers[ml.index];
+    const isCorrect = userAnswer === ml.letter;
+    
+    if (!isCorrect) {
+      allCorrect = false;
+    }
+    
+    const targetSlot = Array.from(slots).find(slot => slot.dataset.index == ml.index);
+    if (targetSlot) {
+      if (isCorrect) {
+        targetSlot.classList.add('correct');
+      } else {
+        targetSlot.classList.add('incorrect');
+        // Show correct answer after delay
+        setTimeout(() => {
+          targetSlot.textContent = ml.letter;
+          targetSlot.classList.remove('incorrect');
+          targetSlot.classList.add('correct');
+        }, 1000);
+      }
+    }
+  });
+
+  if (allCorrect) {
+    // ALL CORRECT
+    correctAnswers++;
+    correctScoreEl.textContent = correctAnswers;
+    
+    feedbackMessageEl.textContent = '¡Perfecto! 🎉';
+    feedbackMessageEl.classList.add('show', 'correct');
+
+    // Visual effects
+    createStarBurst();
+    createConfetti();
+    playSuccessSound();
+  } else {
+    // SOME INCORRECT
+    feedbackMessageEl.textContent = '¡Casi! Revisa las letras 💪';
+    feedbackMessageEl.classList.add('show', 'incorrect');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLEAR BUTTON
+// ═══════════════════════════════════════════════════════════════
+
+btnClear.addEventListener('click', () => {
+  if (hasAnswered) return;
+  
+  userAnswers = {};
+  selectedSlotIndex = null;
+  usedLetters.clear();
+  
+  const slots = alphabetGridEl.children;
+  missingLetters.forEach(ml => {
+    const targetSlot = Array.from(slots).find(slot => slot.dataset.index == ml.index);
+    if (targetSlot) {
+      targetSlot.classList.remove('filled', 'selected');
+      targetSlot.classList.add('empty');
+      targetSlot.innerHTML = '<span class="letter-placeholder">?</span>';
+    }
+  });
+  
+  updateKeyboardState();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// NEXT ROUND
+// ═══════════════════════════════════════════════════════════════
+
+btnNext.addEventListener('click', () => {
+  currentRound++;
+  loadRound();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// RESET GAME
+// ═══════════════════════════════════════════════════════════════
+
+btnReset.addEventListener('click', () => {
+  currentRound = 0;
+  correctAnswers = 0;
+  correctScoreEl.textContent = '0';
+  loadRound();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// UPDATE PROGRESS BAR
+// ═══════════════════════════════════════════════════════════════
+
+function updateProgressBar() {
+  const progress = ((currentRound + 1) / sequenceTemplates.length) * 100;
+  progressBarEl.style.width = `${progress}%`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SHOW VICTORY MODAL
+// ═══════════════════════════════════════════════════════════════
+
+function showVictoryModal() {
+  finalScoreEl.textContent = `${correctAnswers} de ${sequenceTemplates.length}`;
+  modalOverlay.classList.add('show');
+  createConfetti(50);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VISUAL EFFECTS
+// ═══════════════════════════════════════════════════════════════
+
+function createConfetti(count = 30) {
+  const colors = ['#4A90E2', '#4ECDC4', '#FFE66D', '#6BCB77', '#C77DFF', '#FF9F1C'];
+  
+  for (let i = 0; i < count; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
+    confetti.style.left = Math.random() * 100 + '%';
+    confetti.style.top = Math.random() * 20 + '%';
+    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    
+    confettiContainerEl.appendChild(confetti);
+
+    setTimeout(() => confetti.remove(), 3000);
+  }
+}
+
+function createStarBurst() {
+  const rect = alphabetGridEl.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+
+  const emojis = ['⭐', '✨', '🌟', '💫', '🎯', '🔤'];
+  
+  for (let i = 0; i < 8; i++) {
+    const star = document.createElement('div');
+    star.className = 'star-burst';
+    star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    star.style.left = x + 'px';
+    star.style.top = y + 'px';
+    star.style.animationDelay = (i * 0.08) + 's';
+    
+    document.body.appendChild(star);
+
+    setTimeout(() => star.remove(), 1000);
+  }
+}
+
+function playSuccessSound() {
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.value = 800;
+  oscillator.type = 'sine';
+  
+  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.5);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// START GAME
+// ═══════════════════════════════════════════════════════════════
+
+window.addEventListener('DOMContentLoaded', initGame);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✍️ Escribo con Sílabas - Nivel 8</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --shadow-soft:   0 8px 32px rgba(251,146,60,0.15);
+    --shadow-strong: 0 20px 60px rgba(0,0,0,0.2);
+    --c-a: #ef4444;
+    --c-e: #f59e0b;
+    --c-i: #10b981;
+    --c-o: #3b82f6;
+    --c-u: #a855f7;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fbbf24 100%);
+    height: 100vh; width: 100vw;
+    display: flex; justify-content: center; align-items: center;
+    padding: 8px 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg-shapes { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .shape {
+    position:absolute; border-radius:50%; opacity:0.1;
+    animation: float-around 28s infinite ease-in-out;
+  }
+  .shape:nth-child(1){width:140px;height:140px;background:#fff;top:8%;left:4%;animation-delay:0s}
+  .shape:nth-child(2){width:180px;height:180px;background:#6BCB77;top:55%;right:6%;animation-delay:5s}
+  .shape:nth-child(3){width:100px;height:100px;background:#C77DFF;bottom:12%;left:10%;animation-delay:10s}
+  .shape:nth-child(4){width:160px;height:160px;background:#4ECDC4;top:20%;right:18%;animation-delay:15s}
+  @keyframes float-around {
+    0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}
+    25%{transform:translate(40px,-40px) rotate(90deg) scale(1.1)}
+    50%{transform:translate(-30px,30px) rotate(180deg) scale(0.9)}
+    75%{transform:translate(50px,50px) rotate(270deg) scale(1.05)}
+  }
+
+  /* ── Page ── */
+  .page {
+    position:relative; z-index:10;
+    width:100%; max-width:1050px; height:100%;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align:center; margin-bottom:5px;
+    animation: slideDown 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes slideDown{from{transform:translateY(-40px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .title {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1.2rem,2.5vw,1.9rem); color:white;
+    text-shadow:4px 4px 0 rgba(0,0,0,0.2),0 0 30px rgba(255,255,255,0.3); letter-spacing:1px;
+  }
+  .subtitle { font-size:clamp(0.65rem,1.2vw,0.85rem); color:rgba(255,255,255,0.92); font-weight:700; text-shadow:1px 1px 3px rgba(0,0,0,0.2); }
+  .level-badge {
+    display:inline-block; background:linear-gradient(135deg,#ea580c,#c2410c);
+    color:white; padding:2px 12px; border-radius:20px;
+    font-family:'Fredoka One',cursive; font-size:0.75rem; margin-top:2px;
+    box-shadow:0 4px 14px rgba(234,88,12,0.5); animation:pulse-badge 2s infinite;
+  }
+  @keyframes pulse-badge{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+  /* ── Topbar ── */
+  .topbar { display:flex; align-items:center; gap:10px; margin-bottom:5px; animation:slideDown 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s backwards; }
+  .score-panel { background:rgba(255,255,255,0.25); backdrop-filter:blur(10px); border-radius:12px; padding:4px 18px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow-soft); flex-shrink:0; }
+  .score-item{display:flex;align-items:center;gap:6px}
+  .score-icon{font-size:1.1rem;animation:bounce 2s infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .score-text{font-family:'Fredoka One',cursive;font-size:0.95rem;color:white;text-shadow:1px 1px 3px rgba(0,0,0,0.2)}
+  .progress-wrap{flex:1;background:rgba(255,255,255,0.3);height:7px;border-radius:10px;overflow:hidden}
+  .progress-bar{height:100%;border-radius:10px;width:0%;background:linear-gradient(90deg,#fff,rgba(255,255,255,0.6));transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 0 8px rgba(255,255,255,0.5)}
+
+  /* ── Card ── */
+  .card {
+    background:linear-gradient(135deg,#ffffff 0%,#fff7ed 100%);
+    border-radius:20px; padding:12px 16px;
+    box-shadow:var(--shadow-strong);
+    display:flex; flex-direction:row; gap:14px; align-items:stretch;
+    animation: scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s backwards;
+    position:relative; overflow:hidden;
+  }
+  @keyframes scaleIn{from{transform:scale(0.88);opacity:0}to{transform:scale(1);opacity:1}}
+  .card::before{content:'';position:absolute;width:220px;height:220px;border-radius:50%;top:-110px;right:-110px;background:radial-gradient(circle,rgba(249,115,22,0.1) 0%,transparent 70%)}
+
+  /* ── LEFT: consonant panel ── */
+  .card-left {
+    flex:0 0 160px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px;
+    border-right:2px dashed rgba(249,115,22,0.25);
+    padding-right:14px; position:relative; z-index:1;
+  }
+
+  .consonant-label { font-size:clamp(0.65rem,1.2vw,0.82rem); color:#9a3412; font-weight:800; text-transform:uppercase; text-align:center; }
+
+  .consonant-box {
+    background:linear-gradient(135deg,#f97316,#ea580c);
+    border-radius:20px; padding:14px 24px;
+    box-shadow:0 8px 28px rgba(249,115,22,0.45),inset 0 -4px 10px rgba(0,0,0,0.1);
+    animation:pulse-box 2s ease-in-out infinite;
+  }
+  @keyframes pulse-box{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+  .consonant-char {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(3rem,7vw,5rem); color:white;
+    text-shadow:3px 3px 0 rgba(0,0,0,0.2),0 0 20px rgba(255,255,255,0.4); line-height:1;
+  }
+
+  .nav-row { display:flex; gap:8px; align-items:center; }
+  .btn-nav {
+    font-family:'Fredoka One',cursive; font-size:1rem;
+    padding:5px 14px; border:none; border-radius:30px; cursor:pointer;
+    background:linear-gradient(135deg,#f97316,#ea580c); color:white;
+    box-shadow:0 4px 12px rgba(249,115,22,0.35);
+    transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .btn-nav:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(249,115,22,0.45)}
+  .round-badge {
+    font-family:'Fredoka One',cursive; font-size:0.78rem;
+    color:#ea580c; background:rgba(249,115,22,0.1);
+    padding:3px 10px; border-radius:20px; border:1.5px solid rgba(249,115,22,0.25);
+  }
+
+  .hint-text { font-size:clamp(0.6rem,1.1vw,0.75rem); color:#c2410c; font-weight:700; text-align:center; font-style:italic; line-height:1.3; }
+
+  /* ── RIGHT: syllable rows ── */
+  .card-right {
+    flex:1; display:flex; flex-direction:column;
+    gap:6px; justify-content:center; position:relative; z-index:1;
+  }
+
+  /* ── Syllable row ── */
+  .syl-row {
+    display:flex; align-items:center; gap:8px;
+    padding:5px 8px; border-radius:14px;
+    background:rgba(255,255,255,0.6);
+    border:2px solid transparent;
+    transition:all 0.3s;
+  }
+  .syl-row:focus-within { border-color:var(--row-color); background:white; box-shadow:0 4px 16px rgba(0,0,0,0.08); }
+
+  .syl-badge {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1.1rem,2.5vw,1.6rem);
+    color:white; border-radius:12px;
+    padding:4px 12px; min-width:58px; text-align:center;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    flex-shrink:0; text-transform:uppercase;
+    letter-spacing:1px;
+  }
+
+  .syl-input {
+    flex:1; border:none; outline:none; background:transparent;
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1rem,2vw,1.35rem);
+    color:#1c1917; text-transform:uppercase;
+    padding:2px 4px;
+  }
+  .syl-input::placeholder { color:rgba(0,0,0,0.2); font-size:0.9em; text-transform:none; }
+
+  .syl-status {
+    font-size:1.2rem; min-width:24px; text-align:center; flex-shrink:0;
+    transition:all 0.3s;
+  }
+
+  /* State colors per row */
+  .row-a { --row-color: var(--c-a); }
+  .row-e { --row-color: var(--c-e); }
+  .row-i { --row-color: var(--c-i); }
+  .row-o { --row-color: var(--c-o); }
+  .row-u { --row-color: var(--c-u); }
+
+  .row-a .syl-badge { background:linear-gradient(135deg,var(--c-a),#b91c1c); }
+  .row-e .syl-badge { background:linear-gradient(135deg,var(--c-e),#d97706); }
+  .row-i .syl-badge { background:linear-gradient(135deg,var(--c-i),#059669); }
+  .row-o .syl-badge { background:linear-gradient(135deg,var(--c-o),#2563eb); }
+  .row-u .syl-badge { background:linear-gradient(135deg,var(--c-u),#7c3aed); }
+
+  .syl-row.correct { border-color:var(--color-success); background:linear-gradient(135deg,#d4edda,#c3f5c3); }
+  .syl-row.incorrect { border-color:var(--color-error); background:linear-gradient(135deg,#f8d7da,#ffc9c9); animation:shake 0.45s; }
+  .syl-row.skipped { opacity:0.5; }
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+  /* ── Feedback + Buttons ── */
+  .feedback-row {
+    display:flex; align-items:center; justify-content:center;
+    gap:10px; min-height:38px; position:relative; z-index:1;
+  }
+  .feedback-message {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(0.82rem,1.5vw,1.05rem);
+    color:transparent; opacity:0; transform:scale(0.5);
+    transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .feedback-message.show{opacity:1;transform:scale(1)}
+  .feedback-message.correct{background:linear-gradient(135deg,#6BCB77,#4CAF50);-webkit-background-clip:text;background-clip:text;animation:wiggle 0.6s}
+  .feedback-message.partial{background:linear-gradient(135deg,#FF9F1C,#FF8C00);-webkit-background-clip:text;background-clip:text}
+  .feedback-message.incorrect{background:linear-gradient(135deg,#FF6B6B,#FF4757);-webkit-background-clip:text;background-clip:text}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+
+  /* ── Buttons ── */
+  .btn-row{display:flex;gap:7px;justify-content:center;flex-wrap:nowrap}
+  .btn {
+    font-family:'Fredoka One',cursive; font-size:clamp(1rem,1.8vw,1.3rem);
+    padding:6px 16px; border:none; border-radius:50px; cursor:pointer;
+    transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow:0 4px 14px rgba(0,0,0,0.15);
+    position:relative; overflow:hidden; min-width:42px;
+  }
+  .btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.3);opacity:0;transition:opacity 0.3s}
+  .btn:hover::before{opacity:1}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,0.2)}
+  .btn:active{transform:translateY(-1px)}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+  .btn-check{ background:linear-gradient(135deg,#6BCB77,#4CAF50); color:white }
+  .btn-next { background:linear-gradient(135deg,#f97316,#ea580c); color:white }
+  .btn-clear{ background:linear-gradient(135deg,#94a3b8,#64748b); color:white }
+  .btn-reset{ background:linear-gradient(135deg,#FFE66D,#FFC837); color:#9a3412 }
+
+  /* ── Confetti ── */
+  .confetti-container{position:fixed;inset:0;pointer-events:none;z-index:1000}
+  .confetti{position:absolute;width:9px;height:9px;background:var(--color);opacity:0;animation:confetti-fall 3s ease-out forwards}
+  @keyframes confetti-fall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+  .star-burst{position:fixed;pointer-events:none;font-size:1.8rem;animation:star-burst-anim 0.9s ease-out forwards;z-index:999}
+  @keyframes star-burst-anim{0%{opacity:1;transform:translate(-50%,-50%) scale(0)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}100%{opacity:0;transform:translate(-50%,-50%) scale(2) translateY(-80px)}}
+
+  /* ── Modal ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(5px);display:none;justify-content:center;align-items:center;z-index:2000}
+  .modal-overlay.show{display:flex}
+  .modal{background:linear-gradient(135deg,#fff,#fff7ed);border-radius:26px;padding:36px 44px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.3);animation:modalPop 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+  @keyframes modalPop{from{transform:scale(0.5) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  .modal-icon{font-size:4rem;margin-bottom:12px;animation:bounce 1s infinite}
+  .modal-title{font-family:'Fredoka One',cursive;font-size:2.2rem;background:linear-gradient(135deg,#f97316,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
+  .modal-text{font-size:1.1rem;color:#9a3412;font-weight:700;margin-bottom:10px}
+  .modal-stars{font-size:2.5rem;margin-bottom:18px;letter-spacing:8px}
+
+  /* ── Home button ── */
+  .btn-home {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(102,126,234,0.5);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+  }
+  .btn-home:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 8px 20px rgba(102,126,234,0.6); }
+  .btn-home:active { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="shape"></div><div class="shape"></div>
+  <div class="shape"></div><div class="shape"></div>
+</div>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<div class="page">
+  <header class="header">
+    <h1 class="title">✍️ Escribo con Sílabas</h1>
+    <p class="subtitle">¡Escribí una palabra para cada sílaba!</p>
+    <div class="level-badge">🌟 NIVEL 8</div>
+  </header>
+
+  <div class="topbar">
+    <div class="score-panel">
+      <div class="score-item">
+        <span class="score-icon">⭐</span>
+        <span class="score-text" id="correctScore">0</span>
+      </div>
+      <div class="score-item">
+        <span class="score-icon">🎯</span>
+        <span class="score-text"><span id="currentRound">1</span>/<span id="totalRounds">10</span></span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <!-- LEFT: consonant -->
+    <div class="card-left">
+      <p class="consonant-label">🔤 Letra</p>
+      <div class="consonant-box">
+        <div class="consonant-char" id="consonantChar">M</div>
+      </div>
+      <div class="nav-row">
+        <button class="btn-nav" id="btnPrev">◀</button>
+        <span class="round-badge" id="roundBadge">1/10</span>
+        <button class="btn-nav" id="btnNextLetter">▶</button>
+      </div>
+      <p class="hint-text" id="hintText">Escribí una palabra que empiece con MA, ME, MI, MO, MU</p>
+    </div>
+
+    <!-- RIGHT: input rows + feedback -->
+    <div class="card-right">
+
+      <!-- 5 syllable rows (A E I O U) -->
+      <div class="syl-row row-a" id="row-a">
+        <div class="syl-badge" id="badge-a">MA</div>
+        <input class="syl-input" id="input-a" type="text" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escribí una palabra...">
+        <div class="syl-status" id="status-a"></div>
+      </div>
+
+      <div class="syl-row row-e" id="row-e">
+        <div class="syl-badge" id="badge-e">ME</div>
+        <input class="syl-input" id="input-e" type="text" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escribí una palabra...">
+        <div class="syl-status" id="status-e"></div>
+      </div>
+
+      <div class="syl-row row-i" id="row-i">
+        <div class="syl-badge" id="badge-i">MI</div>
+        <input class="syl-input" id="input-i" type="text" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escribí una palabra...">
+        <div class="syl-status" id="status-i"></div>
+      </div>
+
+      <div class="syl-row row-o" id="row-o">
+        <div class="syl-badge" id="badge-o">MO</div>
+        <input class="syl-input" id="input-o" type="text" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escribí una palabra...">
+        <div class="syl-status" id="status-o"></div>
+      </div>
+
+      <div class="syl-row row-u" id="row-u">
+        <div class="syl-badge" id="badge-u">MU</div>
+        <input class="syl-input" id="input-u" type="text" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="escribí una palabra...">
+        <div class="syl-status" id="status-u"></div>
+      </div>
+
+      <!-- Feedback + buttons -->
+      <div class="feedback-row">
+        <div class="feedback-message" id="feedbackMessage"></div>
+        <div class="btn-row">
+          <button class="btn btn-clear" id="btnClear">🗑️</button>
+          <button class="btn btn-check" id="btnCheck">✓</button>
+          <button class="btn btn-next"  id="btnNext"  disabled>➜</button>
+          <button class="btn btn-reset" id="btnReset">🔄</button>
+          <a class="btn btn-home" href="index.html" title="Volver al inicio">🏠</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Victory Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-icon">🏆</div>
+    <h2 class="modal-title">¡Excelente!</h2>
+    <div class="modal-stars">⭐⭐⭐</div>
+    <p class="modal-text">¡Terminaste todas las letras!</p>
+    <p class="modal-text">Rondas perfectas: <strong id="finalScore"></strong></p>
+    <button class="btn btn-next" style="margin-top:10px" onclick="location.reload()">🎮 Jugar de nuevo</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CONSONANTS & VALID WORDS
+// Each consonant has a list of accepted words per vowel.
+// The check is lenient: the word just needs to START with
+// the correct syllable (consonant + vowel). The word lists
+// serve as hints shown on incorrect, not hard gates.
+// ═══════════════════════════════════════════════════════
+
+const CONSONANTS = [
+  {
+    letter: 'M',
+    hint: 'Escribí palabras con MA, ME, MI, MO, MU',
+    examples: {
+      a: ['MANO','MAPA','MAMÁ','MARIPOSA','MANZANA','MATE','MAGO','MALETA','MADERA','MAYOR'],
+      e: ['MESA','MELÓN','MEDIAS','MENDOZA','METAL','MENSAJE','METRO','MENTA','MEDALLA','MERENGUE'],
+      i: ['MIEL','MIEDO','MIMO','MISA','MIRADA','MINUTO','MITO','MINA','MIZAS','MINERO'],
+      o: ['MOTO','MONO','MOLDE','MOÑO','MOCHILA','MOLE','MONTE','MORADO','MODELO','MONEDA'],
+      u: ['MULA','MUNDO','MUÑECA','MUSICA','MUEBLE','MURO','MULTA','MURGA','MUSEO','MÚSCULO'],
+    }
+  },
+  {
+    letter: 'T',
+    hint: 'Escribí palabras con TA, TE, TI, TO, TU',
+    examples: {
+      a: ['TAZA','TAPA','TABLA','TAMBOR','TAREA','TARJETA','TACO','TARDE','TALA','TAPIZ'],
+      e: ['TELA','TECHO','TELÉFONO','TENEDOR','TIGRE','TEMA','TESIS','TEMPLO','TERROR','TEJADO'],
+      i: ['TIGRE','TIZA','TIRO','TIPO','TIENDA','TIMBRE','TIJERA','TINA','TÍTULO','TIERRA'],
+      o: ['TORO','TOCO','TOMATE','TORRE','TORTUGA','TOPO','TOALLA','TOQUE','TONELADA','TONADA'],
+      u: ['TUBO','TURNO','TULIPÁN','TUMBA','TUERCA','TÚNEL','TURBINA','TURISMO','TUTÚ','TUCÁN'],
+    }
+  },
+  {
+    letter: 'S',
+    hint: 'Escribí palabras con SA, SE, SI, SO, SU',
+    examples: {
+      a: ['SAPO','SAL','SACO','SABOR','SANDÍA','SÁBANA','SALUD','SAMBA','SALTO','SARTÉN'],
+      e: ['SELLO','SEMILLA','SERPIENTE','SEÑAL','SETA','SENDA','SEMANA','SEÑOR','SEGURO','SELVA'],
+      i: ['SILLA','SILO','SIRENA','SIESTA','SILBA','SINO','SISTEMA','SICLO','SIGNO','SIGO'],
+      o: ['SOL','SOPA','SOMBRERO','SOBRE','SOLO','SOFÁ','SORTIJA','SORPRESA','SOMBRA','SONIDO'],
+      u: ['SUELO','SUEÑO','SUCIO','SUDO','SUMA','SUAVE','SUJETO','SULKY','SUPERFICIE','SUBIR'],
+    }
+  },
+  {
+    letter: 'L',
+    hint: 'Escribí palabras con LA, LE, LI, LO, LU',
+    examples: {
+      a: ['LAGO','LATA','LANA','LAPIZ','LAZO','LADO','LÁMPARA','LACA','LARGA','LATIDO'],
+      e: ['LECHE','LENTO','LECHUGA','LETRA','LEYENDA','LECCIÓN','LEVE','LENGUA','LECTOR','LENGUAJE'],
+      i: ['LIBRO','LIMA','LIMON','LINDA','LISTA','LLAVE','LÍNEA','LITRO','LIEBRE','LINDO'],
+      o: ['LORO','LOMA','LOBO','LOCA','LODO','LOGRO','LOTUS','LONA','LOCO','LOTERÍA'],
+      u: ['LUNA','LUZ','LUCHA','LUGAR','LUJO','LUPA','LUCES','LUCAS','LUGRE','LUMINOSO'],
+    }
+  },
+  {
+    letter: 'P',
+    hint: 'Escribí palabras con PA, PE, PI, PO, PU',
+    examples: {
+      a: ['PAPÁ','PATO','PALOMA','PARED','PALA','PAÑO','PÁJARO','PAN','PAYASO','PASTA'],
+      e: ['PERRO','PELOTA','PERA','PEINE','PEPINO','PELÍCULA','PECHO','PERSONA','PESCA','PELUCHE'],
+      i: ['PINO','PISO','PIZARRÓN','PIERNA','PICO','PIJAMA','PIEDRA','PILOTO','PIRATA','PINCEL'],
+      o: ['POLLO','POLO','POLVO','POMO','PORTA','POZO','POROTO','PODER','POMELO','PONCHO'],
+      u: ['PULPO','PUERTA','PUENTE','PUEBLO','PUMA','PULGA','PUNTA','PUCHERO','PUPILA','PUREZA'],
+    }
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+
+let currentRound   = 0;
+let correctAnswers = 0;
+let hasAnswered    = false;
+const VOWELS = ['a','e','i','o','u'];
+
+// ═══════════════════════════════════════════════════════
+// DOM
+// ═══════════════════════════════════════════════════════
+
+const consonantCharEl = document.getElementById('consonantChar');
+const hintTextEl      = document.getElementById('hintText');
+const roundBadgeEl    = document.getElementById('roundBadge');
+const feedbackMsgEl   = document.getElementById('feedbackMessage');
+const btnCheck        = document.getElementById('btnCheck');
+const btnNext         = document.getElementById('btnNext');
+const btnClear        = document.getElementById('btnClear');
+const btnReset        = document.getElementById('btnReset');
+const btnPrev         = document.getElementById('btnPrev');
+const btnNextLetter   = document.getElementById('btnNextLetter');
+const correctScoreEl  = document.getElementById('correctScore');
+const currentRoundEl  = document.getElementById('currentRound');
+const totalRoundsEl   = document.getElementById('totalRounds');
+const progressBarEl   = document.getElementById('progressBar');
+const confettiCont    = document.getElementById('confettiContainer');
+const modalOverlay    = document.getElementById('modalOverlay');
+const finalScoreEl    = document.getElementById('finalScore');
+
+function getInput(v)  { return document.getElementById(`input-${v}`); }
+function getBadge(v)  { return document.getElementById(`badge-${v}`); }
+function getRow(v)    { return document.getElementById(`row-${v}`); }
+function getStatus(v) { return document.getElementById(`status-${v}`); }
+
+// ═══════════════════════════════════════════════════════
+// LOAD ROUND
+// ═══════════════════════════════════════════════════════
+
+function loadRound(){
+  if(currentRound >= CONSONANTS.length){ showVictory(); return; }
+
+  hasAnswered = false;
+  btnCheck.disabled = false;
+  btnNext.disabled  = true;
+  feedbackMsgEl.className = 'feedback-message';
+  feedbackMsgEl.textContent = '';
+
+  const con = CONSONANTS[currentRound];
+  consonantCharEl.textContent = con.letter;
+  hintTextEl.textContent      = con.hint;
+  currentRoundEl.textContent  = currentRound + 1;
+  totalRoundsEl.textContent   = CONSONANTS.length;
+  roundBadgeEl.textContent    = `${currentRound+1}/${CONSONANTS.length}`;
+  progressBarEl.style.width   = `${(currentRound / CONSONANTS.length) * 100}%`;
+
+  VOWELS.forEach(v => {
+    const syl = con.letter + v.toUpperCase();
+    getBadge(v).textContent  = syl;
+    getInput(v).value        = '';
+    getInput(v).disabled     = false;
+    getStatus(v).textContent = '';
+    const row = getRow(v);
+    row.classList.remove('correct','incorrect','skipped');
+  });
+
+  // Focus first input
+  setTimeout(() => getInput('a').focus(), 100);
+}
+
+// ═══════════════════════════════════════════════════════
+// ENTER KEY: jump between rows
+// ═══════════════════════════════════════════════════════
+
+VOWELS.forEach((v, idx) => {
+  getInput(v).addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(idx < VOWELS.length - 1){
+        getInput(VOWELS[idx+1]).focus();
+      } else {
+        checkAnswer();
+      }
+    }
+  });
+  // Force uppercase while typing
+  getInput(v).addEventListener('input', e => {
+    e.target.value = e.target.value.toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ ]/g,'');
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// CHECK ANSWER
+// ═══════════════════════════════════════════════════════
+
+function checkAnswer(){
+  if(hasAnswered) return;
+
+  const con = CONSONANTS[currentRound];
+  let totalFilled  = 0;
+  let totalCorrect = 0;
+
+  VOWELS.forEach(v => {
+    const val = getInput(v).value.trim().toUpperCase();
+    const syl = (con.letter + v).toUpperCase();   // e.g. "MA"
+    const row = getRow(v);
+    const st  = getStatus(v);
+    getInput(v).disabled = true;
+
+    if(val === ''){
+      row.classList.add('skipped');
+      st.textContent = '➖';
+      return;
+    }
+
+    totalFilled++;
+
+    // Accept if word starts with the correct syllable
+    // Normalize: remove accents for comparison, allow close matches
+    const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
+    const correct = norm(val).startsWith(norm(syl));
+
+    if(correct){
+      totalCorrect++;
+      row.classList.add('correct');
+      st.textContent = '✅';
+    } else {
+      row.classList.add('incorrect');
+      st.textContent = '❌';
+      // Show a hint example after shake
+      setTimeout(() => {
+        const ex = con.examples[v];
+        if(ex && ex.length){
+          getInput(v).value = '✏️ Ej: ' + ex[0];
+          getInput(v).style.color = '#999';
+          getInput(v).style.fontSize = '0.8em';
+        }
+      }, 500);
+    }
+  });
+
+  hasAnswered = true;
+  btnCheck.disabled = true;
+  btnNext.disabled  = false;
+
+  progressBarEl.style.width = `${((currentRound+1) / CONSONANTS.length) * 100}%`;
+
+  if(totalFilled === 0){
+    feedbackMsgEl.className = 'feedback-message show incorrect';
+    feedbackMsgEl.textContent = '¡Escribí al menos una palabra! ✏️';
+    hasAnswered = false;
+    btnCheck.disabled = false;
+    btnNext.disabled  = true;
+    VOWELS.forEach(v => { getInput(v).disabled = false; getRow(v).classList.remove('skipped','correct','incorrect'); getStatus(v).textContent = ''; });
+    return;
+  }
+
+  if(totalCorrect === 5){
+    correctAnswers++;
+    correctScoreEl.textContent = correctAnswers;
+    feedbackMsgEl.className   = 'feedback-message show correct';
+    feedbackMsgEl.textContent = '¡Perfecto! ¡Las 5 sílabas! 🎉';
+    createStarBurst();
+    createConfetti();
+    playSound(true);
+  } else if(totalCorrect >= 3){
+    feedbackMsgEl.className   = 'feedback-message show partial';
+    feedbackMsgEl.textContent = `¡Muy bien! ${totalCorrect} de 5 correctas 👍`;
+    playSound(true);
+  } else {
+    feedbackMsgEl.className   = 'feedback-message show incorrect';
+    feedbackMsgEl.textContent = `${totalCorrect} de ${totalFilled} correctas. ¡Seguí practicando! 💪`;
+    playSound(false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// BUTTONS
+// ═══════════════════════════════════════════════════════
+
+btnCheck.addEventListener('click', checkAnswer);
+
+btnClear.addEventListener('click', () => {
+  if(hasAnswered) return;
+  VOWELS.forEach(v => {
+    getInput(v).value = '';
+    getInput(v).style.color = '';
+    getInput(v).style.fontSize = '';
+    getRow(v).classList.remove('correct','incorrect','skipped');
+    getStatus(v).textContent = '';
+  });
+  getInput('a').focus();
+});
+
+btnNext.addEventListener('click', () => { currentRound++; loadRound(); });
+
+btnReset.addEventListener('click', () => {
+  currentRound   = 0;
+  correctAnswers = 0;
+  correctScoreEl.textContent = '0';
+  loadRound();
+});
+
+btnPrev.addEventListener('click', () => {
+  currentRound = (currentRound - 1 + CONSONANTS.length) % CONSONANTS.length;
+  loadRound();
+});
+
+btnNextLetter.addEventListener('click', () => {
+  currentRound = (currentRound + 1) % CONSONANTS.length;
+  loadRound();
+});
+
+// ═══════════════════════════════════════════════════════
+// VICTORY
+// ═══════════════════════════════════════════════════════
+
+function showVictory(){
+  finalScoreEl.textContent = `${correctAnswers} de ${CONSONANTS.length}`;
+  modalOverlay.classList.add('show');
+  createConfetti(60);
+}
+
+// ═══════════════════════════════════════════════════════
+// EFFECTS
+// ═══════════════════════════════════════════════════════
+
+function createConfetti(count=30){
+  const colors=['#f97316','#a855f7','#10b981','#3b82f6','#ef4444','#FFE66D'];
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div'); el.className='confetti';
+    el.style.setProperty('--color',colors[Math.floor(Math.random()*colors.length)]);
+    el.style.left=Math.random()*100+'%'; el.style.top=Math.random()*20+'%';
+    el.style.animationDelay=Math.random()*0.5+'s';
+    el.style.animationDuration=(Math.random()*2+2)+'s';
+    confettiCont.appendChild(el); setTimeout(()=>el.remove(),3000);
+  }
+}
+
+function createStarBurst(){
+  const r=document.querySelector('.card-right').getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  ['⭐','✨','🌟','💫','🎉','✍️'].forEach((e,i)=>{
+    const s=document.createElement('div'); s.className='star-burst';
+    s.textContent=e; s.style.left=cx+'px'; s.style.top=cy+'px';
+    s.style.animationDelay=(i*0.09)+'s';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),1000);
+  });
+}
+
+function playSound(ok){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ac.createOscillator(), g=ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.frequency.value=ok?880:300; o.type=ok?'sine':'triangle';
+    g.gain.setValueAtTime(0.25,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.01,ac.currentTime+0.5);
+    o.start(ac.currentTime); o.stop(ac.currentTime+0.5);
+  }catch(e){}
+}
+
+window.addEventListener('DOMContentLoaded', loadRound);
+</script>
+</body>
+</html>

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔡 Sílaba Inicial - Nivel 6</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-success: #6BCB77;
+    --color-error:   #FF6B6B;
+    --shadow-soft:   0 8px 32px rgba(236,72,153,0.15);
+    --shadow-strong: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #a855f7 100%);
+    height: 100vh; width: 100vw;
+    display: flex; justify-content: center; align-items: center;
+    padding: 8px 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Background shapes ── */
+  .bg-shapes { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .shape {
+    position:absolute; border-radius:50%; opacity:0.1;
+    animation: float-around 28s infinite ease-in-out;
+  }
+  .shape:nth-child(1){width:140px;height:140px;background:#FFE66D;top:8%;left:4%;animation-delay:0s}
+  .shape:nth-child(2){width:180px;height:180px;background:#4ECDC4;top:55%;right:6%;animation-delay:5s}
+  .shape:nth-child(3){width:100px;height:100px;background:#FFF;bottom:12%;left:10%;animation-delay:10s}
+  .shape:nth-child(4){width:160px;height:160px;background:#FFE66D;top:20%;right:18%;animation-delay:15s}
+  @keyframes float-around {
+    0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}
+    25%{transform:translate(40px,-40px) rotate(90deg) scale(1.1)}
+    50%{transform:translate(-30px,30px) rotate(180deg) scale(0.9)}
+    75%{transform:translate(50px,50px) rotate(270deg) scale(1.05)}
+  }
+
+  /* ── Page ── */
+  .page {
+    position:relative; z-index:10;
+    width:100%; max-width:1050px; height:100%;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align:center; margin-bottom:5px;
+    animation: slideDown 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes slideDown{from{transform:translateY(-40px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+  .title {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1.2rem,2.5vw,1.9rem);
+    color:white;
+    text-shadow:4px 4px 0 rgba(0,0,0,0.2),0 0 30px rgba(255,255,255,0.3);
+    letter-spacing:1px;
+  }
+  .subtitle {
+    font-size:clamp(0.65rem,1.2vw,0.85rem);
+    color:rgba(255,255,255,0.92); font-weight:700;
+    text-shadow:1px 1px 3px rgba(0,0,0,0.2);
+  }
+  .level-badge {
+    display:inline-block;
+    background:linear-gradient(135deg,#f43f5e,#be123c);
+    color:white; padding:2px 12px; border-radius:20px;
+    font-family:'Fredoka One',cursive; font-size:0.75rem;
+    margin-top:2px; box-shadow:0 4px 14px rgba(244,63,94,0.5);
+    animation:pulse-badge 2s infinite;
+  }
+  @keyframes pulse-badge{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+  /* ── Topbar ── */
+  .topbar {
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:5px;
+    animation: slideDown 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s backwards;
+  }
+  .score-panel {
+    background:rgba(255,255,255,0.25); backdrop-filter:blur(10px);
+    border-radius:12px; padding:4px 18px;
+    display:flex; align-items:center; gap:14px;
+    box-shadow:var(--shadow-soft); flex-shrink:0;
+  }
+  .score-item{display:flex;align-items:center;gap:6px}
+  .score-icon{font-size:1.1rem;animation:bounce 2s infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .score-text{font-family:'Fredoka One',cursive;font-size:0.95rem;color:white;text-shadow:1px 1px 3px rgba(0,0,0,0.2)}
+  .progress-wrap{flex:1;background:rgba(255,255,255,0.3);backdrop-filter:blur(10px);height:7px;border-radius:10px;overflow:hidden}
+  .progress-bar{height:100%;border-radius:10px;width:0%;background:linear-gradient(90deg,#FFE66D,#FF9F1C);transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 0 8px rgba(255,230,109,0.7)}
+
+  /* ── Card ── */
+  .card {
+    background:linear-gradient(135deg,#ffffff 0%,#fff0f6 100%);
+    border-radius:20px; padding:12px 16px;
+    box-shadow:var(--shadow-strong);
+    display:flex; flex-direction:row; gap:16px; align-items:stretch;
+    animation: scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s backwards;
+    position:relative; overflow:hidden;
+  }
+  @keyframes scaleIn{from{transform:scale(0.88);opacity:0}to{transform:scale(1);opacity:1}}
+  .card::before{
+    content:'';position:absolute;width:220px;height:220px;border-radius:50%;
+    top:-110px;right:-110px;
+    background:radial-gradient(circle,rgba(236,72,153,0.1) 0%,transparent 70%);
+  }
+
+  /* ── LEFT: sílaba ── */
+  .card-left {
+    flex:0 0 180px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:8px;
+    border-right:2px dashed rgba(236,72,153,0.25);
+    padding-right:14px; position:relative; z-index:1;
+  }
+
+  .syllable-label {
+    font-size:clamp(0.65rem,1.2vw,0.82rem);
+    color:#9d174d; font-weight:800; text-transform:uppercase;
+  }
+
+  .syllable-box {
+    background:linear-gradient(135deg,#ec4899,#db2777);
+    border-radius:20px; padding:14px 22px;
+    box-shadow:0 8px 28px rgba(236,72,153,0.45),inset 0 -4px 10px rgba(0,0,0,0.1);
+    animation:pulse-syl 2s ease-in-out infinite;
+    position:relative;
+  }
+  @keyframes pulse-syl{0%,100%{transform:scale(1);box-shadow:0 8px 28px rgba(236,72,153,0.45)}50%{transform:scale(1.06);box-shadow:0 12px 36px rgba(236,72,153,0.65)}}
+
+  .syllable-text {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(2.6rem,6vw,4rem);
+    color:white;
+    text-shadow:3px 3px 0 rgba(0,0,0,0.2),0 0 20px rgba(255,255,255,0.4);
+    line-height:1;
+  }
+
+  .hint-text {
+    font-size:clamp(0.62rem,1.1vw,0.78rem);
+    color:#be185d; font-weight:700; text-align:center; font-style:italic;
+  }
+
+  /* Selection counter */
+  .selection-counter {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(0.7rem,1.3vw,0.88rem);
+    color:#9d174d; text-align:center;
+  }
+  .selection-counter span {
+    background:linear-gradient(135deg,#ec4899,#db2777);
+    color:white; padding:1px 8px; border-radius:20px;
+    margin:0 2px;
+  }
+
+  /* ── RIGHT: grid + buttons ── */
+  .card-right {
+    flex:1; display:flex; flex-direction:column;
+    gap:8px; justify-content:center; min-width:0; position:relative; z-index:1;
+  }
+
+  .grid-label {
+    font-size:clamp(0.65rem,1.2vw,0.82rem);
+    color:#9d174d; font-weight:800; text-transform:uppercase; text-align:center;
+  }
+
+  /* ── Options grid ── */
+  .options-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+  }
+
+  .option-card {
+    background:white;
+    border-radius:16px;
+    padding:10px 8px 8px;
+    cursor:pointer;
+    border:3px solid transparent;
+    box-shadow:0 4px 14px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.9);
+    transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    position:relative; overflow:hidden; user-select:none;
+  }
+  .option-card::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,transparent,rgba(255,255,255,0.5),transparent);
+    opacity:0;transition:opacity 0.3s;
+  }
+  .option-card:hover::before{opacity:1}
+  .option-card:hover{transform:translateY(-6px) scale(1.04);box-shadow:0 14px 36px rgba(0,0,0,0.14)}
+  .option-card:active{transform:translateY(-2px) scale(1.01)}
+
+  .option-card.selected {
+    border-color:#ec4899;
+    background:linear-gradient(135deg,#fff0f6,#fce7f3);
+    box-shadow:0 6px 22px rgba(236,72,153,0.3);
+    transform:translateY(-4px) scale(1.02);
+  }
+  .option-card.selected::after{
+    content:'✓';
+    position:absolute;top:4px;right:6px;
+    font-family:'Fredoka One',cursive;font-size:0.85rem;
+    color:#ec4899;
+  }
+  .option-card.correct {
+    border-color:var(--color-success);
+    background:linear-gradient(135deg,#d4edda,#c3f5c3);
+    animation:correctPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .option-card.correct::after{
+    content:'✓';position:absolute;top:4px;right:6px;
+    font-family:'Fredoka One',cursive;font-size:0.85rem;color:#4CAF50;
+  }
+  .option-card.wrong {
+    border-color:var(--color-error);
+    background:linear-gradient(135deg,#f8d7da,#ffc9c9);
+    animation:shake 0.45s ease-in-out;
+  }
+  .option-card.wrong::after{
+    content:'✗';position:absolute;top:4px;right:6px;
+    font-family:'Fredoka One',cursive;font-size:0.85rem;color:#FF6B6B;
+  }
+  .option-card.missed {
+    border-color:var(--color-success);
+    background:linear-gradient(135deg,#d4edda,#c3f5c3);
+    opacity:0.7;
+  }
+  .option-card.disabled{pointer-events:none}
+
+  @keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+  .option-emoji {
+    font-size:clamp(2rem,4.5vw,3rem);
+    filter:drop-shadow(0 3px 6px rgba(0,0,0,0.1));
+    animation:float-opt 3s ease-in-out infinite;
+  }
+  .option-card:nth-child(1) .option-emoji{animation-delay:0s}
+  .option-card:nth-child(2) .option-emoji{animation-delay:0.3s}
+  .option-card:nth-child(3) .option-emoji{animation-delay:0.6s}
+  .option-card:nth-child(4) .option-emoji{animation-delay:0.9s}
+  .option-card:nth-child(5) .option-emoji{animation-delay:1.2s}
+  .option-card:nth-child(6) .option-emoji{animation-delay:1.5s}
+  .option-card:nth-child(7) .option-emoji{animation-delay:1.8s}
+  .option-card:nth-child(8) .option-emoji{animation-delay:2.1s}
+  @keyframes float-opt{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  .option-label { display:none; }
+
+  /* ── Feedback ── */
+  .feedback {
+    display:flex; flex-direction:row; align-items:center;
+    justify-content:center; gap:10px; min-height:40px;
+    position:relative; z-index:1;
+  }
+  .feedback-message {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(0.85rem,1.6vw,1.1rem);
+    color:transparent; opacity:0; transform:scale(0.5);
+    transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .feedback-message.show{opacity:1;transform:scale(1)}
+  .feedback-message.correct{background:linear-gradient(135deg,#6BCB77,#4CAF50);-webkit-background-clip:text;background-clip:text;animation:wiggle 0.6s}
+  .feedback-message.incorrect{background:linear-gradient(135deg,#FF6B6B,#FF4757);-webkit-background-clip:text;background-clip:text}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+
+  /* ── Buttons ── */
+  .btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:nowrap}
+  .btn {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(1rem,1.8vw,1.35rem);
+    padding:6px 16px; border:none; border-radius:50px; cursor:pointer;
+    transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow:0 4px 14px rgba(0,0,0,0.15);
+    font-weight:700; position:relative; overflow:hidden; min-width:42px;
+  }
+  .btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.3);opacity:0;transition:opacity 0.3s}
+  .btn:hover::before{opacity:1}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,0.2)}
+  .btn:active{transform:translateY(-1px)}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+  .btn-check{background:linear-gradient(135deg,#6BCB77,#4CAF50);color:white}
+  .btn-next {background:linear-gradient(135deg,#ec4899,#db2777);color:white}
+  .btn-reset{background:linear-gradient(135deg,#FFE66D,#FFC837);color:#9d174d}
+  .btn-retry{background:linear-gradient(135deg,#FF9F1C,#FF7C00);color:white}
+
+  /* ── Confetti ── */
+  .confetti-container{position:fixed;inset:0;pointer-events:none;z-index:1000}
+  .confetti{position:absolute;width:9px;height:9px;background:var(--color);opacity:0;animation:confetti-fall 3s ease-out forwards}
+  @keyframes confetti-fall{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+
+  /* ── Star burst ── */
+  .star-burst{position:fixed;pointer-events:none;font-size:1.8rem;animation:star-burst-anim 0.9s ease-out forwards;z-index:999}
+  @keyframes star-burst-anim{0%{opacity:1;transform:translate(-50%,-50%) scale(0)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}100%{opacity:0;transform:translate(-50%,-50%) scale(2) translateY(-80px)}}
+
+  /* ── Victory Modal ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(5px);display:none;justify-content:center;align-items:center;z-index:2000}
+  .modal-overlay.show{display:flex}
+  .modal{background:linear-gradient(135deg,#fff,#fff0f6);border-radius:26px;padding:36px 44px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.3);animation:modalPop 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+  @keyframes modalPop{from{transform:scale(0.5) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  .modal-icon{font-size:4rem;margin-bottom:12px;animation:bounce 1s infinite}
+  .modal-title{font-family:'Fredoka One',cursive;font-size:2.2rem;background:linear-gradient(135deg,#ec4899,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
+  .modal-text{font-size:1.1rem;color:#9d174d;font-weight:700;margin-bottom:10px}
+  .modal-stars{font-size:2.5rem;margin-bottom:18px;letter-spacing:8px}
+
+  /* ── Home button ── */
+  .btn-home {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(102,126,234,0.5);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+  }
+  .btn-home:hover { transform: translateY(-3px) scale(1.1); box-shadow: 0 8px 20px rgba(102,126,234,0.6); }
+  .btn-home:active { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="shape"></div><div class="shape"></div>
+  <div class="shape"></div><div class="shape"></div>
+</div>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">🔡 Sílaba Inicial</h1>
+    <p class="subtitle">¡Seleccioná todos los dibujos que empiezan con la sílaba!</p>
+    <div class="level-badge">🌟 NIVEL 6</div>
+  </header>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="score-panel">
+      <div class="score-item">
+        <span class="score-icon">⭐</span>
+        <span class="score-text" id="correctScore">0</span>
+      </div>
+      <div class="score-item">
+        <span class="score-icon">🎯</span>
+        <span class="score-text"><span id="currentRound">1</span>/<span id="totalRounds">10</span></span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- LEFT: sílaba -->
+    <div class="card-left">
+      <p class="syllable-label">🔡 Sílaba</p>
+      <div class="syllable-box">
+        <div class="syllable-text" id="syllableText">MA</div>
+      </div>
+      <p class="hint-text">Seleccioná todos los dibujos que empiezan con esta sílaba</p>
+      <div class="selection-counter">
+        Seleccionados: <span id="selectedCount">0</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: grid + feedback + buttons -->
+    <div class="card-right">
+      <p class="grid-label" id="gridLabel">🖼️ ¿Cuáles empiezan con esta sílaba?</p>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="feedback">
+        <div class="feedback-message" id="feedbackMessage"></div>
+        <div class="btn-row">
+          <button class="btn btn-check" id="btnCheck">✓</button>
+          <button class="btn btn-retry" id="btnRetry" style="display:none">↩️</button>
+          <button class="btn btn-next"  id="btnNext" disabled>➜</button>
+          <button class="btn btn-reset" id="btnReset">🔄</button>
+          <a class="btn btn-home" href="index.html" title="Volver al inicio">🏠</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Victory Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-icon">🏆</div>
+    <h2 class="modal-title">¡Increíble!</h2>
+    <div class="modal-stars">⭐⭐⭐</div>
+    <p class="modal-text">¡Completaste todas las rondas!</p>
+    <p class="modal-text">Aciertos: <strong id="finalScore"></strong></p>
+    <button class="btn btn-next" style="margin-top:10px" onclick="location.reload()">🎮 Jugar de nuevo</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// GAME DATA
+// Each round: syllable + 8 items (correct ones start with that syllable)
+// ═══════════════════════════════════════════════════════
+
+const gameData = [
+  {
+    syllable: 'MA',
+    items: [
+      { word: 'MANO',      emoji: '✋', correct: true  },
+      { word: 'MAPA',      emoji: '🗺️', correct: true  },
+      { word: 'MARIPOSA',  emoji: '🦋', correct: true  },
+      { word: 'MANZANA',   emoji: '🍎', correct: true  },
+      { word: 'PELOTA',    emoji: '⚽', correct: false },
+      { word: 'TREN',      emoji: '🚂', correct: false },
+      { word: 'LUNA',      emoji: '🌙', correct: false },
+      { word: 'PERRO',     emoji: '🐕', correct: false },
+    ]
+  },
+  {
+    syllable: 'CA',
+    items: [
+      { word: 'CASA',      emoji: '🏠', correct: true  },
+      { word: 'CAMA',      emoji: '🛏️', correct: true  },
+      { word: 'CABALLO',   emoji: '🐴', correct: true  },
+      { word: 'CAMIÓN',    emoji: '🚚', correct: true  },
+      { word: 'FLOR',      emoji: '🌸', correct: false },
+      { word: 'BARCO',     emoji: '⛵', correct: false },
+      { word: 'LIBRO',     emoji: '📚', correct: false },
+      { word: 'NUBE',      emoji: '☁️', correct: false },
+    ]
+  },
+  {
+    syllable: 'PE',
+    items: [
+      { word: 'PERRO',     emoji: '🐕', correct: true  },
+      { word: 'PERA',      emoji: '🍐', correct: true  },
+      { word: 'PELOTA',    emoji: '⚽', correct: true  },
+      { word: 'PEPINO',    emoji: '🥒', correct: true  },
+      { word: 'GATO',      emoji: '🐱', correct: false },
+      { word: 'LORO',      emoji: '🦜', correct: false },
+      { word: 'SOL',       emoji: '☀️', correct: false },
+      { word: 'ZAPATO',    emoji: '👟', correct: false },
+    ]
+  },
+  {
+    syllable: 'SO',
+    items: [
+      { word: 'SOL',       emoji: '☀️', correct: true  },
+      { word: 'SOPA',      emoji: '🍜', correct: true  },
+      { word: 'SOMBRERO',  emoji: '🎩', correct: true  },
+      { word: 'SOBRE',     emoji: '✉️', correct: true  },
+      { word: 'ÁRBOL',     emoji: '🌳', correct: false },
+      { word: 'CABRA',     emoji: '🐐', correct: false },
+      { word: 'PATO',      emoji: '🦆', correct: false },
+      { word: 'RELOJ',     emoji: '⏰', correct: false },
+    ]
+  },
+  {
+    syllable: 'LU',
+    items: [
+      { word: 'LUNA',      emoji: '🌙', correct: true  },
+      { word: 'LUZ',       emoji: '💡', correct: true  },
+      { word: 'LUGAR',     emoji: '🏞️', correct: true  },
+      { word: 'LUPA',      emoji: '🔍', correct: true  },
+      { word: 'DELFÍN',    emoji: '🐬', correct: false },
+      { word: 'COHETE',    emoji: '🚀', correct: false },
+      { word: 'FRUTA',     emoji: '🍓', correct: false },
+    ]
+  },
+  {
+    syllable: 'PA',
+    items: [
+      { word: 'PATO',      emoji: '🦆', correct: true  },
+      { word: 'PAN',       emoji: '🍞', correct: true  },
+      { word: 'PAPÁ',      emoji: '👨', correct: true  },
+      { word: 'PALOMA',    emoji: '🕊️', correct: true  },
+      { word: 'TAZA',      emoji: '☕', correct: false },
+      { word: 'GLOBO',     emoji: '🎈', correct: false },
+      { word: 'NIÑO',      emoji: '🧒', correct: false },
+      { word: 'MOTO',      emoji: '🏍️', correct: false },
+    ]
+  },
+  {
+    syllable: 'GA',
+    items: [
+      { word: 'GATO',      emoji: '🐱', correct: true  },
+      { word: 'GALLINA',   emoji: '🐔', correct: true  },
+      { word: 'GANSO',     emoji: '🦢', correct: true  },
+      { word: 'GALLETA',   emoji: '🍪', correct: true  },
+      { word: 'BALLENA',   emoji: '🐋', correct: false },
+      { word: 'ROSA',      emoji: '🌹', correct: false },
+      { word: 'PIANO',     emoji: '🎹', correct: false },
+      { word: 'CAMELLO',   emoji: '🐪', correct: false },
+    ]
+  },
+  {
+    syllable: 'TO',
+    items: [
+      { word: 'TORO',      emoji: '🐂', correct: true  },
+      { word: 'TORTUGA',   emoji: '🐢', correct: true  },
+      { word: 'TOMATE',    emoji: '🍅', correct: true  },
+      { word: 'TORRE',     emoji: '🗼', correct: true  },
+      { word: 'MAPA',      emoji: '🗺️', correct: false },
+      { word: 'PINGÜINO',  emoji: '🐧', correct: false },
+      { word: 'VIOLÍN',    emoji: '🎻', correct: false },
+      { word: 'HELADO',    emoji: '🍦', correct: false },
+    ]
+  },
+  {
+    syllable: 'BO',
+    items: [
+      { word: 'BOCA',      emoji: '👄', correct: true  },
+      { word: 'BOMBERO',   emoji: '🚒', correct: true  },
+      { word: 'BOLSA',     emoji: '👜', correct: true  },
+      { word: 'BOTELLA',   emoji: '🍼', correct: true  },
+      { word: 'TIGRE',     emoji: '🐯', correct: false },
+      { word: 'LAZO',      emoji: '🎀', correct: false },
+      { word: 'MONO',      emoji: '🐵', correct: false },
+      { word: 'PERA',      emoji: '🍐', correct: false },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+
+let currentRound   = 0;
+let correctAnswers = 0;
+let hasAnswered    = false;
+let selectedSet    = new Set();   // indices of selected cards
+let shuffledData   = [];
+
+// ═══════════════════════════════════════════════════════
+// DOM
+// ═══════════════════════════════════════════════════════
+
+const syllableTextEl  = document.getElementById('syllableText');
+const optionsGridEl   = document.getElementById('optionsGrid');
+const feedbackMsgEl   = document.getElementById('feedbackMessage');
+const btnCheck        = document.getElementById('btnCheck');
+const btnNext         = document.getElementById('btnNext');
+const btnReset        = document.getElementById('btnReset');
+const btnRetry        = document.getElementById('btnRetry');
+const correctScoreEl  = document.getElementById('correctScore');
+const currentRoundEl  = document.getElementById('currentRound');
+const totalRoundsEl   = document.getElementById('totalRounds');
+const progressBarEl   = document.getElementById('progressBar');
+const confettiCont    = document.getElementById('confettiContainer');
+const modalOverlay    = document.getElementById('modalOverlay');
+const finalScoreEl    = document.getElementById('finalScore');
+const selectedCountEl = document.getElementById('selectedCount');
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+
+function initGame(){
+  shuffledData = shuffleArray([...gameData]);
+  totalRoundsEl.textContent = shuffledData.length;
+  loadRound();
+}
+
+// ═══════════════════════════════════════════════════════
+// LOAD ROUND
+// ═══════════════════════════════════════════════════════
+
+function loadRound(){
+  if(currentRound >= shuffledData.length){ showVictory(); return; }
+
+  hasAnswered = false;
+  selectedSet.clear();
+  btnCheck.disabled = false;
+  btnNext.disabled  = true;
+  btnRetry.style.display = 'none';
+  feedbackMsgEl.className = 'feedback-message';
+  feedbackMsgEl.textContent = '';
+  selectedCountEl.textContent = '0';
+
+  const round = shuffledData[currentRound];
+  syllableTextEl.textContent = round.syllable;
+  currentRoundEl.textContent = currentRound + 1;
+  progressBarEl.style.width  = `${(currentRound / shuffledData.length) * 100}%`;
+
+  renderOptions(shuffleArray([...round.items]));
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER OPTIONS
+// ═══════════════════════════════════════════════════════
+
+function renderOptions(items){
+  optionsGridEl.innerHTML = '';
+  items.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'option-card';
+    card.dataset.idx     = idx;
+    card.dataset.correct = item.correct;
+    card.innerHTML = `
+      <div class="option-emoji">${item.emoji}</div>
+      <div class="option-label">${item.word}</div>
+    `;
+    card.style.animationDelay = `${idx * 0.07}s`;
+    card.addEventListener('click', () => toggleCard(card, idx));
+    optionsGridEl.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// TOGGLE SELECTION
+// ═══════════════════════════════════════════════════════
+
+function toggleCard(card, idx){
+  if(hasAnswered) return;
+  if(selectedSet.has(idx)){
+    selectedSet.delete(idx);
+    card.classList.remove('selected');
+  } else {
+    selectedSet.add(idx);
+    card.classList.add('selected');
+  }
+  selectedCountEl.textContent = selectedSet.size;
+}
+
+// ═══════════════════════════════════════════════════════
+// CHECK ANSWER
+// ═══════════════════════════════════════════════════════
+
+btnCheck.addEventListener('click', () => {
+  if(hasAnswered) return;
+
+  const cards = optionsGridEl.querySelectorAll('.option-card');
+  const correctIndices = new Set();
+  cards.forEach((c, i) => { if(c.dataset.correct === 'true') correctIndices.add(i); });
+
+  // Must select at least one
+  if(selectedSet.size === 0){
+    feedbackMsgEl.className = 'feedback-message show incorrect';
+    feedbackMsgEl.textContent = '¡Seleccioná al menos una imagen! 👆';
+    return;
+  }
+
+  hasAnswered = true;
+  btnCheck.disabled = true;
+  btnNext.disabled  = false;
+
+  // Evaluate each card
+  let allCorrect = true;
+
+  cards.forEach((card, i) => {
+    card.classList.remove('selected');
+    card.classList.add('disabled');
+    const isCorrect  = card.dataset.correct === 'true';
+    const isSelected = selectedSet.has(i);
+
+    // Reveal the word label
+    card.querySelector('.option-label').style.display = 'block';
+
+    if(isCorrect && isSelected){
+      card.classList.add('correct');       // ✓ selected + correct
+    } else if(!isCorrect && isSelected){
+      card.classList.add('wrong');         // ✗ selected + wrong
+      allCorrect = false;
+    } else if(isCorrect && !isSelected){
+      card.classList.add('missed');        // missed correct
+      allCorrect = false;
+    }
+    // not correct + not selected → no extra class (neutral)
+  });
+
+  progressBarEl.style.width = `${((currentRound+1) / shuffledData.length) * 100}%`;
+
+  if(allCorrect){
+    correctAnswers++;
+    correctScoreEl.textContent = correctAnswers;
+    feedbackMsgEl.className    = 'feedback-message show correct';
+    feedbackMsgEl.textContent  = '¡Perfecto! 🎉';
+    createStarBurst();
+    createConfetti();
+    playSound(true);
+  } else {
+    feedbackMsgEl.className   = 'feedback-message show incorrect';
+    // Count how many were missed / wrong
+    const missed  = [...correctIndices].filter(i => !selectedSet.has(i)).length;
+    const wrong   = [...selectedSet].filter(i => !correctIndices.has(i)).length;
+    if(wrong > 0 && missed > 0)
+      feedbackMsgEl.textContent = '¡Casi! Hay algunas que no y faltan otras 💪';
+    else if(wrong > 0)
+      feedbackMsgEl.textContent = '¡Cuidado! Algunas no empiezan con esa sílaba 🤔';
+    else
+      feedbackMsgEl.textContent = '¡Faltaron algunas imágenes! 🔍';
+    playSound(false);
+    btnRetry.style.display = '';
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+// NEXT / RESET
+// ═══════════════════════════════════════════════════════
+
+btnNext.addEventListener('click', () => { currentRound++; loadRound(); });
+
+btnRetry.addEventListener('click', () => { loadRound(); });
+
+btnReset.addEventListener('click', () => {
+  currentRound   = 0;
+  correctAnswers = 0;
+  correctScoreEl.textContent = '0';
+  shuffledData = shuffleArray([...gameData]);
+  loadRound();
+});
+
+// ═══════════════════════════════════════════════════════
+// VICTORY
+// ═══════════════════════════════════════════════════════
+
+function showVictory(){
+  finalScoreEl.textContent = `${correctAnswers} de ${shuffledData.length}`;
+  modalOverlay.classList.add('show');
+  createConfetti(60);
+}
+
+// ═══════════════════════════════════════════════════════
+// EFFECTS
+// ═══════════════════════════════════════════════════════
+
+function createConfetti(count=30){
+  const colors=['#ec4899','#a855f7','#4ECDC4','#FFE66D','#6BCB77','#FF9F1C'];
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='confetti';
+    el.style.setProperty('--color',colors[Math.floor(Math.random()*colors.length)]);
+    el.style.left=Math.random()*100+'%';
+    el.style.top=Math.random()*20+'%';
+    el.style.animationDelay=Math.random()*0.5+'s';
+    el.style.animationDuration=(Math.random()*2+2)+'s';
+    confettiCont.appendChild(el);
+    setTimeout(()=>el.remove(),3000);
+  }
+}
+
+function createStarBurst(){
+  const grid = optionsGridEl.getBoundingClientRect();
+  const cx = grid.left + grid.width/2;
+  const cy = grid.top  + grid.height/2;
+  const emojis=['⭐','✨','🌟','💫','🎉','🔡'];
+  for(let i=0;i<8;i++){
+    const s=document.createElement('div');
+    s.className='star-burst';
+    s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    s.style.left=cx+'px'; s.style.top=cy+'px';
+    s.style.animationDelay=(i*0.08)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1000);
+  }
+}
+
+function playSound(success){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const osc=ac.createOscillator();
+    const gain=ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
+    osc.frequency.value=success?880:300;
+    osc.type=success?'sine':'triangle';
+    gain.gain.setValueAtTime(0.25,ac.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01,ac.currentTime+0.5);
+    osc.start(ac.currentTime); osc.stop(ac.currentTime+0.5);
+  }catch(e){}
+}
+
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// ═══════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════
+
+window.addEventListener('DOMContentLoaded', initGame);
+</script>
+</body>
+</html>
