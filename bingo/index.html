@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bingo de las Letras — 1º Grado</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- PANTALLA DE SELECCIÓN -->
+  <div id="setup-screen">
+    <div class="setup-card">
+      <div class="setup-logo">🎯</div>
+      <h1>Bingo de las Letras</h1>
+      <p class="setup-subtitle">¡Elegí el número de tu tablero!</p>
+      <div class="player-grid" id="playerGrid"></div>
+      <button class="start-btn" id="startBtn" disabled>
+        ¡Jugar! 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- PANTALLA DE JUEGO -->
+  <div id="game-screen" class="hidden">
+
+    <header class="top-bar">
+      <button class="back-btn" id="backBtn">← Volver</button>
+      <h2 id="boardTitle">Tablero 1</h2>
+      <div class="letter-display hidden" id="letterDisplay">
+        <span class="letter-label">Letra</span>
+        <strong id="currentLetterBig">A</strong>
+      </div>
+    </header>
+
+    <div class="letter-panel">
+      <p class="letter-panel-label">La docente elige la letra:</p>
+      <div class="letter-btns" id="letterBtns"></div>
+    </div>
+
+    <div class="linea-banner hidden" id="lineaBanner">
+      🌟 ¡LÍNEA! ¡Muy bien! 🌟
+    </div>
+
+    <div class="bingo-banner hidden" id="bingoBanner">
+      🎉 ¡BINGO! ¡Ganaste! 🎉
+    </div>
+
+    <div class="tabs-row" id="tabsRow"></div>
+
+    <main class="bingo-board" id="bingoBoard" role="grid" aria-label="Tablero de bingo"></main>
+
+    <footer class="score-row">
+      <div class="score-card">
+        <span>Marcadas</span>
+        <strong id="markedCount">0</strong>
+      </div>
+      <div class="score-card">
+        <span>Con la letra</span>
+        <strong id="correctCount">0</strong>
+      </div>
+      <button class="reset-board-btn" id="resetBoardBtn">🔄 Limpiar tablero</button>
+    </footer>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
