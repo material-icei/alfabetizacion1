@@ -383,10 +383,12 @@ const MESSAGES = [
 // ══════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════
-let currentAngle = 0;     // radians, cumulative
-let isSpinning   = false;
-let history      = [];
-let size         = 320;   // canvas size, updated on resize
+let currentAngle  = 0;       // radians, cumulative
+let isSpinning    = false;
+let history       = [];
+let size          = 320;     // canvas size, updated on resize
+let activeLetters = [...LETTERS];  // letras aún en la ruleta
+let activeColors  = [...COLORS];   // colores alineados con activeLetters
 
 // ══════════════════════════════════════
 //  SIZING
@@ -454,7 +456,9 @@ function drawWheel(angle) {
 
   ctx.clearRect(0, 0, size, size);
 
-  const sliceAngle = (2 * Math.PI) / N;
+  const n = activeLetters.length;
+  if (n === 0) return;
+  const sliceAngle = (2 * Math.PI) / n;
 
   // Shadow
   ctx.save();
@@ -468,10 +472,10 @@ function drawWheel(angle) {
   ctx.restore();
 
   // Slices
-  for (let i = 0; i < N; i++) {
+  for (let i = 0; i < n; i++) {
     const startA = angle + i * sliceAngle - Math.PI / 2;
     const endA   = startA + sliceAngle;
-    const color  = COLORS[i % COLORS.length];
+    const color  = activeColors[i];
 
     // Sector fill
     ctx.beginPath();
@@ -518,11 +522,11 @@ function drawWheel(angle) {
     ctx.font        = `900 ${fsize}px 'Fredoka One', cursive`;
     ctx.textAlign   = 'center';
     ctx.textBaseline= 'middle';
-    ctx.fillText(LETTERS[i], 2, 2);
+    ctx.fillText(activeLetters[i], 2, 2);
 
     // Text
     ctx.fillStyle = '#fff';
-    ctx.fillText(LETTERS[i], 0, 0);
+    ctx.fillText(activeLetters[i], 0, 0);
     ctx.restore();
   }
 
@@ -589,22 +593,22 @@ function spinWheel() {
 }
 
 function onSpinEnd() {
-  // The pointer is at the top (−π/2 in canvas coords).
-  // Normalize currentAngle to find which sector is at top.
-  const sliceAngle = (2 * Math.PI) / N;
-  // angle of pointer relative to wheel (pointer at top = 0 in wheel coords)
-  const normalized = ((currentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-  // Sector 0 starts at -PI/2, so offset by PI/2
+  const n = activeLetters.length;
+  if (n === 0) return;
+
+  // Determine which sector the pointer (top) landed on
+  const sliceAngle   = (2 * Math.PI) / n;
+  const normalized   = ((currentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
   const pointerAngle = (2 * Math.PI - normalized) % (2 * Math.PI);
-  const index = Math.floor(pointerAngle / sliceAngle) % N;
-  const letter = LETTERS[index];
-  const color  = COLORS[index % COLORS.length];
+  const index  = Math.floor(pointerAngle / sliceAngle) % n;
+  const letter = activeLetters[index];
+  const color  = activeColors[index];
 
   // Show result
   const resultLetter = document.getElementById('resultLetter');
   resultLetter.textContent = letter;
   resultLetter.style.color = color;
-  resultLetter.style.textShadow = `0 0 40px ${color}88, 4px 4px 0 rgba(0,0,0,0.3)`;
+  resultLetter.style.textShadow = '0 0 40px ' + color + '88, 4px 4px 0 rgba(0,0,0,0.3)';
   resultLetter.classList.remove('pop');
   void resultLetter.offsetWidth;
   resultLetter.classList.add('pop');
@@ -617,7 +621,7 @@ function onSpinEnd() {
   // Hub text
   document.getElementById('hubText').textContent = letter;
   document.getElementById('hub').style.background =
-    `radial-gradient(circle, #fff 0%, ${color} 50%, ${color}99 100%)`;
+    'radial-gradient(circle, #fff 0%, ' + color + ' 50%, ' + color + '99 100%)';
 
   // History
   addToHistory(letter, color);
@@ -625,9 +629,86 @@ function onSpinEnd() {
   // Confetti
   launchConfetti(color);
 
-  // Re-enable
+  // ── REMOVE letter from wheel ──
+  activeLetters.splice(index, 1);
+  activeColors.splice(index, 1);
+  // Reset angle so the smaller wheel draws cleanly
+  currentAngle = 0;
+
   isSpinning = false;
-  document.getElementById('spinBtn').disabled = false;
+
+  if (activeLetters.length === 0) {
+    showCompleted();
+  } else {
+    document.getElementById('spinBtn').disabled = false;
+    drawWheel(currentAngle);
+  }
+}
+
+function showCompleted() {
+  const resultLetter = document.getElementById('resultLetter');
+  resultLetter.textContent   = '¡Fin!';
+  resultLetter.style.color   = '#FFD700';
+  resultLetter.style.textShadow = '0 0 40px rgba(255,215,0,0.8)';
+  resultLetter.style.fontSize   = 'clamp(2rem,6vw,3.5rem)';
+  document.getElementById('resultMsg').textContent = '¡Se sortearon todas las letras! 🏆';
+  document.getElementById('resultBox').style.borderColor = '#FFD70088';
+  document.getElementById('resultBox').style.background  = 'rgba(255,215,0,0.12)';
+
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx    = canvas.getContext('2d');
+  const cx = size / 2, cy = size / 2, R = size / 2 - 4;
+  ctx.clearRect(0, 0, size, size);
+  // Draw empty circle with trophy
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, 2 * Math.PI);
+  ctx.fillStyle = '#1a1a3e';
+  ctx.fill();
+  ctx.strokeStyle = '#FFD70066';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  ctx.font = (size * 0.28) + 'px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🏆', cx, cy);
+
+  document.getElementById('hubText').textContent = '↺';
+  document.getElementById('hub').style.background =
+    'radial-gradient(circle, #fff 0%, #FFD700 50%, #FF9500 100%)';
+  document.getElementById('hub').onclick = resetWheel;
+
+  const btn = document.getElementById('spinBtn');
+  btn.textContent = '🔄 Reiniciar ruleta';
+  btn.disabled    = false;
+  btn.onclick     = resetWheel;
+
+  launchConfetti('#FFD700');
+  launchConfetti('#FF6B6B');
+}
+
+function resetWheel() {
+  activeLetters = [...LETTERS];
+  activeColors  = [...COLORS];
+  currentAngle  = 0;
+  history       = [];
+  document.getElementById('historyChips').innerHTML = '';
+  const rl = document.getElementById('resultLetter');
+  rl.textContent  = '?';
+  rl.style.color  = 'var(--gold)';
+  rl.style.textShadow = '0 0 40px rgba(255,215,0,0.7), 4px 4px 0 rgba(0,0,0,0.3)';
+  rl.style.fontSize   = '';
+  document.getElementById('resultMsg').textContent = 'Presioná ¡GIRAR! para empezar';
+  document.getElementById('resultBox').style.borderColor = 'rgba(255,215,0,0.25)';
+  document.getElementById('resultBox').style.background  = 'rgba(255,255,255,0.06)';
+  document.getElementById('hubText').textContent = '¡GIRAR!';
+  document.getElementById('hub').style.background =
+    'radial-gradient(circle, #fff 0%, #e0c040 40%, #b8860b 100%)';
+  document.getElementById('hub').onclick = spinWheel;
+  const btn = document.getElementById('spinBtn');
+  btn.textContent = '🎰 ¡GIRAR RULETA!';
+  btn.onclick     = spinWheel;
+  btn.disabled    = false;
+  drawWheel(0);
 }
 
 // ══════════════════════════════════════
