@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutti Frutti — 1º Grado</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       PANTALLA DE INICIO
+  ══════════════════════════════════════ -->
+  <div id="setup-screen" class="screen">
+    <div class="setup-card">
+      <div class="setup-emoji">🍉</div>
+      <h1>Tutti Frutti</h1>
+      <p class="setup-sub">¡El juego de las palabras!</p>
+
+      <div class="setup-field">
+        <label for="playerName">¿Cómo te llamás?</label>
+        <input type="text" id="playerName" placeholder="Escribí tu nombre..." maxlength="24" autocomplete="off" />
+      </div>
+
+      <div class="setup-field">
+        <label for="roundCount">¿Cuántas rondas?</label>
+        <div class="round-picker">
+          <button class="round-btn" data-val="-1">−</button>
+          <span id="roundDisplay">5</span>
+          <button class="round-btn" data-val="1">+</button>
+        </div>
+      </div>
+
+      <button class="start-btn" id="startBtn">¡Jugar! 🚀</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANTALLA DE JUEGO
+  ══════════════════════════════════════ -->
+  <div id="game-screen" class="screen hidden">
+
+    <header class="game-header">
+      <div class="header-left">
+        <span class="player-tag" id="headerName">👤 Jugador</span>
+      </div>
+      <div class="header-center">
+        <div class="letter-badge" id="letterBadge">?</div>
+        <div class="letter-hint">letra de la ronda</div>
+      </div>
+      <div class="header-right">
+        <span class="round-tag">Ronda <strong id="currentRoundNum">1</strong> de <strong id="totalRoundsNum">5</strong></span>
+      </div>
+    </header>
+
+    <!-- Ingreso de letra -->
+    <div class="letter-input-bar" id="letterInputBar">
+      <span class="bar-label">Jugamos con la letra:</span>
+      <input type="text" id="letterInput" maxlength="2" placeholder="A" autocomplete="off" />
+      <button id="setLetterBtn">OK</button>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-wrapper">
+      <table class="tt-table" id="ttTable">
+        <thead>
+          <tr>
+            <th class="col-animal">🐾<br>Animales</th>
+            <th class="col-objeto">📦<br>Objetos</th>
+            <th class="col-nombre">👦<br>Nombres</th>
+            <th class="col-color">🎨<br>Colores</th>
+            <th class="col-fruta">🍓<br>Frutas / Verduras</th>
+            <th class="col-puntaje">⭐<br>Puntaje</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- filas generadas por JS -->
+        </tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td colspan="5" class="total-label">TOTAL</td>
+            <td class="total-value" id="grandTotal">0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="game-actions">
+      <button class="action-btn finish-btn" id="finishRoundBtn">
+        ✅ Terminar ronda
+      </button>
+      <button class="action-btn next-btn hidden" id="nextRoundBtn">
+        ➡️ Siguiente ronda
+      </button>
+      <button class="action-btn end-btn hidden" id="endGameBtn">
+        🏆 Ver resultado final
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANTALLA FINAL
+  ══════════════════════════════════════ -->
+  <div id="result-screen" class="screen hidden">
+    <div class="result-card">
+      <div class="result-emoji" id="resultEmoji">🏆</div>
+      <h2 id="resultTitle">¡Excelente!</h2>
+      <p id="resultName" class="result-player"></p>
+      <div class="result-score-box">
+        <span class="result-score-label">Puntaje total</span>
+        <span class="result-score-value" id="finalScore">0</span>
+        <span class="result-score-max" id="finalMax">puntos</span>
+      </div>
+      <div class="result-history" id="resultHistory"></div>
+      <button class="start-btn" id="playAgainBtn">🔄 Jugar de nuevo</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
