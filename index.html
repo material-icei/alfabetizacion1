@@ -234,6 +234,11 @@
   .card-11 .card-accent { background: linear-gradient(135deg,#1aad72,#0d7a50); }
   .card-11 .card-badge { background: linear-gradient(135deg,#1aad72,#0d7a50); }
 
+  .card-12 { border-color: #1aad72; }
+  .card-12::before { background: linear-gradient(135deg, rgba(26,173,114,0.08), rgba(13,122,80,0.12)); }
+  .card-12 .card-accent { background: linear-gradient(135deg,#1aad72,#0d7a50); }
+  .card-12 .card-badge { background: linear-gradient(135deg,#1aad72,#0d7a50); }
+
   /* ── Card inner parts ── */
   .card-accent {
     width: 100%;
@@ -262,6 +267,8 @@
   .activity-card:nth-child(9)  .card-emoji { animation-delay: 2.4s; }
   .activity-card:nth-child(10) .card-emoji { animation-delay: 2.7s; }
   .activity-card:nth-child(11) .card-emoji { animation-delay: 3.0s; }
+  .activity-card:nth-child(12) .card-emoji { animation-delay: 3.3s; }
+  
 
   @keyframes float-card {
     0%,100% { transform: translateY(0); }
@@ -493,6 +500,20 @@
       <div class="card-level">⭐⭐ Medio</div>
     </a>
 
+   <!-- 12 -->
+    <a class="activity-card card-12" href="tuttifrutti/index.html">
+      <div class="card-accent">
+        <span class="card-emoji">🎯</span>
+      </div>
+      <div class="card-badge">JUEGO</div>
+      <div class="card-title">Tutti Frutti</div>
+      <div class="card-desc">¡Completá con palabras!</div>
+      <div class="card-level">⭐⭐ Medio</div>
+    </a>
+
+
+
+    
   </div>
 
   <!-- Footer -->
