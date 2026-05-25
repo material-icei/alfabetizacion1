@@ -11,8 +11,8 @@
 
 let selectedPlayer  = null;
 let currentLetter   = null;
-let boards          = {};   // { playerId: [cell, ...] }
-let markedState     = {};   // { playerId: [bool, ...] }
+let boards          = {};
+let markedState     = {};
 
 // =============================================
 // UTILIDADES
@@ -31,17 +31,10 @@ function shuffle(arr) {
 // GENERACIÓN DE TABLEROS
 // =============================================
 
-/**
- * Genera un tablero único para el jugador dado.
- * Distribuye palabras de distintas letras del abecedario para
- * que cada tablero tenga variedad y los tableros sean diferentes.
- */
 function generateBoard(playerId) {
-  // Tomar palabras variadas de todo el abecedario
   const allLetters = shuffle([...ALPHABET]);
   let pool = [];
 
-  // Asegurar representación variada: 1-2 palabras por letra
   for (const letter of allLetters) {
     const words = shuffle(WORDS[letter] || []);
     const take = Math.random() > 0.5 ? 2 : 1;
@@ -49,7 +42,6 @@ function generateBoard(playerId) {
     if (pool.length >= WORD_CELLS + 8) break;
   }
 
-  // Rellenar si faltan
   if (pool.length < WORD_CELLS) {
     for (const letter of allLetters) {
       const words = shuffle(WORDS[letter] || []);
@@ -60,12 +52,11 @@ function generateBoard(playerId) {
 
   pool = shuffle(pool).slice(0, WORD_CELLS);
 
-  // Distribuir: 15 palabras + 12 libres en 27 posiciones al azar
-  const positions = shuffle([...Array(TOTAL_CELLS).keys()]);
+  const positions     = shuffle([...Array(TOTAL_CELLS).keys()]);
   const wordPositions = new Set(positions.slice(0, WORD_CELLS));
 
-  const cells = [];
-  let wordIdx = 0;
+  const cells  = [];
+  let wordIdx  = 0;
 
   for (let i = 0; i < TOTAL_CELLS; i++) {
     if (wordPositions.has(i)) {
@@ -78,11 +69,10 @@ function generateBoard(playerId) {
   return cells;
 }
 
-/** Inicializa todos los tableros y sus estados de marcado. */
 function initBoards() {
   for (let i = 1; i <= TOTAL_BOARDS; i++) {
     boards[i]      = generateBoard(i);
-    markedState[i] = boards[i].map(cell => cell.isFree); // libres = pre-marcadas
+    markedState[i] = boards[i].map(cell => cell.isFree);
   }
 }
 
@@ -90,11 +80,6 @@ function initBoards() {
 // LÓGICA DE LÍNEA Y BINGO
 // =============================================
 
-/**
- * Verifica si alguna FILA tiene todas sus casillas de OBJETOS marcadas
- * (ignora las casillas libres — solo cuenta imágenes seleccionadas).
- * Devuelve true si hay al menos una fila así → LÍNEA.
- */
 function checkLinea(playerId) {
   const m     = markedState[playerId];
   const cells = boards[playerId];
@@ -111,24 +96,17 @@ function checkLinea(playerId) {
         if (!m[idx]) { rowComplete = false; break; }
       }
     }
-
     if (hasObjects && rowComplete) return true;
   }
   return false;
 }
 
-/**
- * Verifica si TODAS las casillas de objetos del tablero están marcadas → BINGO.
- */
 function checkBingo(playerId) {
   const m     = markedState[playerId];
   const cells = boards[playerId];
   return cells.every((cell, i) => cell.isFree || m[i]);
 }
 
-/**
- * Devuelve el estado del tablero: 'bingo' | 'linea' | null
- */
 function getBoardState(playerId) {
   if (checkBingo(playerId)) return 'bingo';
   if (checkLinea(playerId)) return 'linea';
@@ -139,10 +117,8 @@ function toggleMark(playerId, idx) {
   markedState[playerId][idx] = !markedState[playerId][idx];
   renderBoard(playerId);
   updateBanners(playerId);
-  buildTabs();
 }
 
-/** Muestra el banner correcto según el estado del tablero activo. */
 function updateBanners(playerId) {
   const state = getBoardState(playerId);
   document.getElementById('lineaBanner').classList.toggle('hidden', state !== 'linea');
@@ -168,7 +144,6 @@ function updateCounts(playerId) {
   document.getElementById('correctCount').textContent = correctMarked;
 }
 
-/** Normaliza la primera letra de una palabra (sin tildes) para comparar. */
 function normalizeFirst(word) {
   const map = { 'Á':'A','É':'E','Í':'I','Ó':'O','Ú':'U' };
   const first = word.charAt(0).toUpperCase();
@@ -190,19 +165,20 @@ function renderBoard(playerId) {
     const div = document.createElement('div');
 
     let cls = 'cell';
-    if (cell.isFree)         cls += ' free-space';
-    else if (marked[idx])    cls += ' marked';
+    if (cell.isFree)       cls += ' free-space';
+    else if (marked[idx])  cls += ' marked';
 
-    div.className      = cls;
+    div.className = cls;
     div.setAttribute('role', 'gridcell');
     div.setAttribute('aria-label', cell.w);
 
-    div.innerHTML = cell.isFree ? '' : `
-      <span class="cell-emoji" aria-hidden="true">${cell.e}</span>
-      <span class="cell-word">${cell.w.toUpperCase()}</span>
-    `;
-
-    if (!cell.isFree) {
+    if (cell.isFree) {
+      div.innerHTML = `<span style="font-size:1.6rem">⭐</span>`;
+    } else {
+      div.innerHTML = `
+        <span class="cell-emoji" aria-hidden="true">${cell.e}</span>
+        <span class="cell-word">${cell.w.toUpperCase()}</span>
+      `;
       div.addEventListener('click', () => toggleMark(playerId, idx));
     }
 
@@ -233,7 +209,6 @@ function buildLetterBtns() {
 
 function selectLetter(letter) {
   currentLetter = letter;
-
   document.getElementById('currentLetterBig').textContent = letter;
   document.getElementById('letterDisplay').classList.remove('hidden');
 
@@ -248,28 +223,10 @@ function selectLetter(letter) {
 // TABS DE TABLEROS
 // =============================================
 
-function buildTabs() {
-  const row = document.getElementById('tabsRow');
-  row.innerHTML = '';
-
-  for (let i = 1; i <= TOTAL_BOARDS; i++) {
-    const btn   = document.createElement('button');
-    const state = getBoardState(i);
-    btn.className = 'tab-btn';
-    if (i === selectedPlayer) btn.classList.add('active-tab');
-    if (state === 'bingo')    btn.classList.add('bingo-tab');
-    if (state === 'linea')    btn.classList.add('linea-tab');
-    btn.textContent = `T${i}`;
-    btn.setAttribute('aria-label', `Tablero ${i}`);
-    btn.addEventListener('click', () => switchBoard(i));
-    row.appendChild(btn);
-  }
-}
 
 function switchBoard(id) {
   selectedPlayer = id;
   document.getElementById('boardTitle').textContent = `Tablero ${id}`;
-  buildTabs();
   renderBoard(id);
   updateBanners(id);
 }
@@ -315,7 +272,6 @@ function startGame(playerId) {
   document.getElementById('letterDisplay').classList.add('hidden');
 
   buildLetterBtns();
-  buildTabs();
   renderBoard(playerId);
 }
 
@@ -332,7 +288,6 @@ function resetCurrentBoard() {
   document.getElementById('bingoBanner').classList.add('hidden');
   document.getElementById('lineaBanner').classList.add('hidden');
   renderBoard(selectedPlayer);
-  buildTabs();
 }
 
 // =============================================
@@ -348,6 +303,5 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('backBtn').addEventListener('click', goBack);
-
   document.getElementById('resetBoardBtn').addEventListener('click', resetCurrentBoard);
 });
