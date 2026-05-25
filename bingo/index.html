@@ -27,43 +27,48 @@
   <!-- PANTALLA DE JUEGO -->
   <div id="game-screen" class="hidden">
 
+    <!-- HEADER -->
     <header class="top-bar">
       <button class="back-btn" id="backBtn">← Volver</button>
       <h2 id="boardTitle">Tablero 1</h2>
+
       <div class="letter-display hidden" id="letterDisplay">
         <span class="letter-label">Letra</span>
         <strong id="currentLetterBig">A</strong>
       </div>
+
+      <div class="topbar-spacer"></div>
+
+      <div class="linea-banner hidden" id="lineaBanner">🌟 ¡LÍNEA! ¡Muy bien! 🌟</div>
+      <div class="bingo-banner hidden" id="bingoBanner">🎉 ¡BINGO! ¡Ganaste! 🎉</div>
     </header>
 
-    <div class="letter-panel">
-      <p class="letter-panel-label">La docente elige la letra:</p>
-      <div class="letter-btns" id="letterBtns"></div>
-    </div>
-
-    <div class="linea-banner hidden" id="lineaBanner">
-      🌟 ¡LÍNEA! ¡Muy bien! 🌟
-    </div>
-
-    <div class="bingo-banner hidden" id="bingoBanner">
-      🎉 ¡BINGO! ¡Ganaste! 🎉
-    </div>
-
-    <div class="tabs-row" id="tabsRow"></div>
-
-    <main class="bingo-board" id="bingoBoard" role="grid" aria-label="Tablero de bingo"></main>
-
-    <footer class="score-row">
-      <div class="score-card">
-        <span>Marcadas</span>
-        <strong id="markedCount">0</strong>
+    <!-- SIDEBAR IZQUIERDO: letras + stats -->
+    <aside class="sidebar">
+      <div>
+        <p class="letter-panel-label">La docente elige la letra:</p>
+        <div class="letter-btns" id="letterBtns"></div>
       </div>
-      <div class="score-card">
-        <span>Con la letra</span>
-        <strong id="correctCount">0</strong>
+
+      <div class="score-sidebar">
+        <div class="score-card">
+          <span>Marcadas</span>
+          <strong id="markedCount">0</strong>
+        </div>
+        <div class="score-card">
+          <span>Con la letra</span>
+          <strong id="correctCount">0</strong>
+        </div>
       </div>
+
       <button class="reset-board-btn" id="resetBoardBtn">🔄 Limpiar tablero</button>
-    </footer>
+    </aside>
+
+    <!-- ÁREA DEL TABLERO -->
+    <div class="board-area">
+      <div class="tabs-row" id="tabsRow"></div>
+      <main class="bingo-board" id="bingoBoard" role="grid" aria-label="Tablero de bingo"></main>
+    </div>
 
   </div>
 
