@@ -31,45 +31,26 @@
     <header class="top-bar">
       <button class="back-btn" id="backBtn">← Volver</button>
       <h2 id="boardTitle">Tablero 1</h2>
-
-      <div class="letter-display hidden" id="letterDisplay">
-        <span class="letter-label">Letra</span>
-        <strong id="currentLetterBig">A</strong>
-      </div>
-
       <div class="topbar-spacer"></div>
-
-      <div class="linea-banner hidden" id="lineaBanner">🌟 ¡LÍNEA! ¡Muy bien! 🌟</div>
-      <div class="bingo-banner hidden" id="bingoBanner">🎉 ¡BINGO! ¡Ganaste! 🎉</div>
     </header>
 
-    <!-- SIDEBAR IZQUIERDO: letras + stats -->
-    <aside class="sidebar">
-      <div>
-        <p class="letter-panel-label">La letra elegida es:</p>
-        <div class="letter-btns" id="letterBtns"></div>
-      </div>
-
-      <div class="score-sidebar">
-        <div class="score-card">
-          <span>Marcadas</span>
-          <strong id="markedCount">0</strong>
-        </div>
-        <div class="score-card">
-          <span>Con la letra</span>
-          <strong id="correctCount">0</strong>
-        </div>
-      </div>
-
-      <button class="reset-board-btn" id="resetBoardBtn">🔄 Limpiar tablero</button>
-    </aside>
-
-    <!-- ÁREA DEL TABLERO -->
+    <!-- ÁREA DEL TABLERO — sin sidebar, ocupa todo el ancho -->
     <div class="board-area">
-      <div class="tabs-row" id="tabsRow"></div>
       <main class="bingo-board" id="bingoBoard" role="grid" aria-label="Tablero de bingo"></main>
     </div>
 
+  </div>
+
+  <!-- OVERLAY + TARJETA FLOTANTE LÍNEA/BINGO -->
+  <div class="celebration-overlay hidden" id="celebrationOverlay">
+    <div class="celebration-card" id="celebrationCard">
+      <button class="celebration-close" id="celebrationClose" aria-label="Cerrar">✕</button>
+      <div class="celebration-confetti" id="celebrationConfetti"></div>
+      <div class="celebration-emoji" id="celebrationEmoji"></div>
+      <h2 class="celebration-title" id="celebrationTitle"></h2>
+      <p class="celebration-msg" id="celebrationMsg"></p>
+      <button class="celebration-btn" id="celebrationBtn">¡Seguir jugando!</button>
+    </div>
   </div>
 
   <script src="data.js"></script>
