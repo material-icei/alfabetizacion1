@@ -10,9 +10,9 @@
 // =============================================
 
 let selectedPlayer  = null;
-let currentLetter   = null;
 let boards          = {};
 let markedState     = {};
+let celebrationShown = { linea: false, bingo: false };
 
 // =============================================
 // UTILIDADES
@@ -116,38 +116,78 @@ function getBoardState(playerId) {
 function toggleMark(playerId, idx) {
   markedState[playerId][idx] = !markedState[playerId][idx];
   renderBoard(playerId);
-  updateBanners(playerId);
+  checkAndCelebrate(playerId);
 }
 
-function updateBanners(playerId) {
+// =============================================
+// CELEBRACIÓN — tarjeta flotante
+// =============================================
+
+const CONFETTI_COLORS = [
+  '#FFD93D','#FF6B35','#FF9F1C','#74C7EC','#3A86FF',
+  '#6BCB77','#FF6B9D','#C77DFF','#ffffff','#f5a623'
+];
+
+function spawnConfetti() {
+  const container = document.getElementById('celebrationConfetti');
+  container.innerHTML = '';
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.setProperty('--x',     Math.random() * 100 + '%');
+    p.style.setProperty('--col',   CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]);
+    p.style.setProperty('--dur',   (0.9 + Math.random() * 0.8) + 's');
+    p.style.setProperty('--delay', (Math.random() * 0.6) + 's');
+    p.style.setProperty('--rot0',  (Math.random() * 60 - 30) + 'deg');
+    p.style.setProperty('--rot1',  (Math.random() * 720 - 360) + 'deg');
+    p.style.width  = (7 + Math.random() * 8) + 'px';
+    p.style.height = (7 + Math.random() * 8) + 'px';
+    p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    container.appendChild(p);
+  }
+}
+
+function showCelebration(type) {
+  const overlay = document.getElementById('celebrationOverlay');
+  const card    = document.getElementById('celebrationCard');
+  const emoji   = document.getElementById('celebrationEmoji');
+  const title   = document.getElementById('celebrationTitle');
+  const msg     = document.getElementById('celebrationMsg');
+
+  // Resetear clases
+  card.classList.remove('is-bingo', 'is-linea');
+
+  if (type === 'bingo') {
+    card.classList.add('is-bingo');
+    emoji.textContent = '🏆';
+    title.textContent = '¡BINGO!';
+    msg.textContent   = '¡Completaste todo el tablero! ¡Sos un campeón!';
+    spawnConfetti();
+  } else {
+    card.classList.add('is-linea');
+    emoji.textContent = '🌟';
+    title.textContent = '¡LÍNEA!';
+    msg.textContent   = '¡Muy bien! ¡Completaste una fila entera!';
+  }
+
+  overlay.classList.remove('hidden');
+}
+
+function hideCelebration() {
+  document.getElementById('celebrationOverlay').classList.add('hidden');
+}
+
+function checkAndCelebrate(playerId) {
   const state = getBoardState(playerId);
-  document.getElementById('lineaBanner').classList.toggle('hidden', state !== 'linea');
-  document.getElementById('bingoBanner').classList.toggle('hidden', state !== 'bingo');
-}
 
-// =============================================
-// CONTADORES
-// =============================================
-
-function updateCounts(playerId) {
-  const m     = markedState[playerId];
-  const cells = boards[playerId];
-
-  const totalMarked = m.filter((v, i) => v && !cells[i].isFree).length;
-
-  const correctMarked = currentLetter
-    ? m.filter((v, i) => v && !cells[i].isFree &&
-        normalizeFirst(cells[i].w) === currentLetter).length
-    : 0;
-
-  document.getElementById('markedCount').textContent  = totalMarked;
-  document.getElementById('correctCount').textContent = correctMarked;
-}
-
-function normalizeFirst(word) {
-  const map = { 'Á':'A','É':'E','Í':'I','Ó':'O','Ú':'U' };
-  const first = word.charAt(0).toUpperCase();
-  return map[first] || first;
+  if (state === 'bingo' && !celebrationShown.bingo) {
+    celebrationShown.bingo = true;
+    celebrationShown.linea = true; // linea ya fue o se omite
+    setTimeout(() => showCelebration('bingo'), 180);
+  } else if (state === 'linea' && !celebrationShown.linea) {
+    celebrationShown.linea = true;
+    setTimeout(() => showCelebration('linea'), 180);
+  }
 }
 
 // =============================================
@@ -173,7 +213,7 @@ function renderBoard(playerId) {
     div.setAttribute('aria-label', cell.w);
 
     if (cell.isFree) {
-      div.innerHTML = `<span style="font-size:1.6rem">⭐</span>`;
+      div.innerHTML = `<span style="font-size:1.8rem">⭐</span>`;
     } else {
       div.innerHTML = `
         <span class="cell-emoji" aria-hidden="true">${cell.e}</span>
@@ -184,51 +224,6 @@ function renderBoard(playerId) {
 
     board.appendChild(div);
   });
-
-  updateCounts(playerId);
-}
-
-// =============================================
-// SELECTOR DE LETRAS
-// =============================================
-
-function buildLetterBtns() {
-  const container = document.getElementById('letterBtns');
-  container.innerHTML = '';
-
-  ALPHABET.forEach(letter => {
-    const btn = document.createElement('button');
-    btn.className    = 'lbtn';
-    btn.textContent  = letter;
-    btn.dataset.letter = letter;
-    btn.setAttribute('aria-label', `Letra ${letter}`);
-    btn.addEventListener('click', () => selectLetter(letter));
-    container.appendChild(btn);
-  });
-}
-
-function selectLetter(letter) {
-  currentLetter = letter;
-  document.getElementById('currentLetterBig').textContent = letter;
-  document.getElementById('letterDisplay').classList.remove('hidden');
-
-  document.querySelectorAll('.lbtn').forEach(btn => {
-    btn.classList.toggle('active-letter', btn.dataset.letter === letter);
-  });
-
-  if (selectedPlayer !== null) updateCounts(selectedPlayer);
-}
-
-// =============================================
-// TABS DE TABLEROS
-// =============================================
-
-
-function switchBoard(id) {
-  selectedPlayer = id;
-  document.getElementById('boardTitle').textContent = `Tablero ${id}`;
-  renderBoard(id);
-  updateBanners(id);
 }
 
 // =============================================
@@ -262,32 +257,21 @@ function buildPlayerGrid() {
 
 function startGame(playerId) {
   selectedPlayer = playerId;
+  celebrationShown = { linea: false, bingo: false };
 
   document.getElementById('setup-screen').style.display = 'none';
   document.getElementById('game-screen').classList.remove('hidden');
-
   document.getElementById('boardTitle').textContent = `Tablero ${playerId}`;
-  document.getElementById('bingoBanner').classList.add('hidden');
-  document.getElementById('lineaBanner').classList.add('hidden');
-  document.getElementById('letterDisplay').classList.add('hidden');
 
-  buildLetterBtns();
+  hideCelebration();
   renderBoard(playerId);
 }
 
 function goBack() {
   document.getElementById('game-screen').classList.add('hidden');
   document.getElementById('setup-screen').style.display = 'flex';
+  hideCelebration();
   selectedPlayer = null;
-  currentLetter  = null;
-}
-
-function resetCurrentBoard() {
-  if (selectedPlayer === null) return;
-  markedState[selectedPlayer] = boards[selectedPlayer].map(cell => cell.isFree);
-  document.getElementById('bingoBanner').classList.add('hidden');
-  document.getElementById('lineaBanner').classList.add('hidden');
-  renderBoard(selectedPlayer);
 }
 
 // =============================================
@@ -303,5 +287,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('backBtn').addEventListener('click', goBack);
-  document.getElementById('resetBoardBtn').addEventListener('click', resetCurrentBoard);
+
+  document.getElementById('celebrationClose').addEventListener('click', hideCelebration);
+  document.getElementById('celebrationBtn').addEventListener('click', hideCelebration);
+
+  document.getElementById('celebrationOverlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) hideCelebration();
+  });
 });
+
