@@ -162,21 +162,39 @@ body {
 /* ── RESULT DISPLAY ── */
 .result-area {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  min-height: 90px;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 560px;
 }
 
 .result-box {
   background: rgba(255,255,255,0.06);
   border: 2px solid rgba(255,215,0,0.25);
   border-radius: 20px;
-  padding: 8px 28px;
+  padding: 8px 16px;
   text-align: center;
   backdrop-filter: blur(8px);
   transition: all 0.3s;
-  min-width: 240px;
+  min-width: 130px;
+  flex: 0 0 auto;
+}
+
+.history-box {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 8px 12px;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .result-label {
@@ -208,9 +226,11 @@ body {
 
 .result-msg {
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
   color: rgba(255,255,255,0.85);
   text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+  text-align: center;
+  margin-top: -4px;
 }
 
 /* ── SPIN BUTTON ── */
@@ -250,31 +270,31 @@ body {
   box-shadow: none;
 }
 
-/* ── HISTORY ── */
-.history-wrap {
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
-  width: 100%;
-}
-.history-title {
-  font-size: 0.7rem; font-weight: 800;
-  color: rgba(255,255,255,0.35);
+/* ── HISTORY (inline card) ── */
+.history-box-title {
+  font-size: 0.68rem; font-weight: 800;
+  color: rgba(255,255,255,0.45);
   text-transform: uppercase; letter-spacing: 1px;
+  white-space: nowrap;
 }
-.history-chips {
-  display: flex; flex-wrap: wrap; gap: 5px;
+.history-chips-inline {
+  display: flex; flex-wrap: wrap; gap: 4px;
   justify-content: center;
-  max-height: 52px; overflow: hidden;
+  overflow-y: auto;
+  max-height: 120px;
+  width: 100%;
 }
 .chip {
   font-family: 'Fredoka One', cursive;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: #1a1a2e;
   background: var(--chip-color, #FFD700);
-  border-radius: 10px;
-  width: 32px; height: 32px;
+  border-radius: 8px;
+  width: 28px; height: 28px;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   animation: chipPop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  flex-shrink: 0;
 }
 @keyframes chipPop {
   from { transform: scale(0); opacity:0; }
@@ -337,23 +357,22 @@ body {
     </div>
   </div>
 
-  <!-- Result -->
+  <!-- Result + History side by side -->
   <div class="result-area">
     <div class="result-box" id="resultBox">
       <div class="result-label">Letra sorteada</div>
       <div class="result-letter" id="resultLetter">?</div>
     </div>
-    <div class="result-msg" id="resultMsg">Presioná ¡GIRAR! para empezar</div>
+    <div class="history-box" id="historyBox">
+      <div class="history-box-title">Letras sorteadas</div>
+      <div class="history-chips-inline" id="historyChips"></div>
+    </div>
   </div>
+
+  <div class="result-msg" id="resultMsg">Presioná ¡GIRAR! para empezar</div>
 
   <!-- Button -->
   <button class="spin-btn" id="spinBtn" onclick="spinWheel()">🎰 ¡GIRAR RULETA!</button>
-
-  <!-- History -->
-  <div class="history-wrap">
-    <div class="history-title">Letras anteriores</div>
-    <div class="history-chips" id="historyChips"></div>
-  </div>
 
 </div>
 
@@ -362,17 +381,19 @@ body {
 //  CONFIG
 // ══════════════════════════════════════
 const LETTERS = [
-  'A','B','C','D','E','F','G','H','I','J','k',
-  'L','M','N','O','P','Q','R','S','T','U','V','Z'
+  'A','B','C','D','E','F','G','H','I','J',
+  'K','L','M','N','Ñ','O','P','Q','R','S',
+  'T','U','V','W','X','Y','Z'
 ];
-const N = LETTERS.length; // 21
+const N = LETTERS.length; // 27
 
 const COLORS = [
   '#FF6B6B','#FF9F43','#FECA57','#48DBFB','#1DD1A1',
   '#FF6B9D','#A29BFE','#6C5CE7','#FD79A8','#00CEC9',
   '#E17055','#74B9FF','#55EFC4','#FDCB6E','#E84393',
   '#0984E3','#00B894','#D63031','#6D5BBA','#F9CA24',
-  '#26de81'
+  '#26de81','#fc5c65','#45aaf2','#a55eea','#fd9644',
+  '#2bcbba','#eb3b5a'
 ];
 
 const MESSAGES = [
@@ -716,7 +737,6 @@ function resetWheel() {
 // ══════════════════════════════════════
 function addToHistory(letter, color) {
   history.unshift({ letter, color });
-  if (history.length > 20) history.pop();
 
   const container = document.getElementById('historyChips');
   container.innerHTML = '';
