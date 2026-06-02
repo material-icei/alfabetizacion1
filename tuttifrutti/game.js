@@ -1,7 +1,7 @@
 /**
- * game.js — Tutti Frutti (1º grado)
- * Categorías: Animales · Objetos · Nombres · Colores · Frutas/Verduras
- * Puntaje por ronda: 0 (sin palabra) · 5 (repetida) · 10 (única)
+ * game.js — Tutti Frutti adaptado para 1º grado
+ * Categorías: ¿Qué es? · ¿Cómo es? · ¿Qué hace?
+ * Puntaje: ❌ (0) · ⭐ (5) · 🏆 (10)
  */
 
 'use strict';
@@ -10,25 +10,30 @@
 // CONFIGURACIÓN
 // =============================================
 
-const CATEGORIES = ['animal', 'objeto', 'nombre', 'color', 'fruta'];
+const CATEGORIES = ['que-es', 'como-es', 'que-hace'];
 const CAT_LABEL  = {
-  animal: 'Animales',
-  objeto: 'Objetos',
-  nombre: 'Nombres',
-  color:  'Colores',
-  fruta:  'Frutas / Verduras',
+  'que-es':   '¿QUÉ ES?',
+  'como-es':  '¿CÓMO ES?',
+  'que-hace': '¿QUÉ HACE?',
 };
+
+// Opciones de puntaje: valor numérico + emoji mostrado
+const SCORE_OPTS = [
+  { val: 0,  emoji: '❌', label: 'Nada' },
+  { val: 5,  emoji: '⭐', label: 'Repetida' },
+  { val: 10, emoji: '🏆', label: 'Única' },
+];
 
 // =============================================
 // ESTADO
 // =============================================
 
-let playerName   = '';
-let totalRounds  = 5;
-let currentRound = 0;          // 0-based
+let playerName    = '';
+let totalRounds   = 5;
+let currentRound  = 0;
 let currentLetter = '';
-let rounds       = [];         // [{letter, words:{animal,objeto,...}, scores:{...}}]
-let roundLocked  = false;      // true cuando se terminó la ronda (inputs bloqueados)
+let rounds        = [];
+let roundLocked   = false;
 
 // =============================================
 // HELPERS
@@ -41,34 +46,52 @@ function showScreen(id) {
   $(id).classList.remove('hidden');
 }
 
+function scoreEmoji(val) {
+  const opt = SCORE_OPTS.find(o => o.val === val);
+  return opt ? opt.emoji : '—';
+}
+
+function scoreBorderColor(val) {
+  if (val === 0)  return '#e8365d';
+  if (val === 5)  return '#f5a623';
+  if (val === 10) return '#5cb85c';
+  return '#ecdcc8';
+}
+
 // =============================================
 // PANTALLA DE INICIO
 // =============================================
 
-const roundDisplay = $('roundDisplay');
 let roundCount = 5;
 
 document.querySelectorAll('.round-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const delta = parseInt(btn.dataset.val);
     roundCount = Math.min(15, Math.max(2, roundCount + delta));
-    roundDisplay.textContent = roundCount;
+    $('roundDisplay').textContent = roundCount;
   });
 });
 
 $('startBtn').addEventListener('click', () => {
-  const name = $('playerName').value.trim();
+  const name = $('playerName').value.trim().toUpperCase();
   if (!name) {
     $('playerName').focus();
     $('playerName').style.borderColor = '#e8365d';
     setTimeout(() => $('playerName').style.borderColor = '', 1000);
     return;
   }
-  playerName  = name;
-  totalRounds = roundCount;
-  rounds      = [];
+  playerName   = name;
+  totalRounds  = roundCount;
+  rounds       = [];
   currentRound = 0;
   startRound();
+});
+
+// Forzar mayúsculas en el nombre
+$('playerName').addEventListener('input', function() {
+  const pos = this.selectionStart;
+  this.value = this.value.toUpperCase();
+  this.setSelectionRange(pos, pos);
 });
 
 // =============================================
@@ -79,29 +102,23 @@ function startRound() {
   roundLocked   = false;
   currentLetter = '';
 
-  // Header
-  $('headerName').textContent     = '👤 ' + playerName;
-  $('currentRoundNum').textContent = currentRound + 1;
-  $('totalRoundsNum').textContent  = totalRounds;
+  $('headerName').textContent      = '👤 ' + playerName;
+  $('currentRoundNum').textContent  = currentRound + 1;
+  $('totalRoundsNum').textContent   = totalRounds;
 
-  // Badge
   const badge = $('letterBadge');
   badge.textContent = '?';
   badge.style.background = 'linear-gradient(135deg, #e8365d, #f5a623)';
 
-  // Barra de letra
   $('letterInput').value = '';
   $('letterInputBar').classList.remove('hidden');
   setTimeout(() => $('letterInput').focus(), 100);
 
-  // Botones
   $('finishRoundBtn').classList.remove('hidden');
   $('nextRoundBtn').classList.add('hidden');
   $('endGameBtn').classList.add('hidden');
 
-  // Construir tabla
   buildTable();
-
   showScreen('game-screen');
 }
 
@@ -119,15 +136,13 @@ function confirmLetter() {
   const badge = $('letterBadge');
   badge.textContent = currentLetter;
   badge.classList.remove('pop');
-  void badge.offsetWidth; // reflow
+  void badge.offsetWidth;
   badge.classList.add('pop');
 
-  // Actualizar rótulos de ronda en la tabla
   document.querySelectorAll('.row-letter').forEach(el => {
     el.textContent = currentLetter;
   });
 
-  // Enfocar primer input vacío
   const firstInput = document.querySelector('.word-input:not(:disabled)');
   if (firstInput) firstInput.focus();
 }
@@ -136,37 +151,35 @@ function confirmLetter() {
 function buildTable() {
   const tbody = $('tableBody');
   tbody.innerHTML = '';
-
-  // Una fila por ronda completada (lectura) + fila activa
-  // Pero mostramos UNA fila por ronda: la activa es la última
-  // Historial: filas anteriores (solo lectura)
-  rounds.forEach((r, idx) => {
-    tbody.appendChild(buildHistoryRow(r, idx));
-  });
-
-  // Fila activa
+  rounds.forEach((r, idx) => tbody.appendChild(buildHistoryRow(r, idx)));
   tbody.appendChild(buildActiveRow());
   updateGrandTotal();
 }
 
 function buildHistoryRow(round, idx) {
   const tr = document.createElement('tr');
-  tr.className = 'row-done';
+  tr.className  = 'row-done';
   tr.dataset.round = idx;
 
   CATEGORIES.forEach(cat => {
-    const td = document.createElement('td');
+    const td    = document.createElement('td');
     const input = document.createElement('input');
-    input.type        = 'text';
-    input.className   = 'word-input';
-    input.value       = round.words[cat] || '';
-    input.disabled    = true;
-    input.style.borderColor = scoreColor(round.scores[cat]);
+    input.type      = 'text';
+    input.className = 'word-input';
+    input.value     = round.words[cat] || '';
+    input.disabled  = true;
+    input.style.borderColor = scoreBorderColor(round.scores[cat]);
     td.appendChild(input);
+
+    // Mostrar emoji de puntaje debajo del input en historial
+    const scoreSpan = document.createElement('div');
+    scoreSpan.className   = 'cell-score-emoji';
+    scoreSpan.textContent = scoreEmoji(round.scores[cat]);
+    td.appendChild(scoreSpan);
+
     tr.appendChild(td);
   });
 
-  // Puntaje de la fila
   const tdScore = document.createElement('td');
   tdScore.className = 'row-score-cell';
   const rowTotal = CATEGORIES.reduce((s, c) => s + (round.scores[c] || 0), 0);
@@ -176,13 +189,6 @@ function buildHistoryRow(round, idx) {
   return tr;
 }
 
-function scoreColor(val) {
-  if (val === 0)  return '#e8365d';
-  if (val === 5)  return '#f5a623';
-  if (val === 10) return '#5cb85c';
-  return '#ecdcc8';
-}
-
 function buildActiveRow() {
   const tr = document.createElement('tr');
   tr.id = 'activeRow';
@@ -190,31 +196,28 @@ function buildActiveRow() {
   CATEGORIES.forEach(cat => {
     const td = document.createElement('td');
 
-    // Badge de letra
     const badge = document.createElement('span');
     badge.className   = 'row-letter';
     badge.textContent = currentLetter || '?';
 
     const input = document.createElement('input');
-    input.type        = 'text';
-    input.className   = 'word-input';
-    input.dataset.cat = cat;
-    input.maxLength   = 30;
+    input.type         = 'text';
+    input.className    = 'word-input';
+    input.dataset.cat  = cat;
+    input.maxLength    = 30;
     input.autocomplete = 'off';
-    input.placeholder = CAT_LABEL[cat].split(' ')[0] + '...';
+    input.placeholder  = CAT_LABEL[cat];
 
     input.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
-        // Mover al siguiente input
         const inputs = [...document.querySelectorAll('#activeRow .word-input')];
-        const idx    = inputs.indexOf(e.target);
-        if (idx < inputs.length - 1) inputs[idx + 1].focus();
+        const i      = inputs.indexOf(e.target);
+        if (i < inputs.length - 1) inputs[i + 1].focus();
       }
     });
 
-    // Forzar mayúsculas mientras escribe
     input.addEventListener('input', () => {
-      const pos = input.selectionStart;
+      const pos   = input.selectionStart;
       input.value = input.value.toUpperCase();
       input.setSelectionRange(pos, pos);
     });
@@ -224,9 +227,8 @@ function buildActiveRow() {
     tr.appendChild(td);
   });
 
-  // Celda de puntaje (vacía hasta que se termine la ronda)
   const tdScore = document.createElement('td');
-  tdScore.id = 'activeScoreCell';
+  tdScore.id        = 'activeScoreCell';
   tdScore.innerHTML = `<span class="row-score" id="activeRowScore">—</span>`;
   tr.appendChild(tdScore);
 
@@ -239,49 +241,45 @@ $('finishRoundBtn').addEventListener('click', finishRound);
 function finishRound() {
   if (roundLocked) return;
 
-  // Recoger palabras
   const words = {};
   document.querySelectorAll('#activeRow .word-input').forEach(input => {
     words[input.dataset.cat] = input.value.trim().toUpperCase();
   });
 
-  // Bloquear inputs
   document.querySelectorAll('#activeRow .word-input').forEach(input => {
     input.disabled = true;
   });
 
   roundLocked = true;
 
-  // Mostrar selector de puntaje por categoría
+  // Mostrar botones de puntaje con emoji
   const activeRow = $('activeRow');
   CATEGORIES.forEach((cat, colIdx) => {
     const td = activeRow.children[colIdx];
 
-    // Quitar el input (ya bloqueado) y añadir botones de puntaje
     const scoreDiv = document.createElement('div');
-    scoreDiv.className   = 'score-cell';
-    scoreDiv.id          = `score-cell-${cat}`;
+    scoreDiv.className = 'score-cell';
+    scoreDiv.id        = `score-cell-${cat}`;
 
-    [0, 5, 10].forEach(val => {
+    SCORE_OPTS.forEach(opt => {
       const btn = document.createElement('button');
-      btn.className    = 'score-opt';
-      btn.dataset.val  = val;
-      btn.dataset.cat  = cat;
-      btn.textContent  = val;
+      btn.className       = 'score-opt';
+      btn.dataset.val     = opt.val;
+      btn.dataset.cat     = cat;
+      btn.textContent     = opt.emoji;
+      btn.title           = opt.label;
 
-      // Si no hay palabra, pre-seleccionar 0
-      if (!words[cat] && val === 0) {
+      // Pre-seleccionar ❌ si no hay palabra
+      if (!words[cat] && opt.val === 0) {
         btn.classList.add('active');
       }
 
       btn.addEventListener('click', () => {
-        // Desactivar hermanos
         scoreDiv.querySelectorAll('.score-opt').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         updateActiveRowScore();
-        // Colorear borde del input
         const inp = td.querySelector('.word-input');
-        if (inp) inp.style.borderColor = scoreColor(val);
+        if (inp) inp.style.borderColor = scoreBorderColor(opt.val);
       });
 
       scoreDiv.appendChild(btn);
@@ -290,9 +288,7 @@ function finishRound() {
     td.appendChild(scoreDiv);
   });
 
-  // Ocultar botón terminar, mostrar siguiente o final
   $('finishRoundBtn').classList.add('hidden');
-
   if (currentRound + 1 < totalRounds) {
     $('nextRoundBtn').classList.remove('hidden');
   } else {
@@ -303,7 +299,7 @@ function finishRound() {
 function updateActiveRowScore() {
   let total = 0;
   CATEGORIES.forEach(cat => {
-    const cell = $(`score-cell-${cat}`);
+    const cell   = $(`score-cell-${cat}`);
     if (!cell) return;
     const active = cell.querySelector('.score-opt.active');
     if (active) total += parseInt(active.dataset.val);
@@ -313,13 +309,11 @@ function updateActiveRowScore() {
 }
 
 function updateGrandTotal() {
-  // Sumar historial + fila activa
   let grand = rounds.reduce((s, r) =>
     s + CATEGORIES.reduce((rs, c) => rs + (r.scores[c] || 0), 0), 0);
 
-  // Fila activa (si ya hay puntajes seleccionados)
   CATEGORIES.forEach(cat => {
-    const cell = $(`score-cell-${cat}`);
+    const cell   = $(`score-cell-${cat}`);
     if (!cell) return;
     const active = cell.querySelector('.score-opt.active');
     if (active) grand += parseInt(active.dataset.val);
@@ -363,33 +357,30 @@ function saveCurrentRound() {
 // =============================================
 
 function showResults() {
-  const grand = rounds.reduce((s, r) =>
+  const grand       = rounds.reduce((s, r) =>
     s + CATEGORIES.reduce((rs, c) => rs + (r.scores[c] || 0), 0), 0);
-
   const maxPossible = totalRounds * CATEGORIES.length * 10;
-  const pct = grand / maxPossible;
+  const pct         = grand / maxPossible;
 
-  // Emoji y título según rendimiento
   let emoji, title;
-  if (pct >= 0.9)      { emoji = '🏆'; title = '¡Excelente!'; }
-  else if (pct >= 0.7) { emoji = '🌟'; title = '¡Muy bien!'; }
-  else if (pct >= 0.5) { emoji = '😊'; title = '¡Bien hecho!'; }
-  else                 { emoji = '💪'; title = '¡Seguí practicando!'; }
+  if (pct >= 0.9)      { emoji = '🏆'; title = '¡EXCELENTE!'; }
+  else if (pct >= 0.7) { emoji = '🌟'; title = '¡MUY BIEN!'; }
+  else if (pct >= 0.5) { emoji = '😊'; title = '¡BIEN HECHO!'; }
+  else                 { emoji = '💪'; title = '¡SEGUÍ PRACTICANDO!'; }
 
   $('resultEmoji').textContent = emoji;
   $('resultTitle').textContent = title;
   $('resultName').textContent  = playerName;
   $('finalScore').textContent  = grand;
-  $('finalMax').textContent    = `de ${maxPossible} puntos posibles`;
+  $('finalMax').textContent    = `DE ${maxPossible} PUNTOS POSIBLES`;
 
-  // Historial por rondas
   const hist = $('resultHistory');
   hist.innerHTML = '';
   rounds.forEach((r, i) => {
     const rowTotal = CATEGORIES.reduce((s, c) => s + (r.scores[c] || 0), 0);
-    const chip = document.createElement('div');
+    const chip     = document.createElement('div');
     chip.className = 'history-chip';
-    chip.innerHTML = `<span class="chip-letter">${r.letter || '?'}</span>Ronda ${i+1}: ${rowTotal} pts`;
+    chip.innerHTML = `<span class="chip-letter">${r.letter || '?'}</span>RONDA ${i+1}: ${rowTotal} PTS`;
     hist.appendChild(chip);
   });
 
@@ -407,3 +398,4 @@ $('playAgainBtn').addEventListener('click', () => {
 // =============================================
 
 showScreen('setup-screen');
+
