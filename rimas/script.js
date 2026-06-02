@@ -54,12 +54,12 @@ var PAIRS = [
   {
     clue:    { emoji: '🌞', word: 'SOL' },
     options: [
-      { emoji: '🥦', word: 'COL' },
+      { emoji: '🔥', word: 'FAROL' },
       { emoji: '🌧️', word: 'LLUVIA' },
       { emoji: '🌲', word: 'ÁRBOL' },
     ],
     correct: 0,   // COL rima con SOL
-    hint: 'Ejemplos: ROL, GOL, FAROL...'
+    hint: 'Ejemplos: ROL, GOL, CARACOL...'
   },
   {
     clue:    { emoji: '🦁', word: 'LEÓN' },
