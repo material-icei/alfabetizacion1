@@ -133,7 +133,7 @@
   /* ── Cards grid — 6 columnas × 2 filas, ocupa el ancho disponible ── */
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 7px;
     animation: scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s backwards;
@@ -240,6 +240,11 @@
   .card-12 .card-accent { background: linear-gradient(135deg,#1aad72,#0d7a50); }
   .card-12 .card-badge { background: linear-gradient(135deg,#1aad72,#0d7a50); }
 
+  .card-13 { border-color: #e879f9; }
+  .card-13::before { background: linear-gradient(135deg, rgba(232,121,249,0.08), rgba(192,38,211,0.12)); }
+  .card-13 .card-accent { background: linear-gradient(135deg,#e879f9,#c026d3); }
+  .card-13 .card-badge { background: linear-gradient(135deg,#e879f9,#a21caf); }
+
   /* ── Card inner parts ── */
   .card-accent {
     width: 100%;
@@ -269,6 +274,7 @@
   .activity-card:nth-child(10) .card-emoji { animation-delay: 2.7s; }
   .activity-card:nth-child(11) .card-emoji { animation-delay: 3.0s; }
   .activity-card:nth-child(12) .card-emoji { animation-delay: 3.3s; }
+  .activity-card:nth-child(13) .card-emoji { animation-delay: 3.6s; }
   
 
   @keyframes float-card {
@@ -446,30 +452,43 @@
       <div class="card-level">⭐⭐ Medio</div>
     </a>
 
-    <!-- 7 -->
-    <a class="activity-card card-7" href="SilabaInicial.html">
+
+<!-- 7 -->
+    <a class="activity-card card-7" href="rimas/index.html">
+      <div class="card-accent">
+        <span class="card-emoji">🎶</span>
+      </div>
+      <div class="card-badge">NIVEL 7</div>
+      <div class="card-title">RIMAS</div>
+      <div class="card-desc">¡Encontrá las palabras que riman!</div>
+      <div class="card-level">⭐⭐ Medio</div>
+    </a>
+    
+    
+    <!-- 8 -->
+    <a class="activity-card card-8" href="SilabaInicial.html">
       <div class="card-accent">
         <span class="card-emoji">🔡</span>
       </div>
-      <div class="card-badge">NIVEL 7</div>
+      <div class="card-badge">NIVEL 8</div>
       <div class="card-title">SÍLABA INICIAL</div>
       <div class="card-desc">¿Qué imágenes empiezan con la sílaba?</div>
       <div class="card-level">⭐⭐⭐ Difícil</div>
     </a>
 
-    <!-- 8 -->
-    <a class="activity-card card-8" href="UnirImagenPalabra.html">
+    <!-- 9 -->
+    <a class="activity-card card-9" href="UnirImagenPalabra.html">
       <div class="card-accent">
         <span class="card-emoji">🔗</span>
       </div>
-      <div class="card-badge">NIVEL 8</div>
+      <div class="card-badge">NIVEL 9</div>
       <div class="card-title">UNIR IMAGEN Y PALABRA</div>
       <div class="card-desc">Conectá cada dibujo con su nombre</div>
       <div class="card-level">⭐⭐⭐ Difícil</div>
     </a>
 
-    <!-- 9 -->
-    <a class="activity-card card-9" href="Escribo_Silabas.html">
+    <!-- 10 -->
+    <a class="activity-card card-10" href="Escribo_Silabas.html">
       <div class="card-accent">
         <span class="card-emoji">✍️</span>
       </div>
@@ -479,19 +498,19 @@
       <div class="card-level">⭐⭐⭐ Difícil</div>
     </a>
 
-    <!-- 10 -->
-    <a class="activity-card card-10" href="OrdenarLetras.html">
+    <!-- 11 -->
+    <a class="activity-card card-11" href="OrdenarLetras.html">
       <div class="card-accent">
         <span class="card-emoji">🔀</span>
       </div>
-      <div class="card-badge">NIVEL 10</div>
+      <div class="card-badge">NIVEL 11</div>
       <div class="card-title">ORDENAR LAS LETRAS</div>
       <div class="card-desc">Formá la palabra ordenando las letras</div>
       <div class="card-level">⭐⭐⭐ Difícil</div>
     </a>
 
-    <!-- 11 -->
-    <a class="activity-card card-11" href="bingo/index.html">
+    <!-- 12 -->
+    <a class="activity-card card-12" href="bingo/index.html">
       <div class="card-accent">
         <span class="card-emoji">🧩</span>
       </div>
@@ -501,8 +520,8 @@
       <div class="card-level">⭐⭐ Medio</div>
     </a>
 
-   <!-- 12 -->
-    <a class="activity-card card-12" href="tuttifrutti/index.html">
+   <!-- 13 -->
+    <a class="activity-card card-13" href="tuttifrutti/index.html">
       <div class="card-accent">
         <span class="card-emoji">🧩</span>
       </div>
@@ -512,9 +531,8 @@
       <div class="card-level">⭐⭐ Medio</div>
     </a>
 
+   
 
-
-    
   </div>
 
   <!-- Footer -->

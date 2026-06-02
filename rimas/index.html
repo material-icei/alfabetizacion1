@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>¿QUÉ RIMA CON...? 🎵</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <header>
+    <div class="hdr-inner">
+      <span class="anim-icon">⭐</span>
+      <div>
+        <h1>¿QUÉ RIMA CON...?</h1>
+        <p class="subtitle">ELEGÍ LA IMAGEN QUE RIMA Y ESCRIBÍ UNA NUEVA RIMA</p>
+      </div>
+      <span class="anim-icon" style="animation-delay:.7s">🎵</span>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-bar">
+        <div class="prog-fill" id="pf"></div>
+      </div>
+      <span class="prog-lbl" id="pl">0 / 8</span>
+      <button class="btn-reset" onclick="resetAll()">🔄 REINICIAR</button>
+    </div>
+  </header>
+
+  <main id="cards"></main>
+
+  <!-- MODAL -->
+  <div class="modal-bg hidden" id="modal">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <span id="mpair"></span>
+        <h2 id="mtitle"></h2>
+      </div>
+      <p class="modal-prompt">AHORA ESCRIBÍ OTRA PALABRA QUE RIME:</p>
+      <div class="modal-words">
+        <span class="mword clue-w" id="mclue"></span>
+        <span class="rhyme-conn">🎵</span>
+        <span class="mword rhyme-w" id="mrhyme"></span>
+      </div>
+      <input class="rhy-input" id="rhy-in" type="text" maxlength="20" autocomplete="off" placeholder="ESCRIBÍ AQUÍ..."/>
+      <p class="hint-txt" id="hint-txt"></p>
+      <div class="modal-actions">
+        <button class="btn-ok" onclick="confirmRhyme()">✅ OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CELEBRACIÓN -->
+  <div class="cel-bg hidden" id="cel">
+    <div class="cel-box">
+      <div class="cel-emo">🎉</div>
+      <h2>¡FELICITACIONES!</h2>
+      <p>COMPLETASTE TODAS LAS RIMAS.</p>
+      <div class="summary" id="sum"></div>
+      <button class="btn-again" onclick="resetAll()">🔄 JUGAR DE NUEVO</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
