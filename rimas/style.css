@@ -315,6 +315,86 @@ main {
 .rhyme-result.show { display: flex; }
 .rr-icon { flex-shrink: 0; font-size: 1rem; margin-top: 2px; }
 
+/* ---- RIMA PROPIA (campo libre en la tarjeta) ---- */
+.own-rhyme {
+  margin: 4px 10px 12px;
+  padding: 10px 12px;
+  background: #fff8e1;
+  border: 2px dashed #ffca28;
+  border-radius: var(--radius-sm);
+}
+
+.own-lbl {
+  font-family: var(--font-title);
+  font-size: clamp(.74rem, 1.2vw, .85rem);
+  color: #f57f17;
+  margin-bottom: 7px;
+  line-height: 1.25;
+}
+
+.own-row {
+  display: flex;
+  gap: 6px;
+}
+
+.own-input {
+  flex: 1;
+  min-width: 0;
+  border: 2.5px solid #ffd54f;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-family: var(--font-title);
+  font-size: 1rem;
+  color: #333;
+  letter-spacing: .5px;
+  outline: none;
+  background: white;
+  text-transform: uppercase;
+  transition: border-color .2s, box-shadow .2s;
+}
+.own-input:focus {
+  border-color: #fb8c00;
+  box-shadow: 0 0 0 3px #fb8c0033;
+}
+.own-input.err {
+  border-color: var(--wrong);
+  animation: shake .4s ease;
+}
+.own-input:disabled {
+  background: #f1f8e9;
+  border-color: var(--done-border);
+  color: #2e7d32;
+  opacity: 1;
+}
+
+.own-btn {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ffb300, #fb8c00);
+  font-size: 1.1rem;
+  padding: 0 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  transition: transform .12s;
+}
+.own-btn:hover:not(:disabled)  { transform: translateY(-2px); }
+.own-btn:active:not(:disabled) { transform: scale(.93); }
+.own-btn:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.own-feedback {
+  font-size: clamp(.74rem, 1.15vw, .85rem);
+  font-weight: 800;
+  margin-top: 7px;
+  min-height: 1em;
+  line-height: 1.3;
+}
+.own-feedback.ok  { color: var(--correct); }
+.own-feedback.bad { color: var(--wrong); }
+
 /* ---- MODAL ---- */
 .modal-bg {
   position: fixed;
@@ -526,3 +606,4 @@ main {
 /* ---- SCROLLBAR ---- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: #a5d6a7; border-radius: 10px; }
+
