@@ -19,7 +19,8 @@ var PAIRS = [
       { emoji: '🍎', word: 'MANZANA' },
     ],
     correct: 0,   // PATO rima con GATO
-    hint: 'Ejemplos: RATO, PLATO, ZAPATO...'
+    hint: 'Ejemplos: RATO, PLATO, ZAPATO...',
+    ending: 'ATO'
   },
   {
     clue:    { emoji: '🌙', word: 'LUNA' },
@@ -29,7 +30,8 @@ var PAIRS = [
       { emoji: '🐟', word: 'PEZ' },
     ],
     correct: 0,   // CUNA rima con LUNA
-    hint: 'Ejemplos: UNA, TUNA, LAGUNA...'
+    hint: 'Ejemplos: UNA, TUNA, LAGUNA...',
+    ending: 'UNA'
   },
   {
     clue:    { emoji: '🏠', word: 'CASA' },
@@ -39,7 +41,8 @@ var PAIRS = [
       { emoji: '🍋', word: 'LIMÓN' },
     ],
     correct: 0,   // TAZA rima con CASA
-    hint: 'Ejemplos: MASA, PASA, RASA...'
+    hint: 'Ejemplos: MASA, PASA, RASA...',
+    ending: 'ASA'
   },
   {
     clue:    { emoji: '🐸', word: 'SAPO' },
@@ -49,7 +52,8 @@ var PAIRS = [
       { emoji: '🎈', word: 'GLOBO' },
     ],
     correct: 0,   // TRAPO rima con SAPO
-    hint: 'Ejemplos: GUAPO, MAPO, GARRAPO...'
+    hint: 'Ejemplos: GUAPO, MAPO, GARRAPO...',
+    ending: 'APO'
   },
   {
     clue:    { emoji: '🌞', word: 'SOL' },
@@ -59,7 +63,8 @@ var PAIRS = [
       { emoji: '🌲', word: 'ÁRBOL' },
     ],
     correct: 0,   // COL rima con SOL
-    hint: 'Ejemplos: ROL, GOL, CARACOL...'
+    hint: 'Ejemplos: ROL, GOL, CARACOL...',
+    ending: 'OL'
   },
   {
     clue:    { emoji: '🦁', word: 'LEÓN' },
@@ -69,7 +74,8 @@ var PAIRS = [
       { emoji: '🧦', word: 'MEDIA' },
     ],
     correct: 1,   // RATÓN rima con LEÓN
-    hint: 'Ejemplos: CAMIÓN, SILLÓN, BOTÓN...'
+    hint: 'Ejemplos: CAMIÓN, SILLÓN, BOTÓN...',
+    ending: 'ON'
   },
   {
     clue:    { emoji: '🌹', word: 'FLOR' },
@@ -79,7 +85,8 @@ var PAIRS = [
       { emoji: '🍋', word: 'LIMÓN' },
     ],
     correct: 0,   // AMOR rima con FLOR
-    hint: 'Ejemplos: CALOR, COLOR, VAPOR...'
+    hint: 'Ejemplos: CALOR, COLOR, VAPOR...',
+    ending: 'OR'
   },
   {
     clue:    { emoji: '🎻', word: 'VIOLÍN' },
@@ -89,21 +96,32 @@ var PAIRS = [
       { emoji: '🎸', word: 'GUITARRA' },
     ],
     correct: 1,   // JARDÍN rima con VIOLÍN
-    hint: 'Ejemplos: FESTÍN, PATÍN, CALCETÍN...'
+    hint: 'Ejemplos: FESTÍN, PATÍN, CALCETÍN...',
+    ending: 'IN'
   },
 ];
 
 // ---- ESTADO ----
 var completed  = new Array(PAIRS.length).fill(false);
 var rhymes     = new Array(PAIRS.length).fill('');
+var ownRhymes  = new Array(PAIRS.length).fill('');  // palabra propia escrita en la tarjeta
 var currentPair = null;
 var score      = 0;
 var hintTimer  = null;   // temporizador del hint
+
+// ---- NORMALIZAR TEXTO (sacar tildes, mayúsculas) ----
+function normalize(str) {
+  return str
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, ''); // quita acentos
+}
 
 // ---- INIT ----
 function init() {
   completed   = new Array(PAIRS.length).fill(false);
   rhymes      = new Array(PAIRS.length).fill('');
+  ownRhymes   = new Array(PAIRS.length).fill('');
   score       = 0;
   currentPair = null;
 
@@ -147,6 +165,14 @@ function buildCards() {
       '<div class="rhyme-result" id="rr-' + pi + '">' +
         '<span class="rr-icon">✏️</span>' +
         '<span id="rt-' + pi + '"></span>' +
+      '</div>' +
+      '<div class="own-rhyme" id="own-' + pi + '">' +
+        '<p class="own-lbl">🖊️ ¿SE TE OCURRE OTRA PALABRA QUE RIME?</p>' +
+        '<div class="own-row">' +
+          '<input class="own-input" id="own-in-' + pi + '" type="text" maxlength="20" autocomplete="off" placeholder="ESCRIBÍ AQUÍ..." onkeydown="if(event.key===\'Enter\'){checkOwnRhyme(' + pi + ')}"/>' +
+          '<button class="own-btn" onclick="checkOwnRhyme(' + pi + ')">✅</button>' +
+        '</div>' +
+        '<p class="own-feedback" id="own-fb-' + pi + '"></p>' +
       '</div>';
 
     container.appendChild(card);
@@ -300,6 +326,42 @@ document.addEventListener('keydown', function(e) {
     confirmRhyme();
   }
 });
+
+// ---- VERIFICAR RIMA PROPIA EN LA TARJETA ----
+function checkOwnRhyme(pi) {
+  var inp = document.getElementById('own-in-' + pi);
+  var fb  = document.getElementById('own-fb-' + pi);
+  var val = inp.value.trim();
+
+  if (val.length < 2) {
+    inp.classList.add('err');
+    setTimeout(function() { inp.classList.remove('err'); }, 500);
+    return;
+  }
+
+  var pair = PAIRS[pi];
+  var normVal    = normalize(val);
+  var normEnding = normalize(pair.ending);
+  // Que no sea exactamente la misma palabra de la pista
+  var sameAsClue = normVal === normalize(pair.clue.word);
+  var isRhyme = !sameAsClue && normVal.length > normEnding.length && normVal.endsWith(normEnding);
+
+  if (isRhyme) {
+    ownRhymes[pi] = val.toUpperCase();
+    inp.disabled = true;
+    inp.classList.remove('err');
+    document.querySelector('#own-' + pi + ' .own-btn').disabled = true;
+    fb.className = 'own-feedback ok';
+    fb.textContent = '🎉 ¡' + val.toUpperCase() + ' RIMA CON ' + pair.clue.word + '!';
+  } else {
+    inp.classList.add('err');
+    fb.className = 'own-feedback bad';
+    fb.textContent = sameAsClue
+      ? '🤔 ¡ESA ES LA MISMA PALABRA! PROBÁ OTRA.'
+      : '🤔 PROBÁ UNA PALABRA QUE TERMINE COMO "' + pair.clue.word + '"';
+    setTimeout(function() { inp.classList.remove('err'); }, 500);
+  }
+}
 
 // ---- ARRANCAR ----
 init();
