@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pre-trazos — Escritura Cursiva 1º Grado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       ENCABEZADO: título + barra de progreso
+  ══════════════════════════════════════════ -->
+  <header id="app-header">
+    <div class="header-left">
+      <span class="header-icon">✏️</span>
+      <h1>PRE-TRAZOS</h1>
+    </div>
+    <div class="progress-area">
+      <span class="prog-label" id="prog-label">TRAZO 1 DE 5</span>
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-fill"></div>
+        <!-- Marcadores de los 5 pasos -->
+        <div class="prog-dots" id="prog-dots"></div>
+      </div>
+    </div>
+    <button class="btn-retry" id="btn-retry" onclick="retryRow()">
+      🔄 REINTENTAR
+    </button>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       ÁREA DE INSTRUCCIÓN: nombre del trazo actual
+  ══════════════════════════════════════════ -->
+  <div class="instruction-bar" id="instruction-bar">
+    <span class="instr-icon" id="instr-icon">👆</span>
+    <span class="instr-text" id="instr-text">HACÉ CLIC EN EL PUNTO VERDE Y ARRASTRÁ SIGUIENDO LA LÍNEA</span>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ZONA DE TRAZOS: 5 canvas lado a lado
+  ══════════════════════════════════════════ -->
+  <main id="canvas-row">
+    <!-- Los canvas se generan dinámicamente por script.js -->
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       PANEL DE FELICITACIÓN (oculto al inicio)
+  ══════════════════════════════════════════ -->
+  <div class="congrats-overlay hidden" id="congrats-overlay">
+    <div class="congrats-box">
+      <div class="congrats-emo" id="congrats-emo">🎉</div>
+      <h2 class="congrats-title" id="congrats-title">¡MUY BIEN!</h2>
+      <p class="congrats-sub"  id="congrats-sub">COMPLETASTE LA FILA</p>
+      <!-- Botón único para trazos intermedios -->
+      <button class="btn-next" id="btn-next" onclick="nextStroke()">
+        ➡️ SIGUIENTE
+      </button>
+      <!-- Dos botones para la pantalla final (ocultos hasta el último trazo) -->
+      <div id="btn-final-wrap" style="display:none; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:4px;">
+        <button class="btn-next" onclick="volverAJugar()">🔄 VOLVER A JUGAR</button>
+        <button class="btn-next" style="background:linear-gradient(135deg,#1565c0,#0d47a1);" onclick="window.location.href='../index.html'">🏠 PÁGINA PRINCIPAL</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
