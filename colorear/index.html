@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colorear por Letras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===================== PANTALLA: SELECTOR ===================== -->
+  <section id="screen-selector" class="screen active">
+    <header class="top-bar">
+      <h1>🎨 COLOREAR POR LETRAS</h1>
+      <a class="btn btn-ghost" href="../index.html">🏠 PÁGINA PRINCIPAL</a>
+    </header>
+
+    <div class="gallery" id="gallery">
+      <!-- Las tarjetas de actividades se generan con JS -->
+    </div>
+  </section>
+
+  <!-- ===================== PANTALLA: JUEGO ===================== -->
+  <section id="screen-game" class="screen">
+    <header class="top-bar">
+      <h1 id="game-title">DIBUJO</h1>
+      <div class="top-actions">
+        <button class="btn btn-secondary" id="btn-reset">🔄 REINICIAR</button>
+        <button class="btn btn-ghost" id="btn-back">⬅ VOLVER</button>
+      </div>
+    </header>
+
+    <div class="game-body">
+      <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+      </div>
+      <aside class="palette" id="palette">
+        <!-- Botones de color se generan con JS -->
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===================== PANTALLA: SUBIR IMAGEN ===================== -->
+  <section id="screen-upload" class="screen">
+    <header class="top-bar">
+      <h1>➕ NUEVA IMAGEN</h1>
+      <button class="btn btn-ghost" id="btn-upload-cancel">⬅ VOLVER</button>
+    </header>
+
+    <div class="upload-body">
+      <div class="upload-step" id="upload-step-1">
+        <p class="upload-hint">1️⃣ ELEGÍ UNA IMAGEN PARA COLOREAR (el fondo debe ser blanco con líneas negras)</p>
+        <input type="file" id="file-input" accept="image/*">
+        <div class="upload-preview" id="upload-preview"></div>
+      </div>
+
+      <div class="upload-step" id="upload-step-2" style="display:none;">
+        <p class="upload-hint">2️⃣ PONÉ UN NOMBRE Y ARMÁ LA LEYENDA DE COLORES</p>
+        <input type="text" id="activity-name" class="text-input" placeholder="NOMBRE DEL DIBUJO" maxlength="30">
+
+        <div id="legend-rows" class="legend-rows"></div>
+
+        <button class="btn btn-secondary" id="btn-add-row">➕ AGREGAR LETRA</button>
+        <button class="btn btn-primary" id="btn-save-activity">💾 GUARDAR Y JUGAR</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="data.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
