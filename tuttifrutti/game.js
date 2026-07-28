@@ -1,6 +1,6 @@
 /**
  * game.js — Tutti Frutti adaptado para 1º grado
- * Categorías: ¿Qué es? · ¿Cómo es? · ¿Qué hace?
+ * Categorías: OBJETO · ANIMAL · COLOR
  * Puntaje: ❌ (0) · ⭐ (5) · 🏆 (10)
  */
 
@@ -12,9 +12,9 @@
 
 const CATEGORIES = ['que-es', 'como-es', 'que-hace'];
 const CAT_LABEL  = {
-  'que-es':   '¿QUÉ ES?',
-  'como-es':  '¿CÓMO ES?',
-  'que-hace': '¿QUÉ HACE?',
+  'que-es':   'OBJETO',
+  'como-es':  'ANIMAL',
+  'que-hace': 'COLOR',
 };
 
 // Opciones de puntaje: valor numérico + emoji mostrado
