@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>✂️ SEPARÁ EN SÍLABAS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ══ Fondo animado (igual que el index principal) ══ -->
+<div class="bg-shapes">
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+
+<!-- ══ PANTALLA: SELECTOR DE NIVEL ══ -->
+<div class="screen" id="screen-levels">
+  <div class="page-inner">
+
+    <header class="header">
+      <div class="mascot">✂️</div>
+      <h1 class="title">SEPARÁ EN SÍLABAS</h1>
+      <p class="subtitle">¡Arrastrá para marcar cada sílaba en orden!</p>
+    </header>
+
+    <div class="levels-grid" id="levels-grid">
+      <!-- generado por JS -->
+    </div>
+
+    <div class="footer">
+      <a class="btn-home" href="../index.html">🏠 PÁGINA PRINCIPAL</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ PANTALLA: JUEGO ══ -->
+<div class="screen hidden" id="screen-game">
+  <div class="page-inner game-layout">
+
+    <!-- Cabecera del juego -->
+    <header class="game-header">
+      <button class="btn-back" onclick="goToLevels()">◀ NIVELES</button>
+
+      <div class="game-title-area">
+        <span id="game-level-label" class="game-level-label">NIVEL 1</span>
+        <span id="game-progress-label" class="game-progress-label">Palabra 1 de 5</span>
+      </div>
+
+      <!-- Barra de progreso de palabras -->
+      <div class="word-prog-track">
+        <div class="word-prog-fill" id="word-prog-fill"></div>
+      </div>
+
+      <button class="btn-back btn-reintentar" onclick="retryWord()">🔄 REINTENTAR</button>
+    </header>
+
+    <!-- Instrucción dinámica -->
+    <div class="instruccion" id="instruccion">
+      Marcá la <strong>1ª sílaba</strong>: arrastrá sobre las letras
+    </div>
+
+    <!-- Emoji + Palabra de la ronda -->
+    <div class="word-area">
+      <div class="word-emoji" id="word-emoji">🐱</div>
+      <div class="word-display" id="word-display">
+        <!-- letras generadas por JS -->
+      </div>
+    </div>
+
+    <!-- Sílabas ya marcadas (chips) -->
+    <div class="silabas-marcadas" id="silabas-marcadas">
+      <!-- chips aparecen aquí -->
+    </div>
+
+    <!-- Feedback de resultado -->
+    <div class="feedback hidden" id="feedback"></div>
+
+  </div>
+</div>
+
+<!-- ══ OVERLAY: NIVEL COMPLETADO ══ -->
+<div class="overlay hidden" id="overlay-level">
+  <div class="overlay-box">
+    <div class="overlay-emo" id="ol-emo">🎉</div>
+    <h2 class="overlay-title" id="ol-title">¡NIVEL COMPLETADO!</h2>
+    <p  class="overlay-sub"   id="ol-sub">Completaste el Nivel 1</p>
+    <div class="overlay-btns">
+      <button class="btn-overlay btn-green"  id="ol-btn-next"   onclick="nextLevel()">➡️ SIGUIENTE NIVEL</button>
+      <button class="btn-overlay btn-purple" onclick="goToLevels()">📋 VER NIVELES</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ OVERLAY: TODOS LOS NIVELES COMPLETADOS ══ -->
+<div class="overlay hidden" id="overlay-final">
+  <div class="overlay-box">
+    <div class="overlay-emo">🏆</div>
+    <h2 class="overlay-title">¡FELICITACIONES!</h2>
+    <p  class="overlay-sub">¡Completaste todos los niveles!</p>
+    <div class="overlay-btns">
+      <button class="btn-overlay btn-green"  onclick="resetAll()">🔄 VOLVER A JUGAR</button>
+      <button class="btn-overlay btn-purple" onclick="goHome()">🏠 PÁGINA PRINCIPAL</button>
+    </div>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
