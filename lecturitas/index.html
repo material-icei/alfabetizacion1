@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📖 Lecturitas</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <a class="back-link" href="../index.html">⬅ MENÚ PRINCIPAL</a>
+    <div class="mascot">📖</div>
+    <h1 class="title">Lecturitas</h1>
+    <p class="subtitle" id="headerSubtitle">¡Leé el texto y encontrá la palabra escondida!</p>
+  </header>
+
+  <!-- ===================== PANTALLA 1: MENÚ DE TEXTOS ===================== -->
+  <section id="screenMenu" class="screen">
+    <div id="menuGrid" class="menu-grid"></div>
+  </section>
+
+  <!-- ===================== PANTALLA 2: JUEGO ===================== -->
+  <section id="screenGame" class="screen" hidden>
+
+    <div class="game-toolbar">
+      <button class="btn-back" id="btnBackToMenu">⬅ Elegir otro texto</button>
+      <div class="target-pill">
+        Buscá la palabra: <span id="targetWordLabel"></span>
+      </div>
+      <div class="progress-pill">
+        <span id="foundCount">0</span> / <span id="totalCount">0</span> ⭐
+      </div>
+    </div>
+
+    <div class="story-card">
+      <div class="story-emoji" id="storyEmoji"></div>
+      <h2 class="story-title" id="storyTitle"></h2>
+      <p class="story-text" id="storyText"></p>
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-stars">⭐✨🌟✨⭐</div>
+    <p class="footer-text">📖 · LECTURA COMPRENSIVA PARA PRIMER GRADO 📖</p>
+  </div>
+
+</div>
+
+<!-- Overlay de felicitaciones -->
+<div id="winOverlay" class="win-overlay" hidden>
+  <div class="win-card">
+    <div class="win-trophy">🏆</div>
+    <h2 class="win-title">¡LO LOGRASTE!</h2>
+    <p class="win-text">Encontraste todas las palabras del texto</p>
+    <div class="win-buttons">
+      <button class="btn-win btn-retry" id="btnRetry">🔁 Reintentar</button>
+      <button class="btn-win btn-menu" id="btnGoMenu">📚 Otro texto</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
