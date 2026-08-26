@@ -1,615 +1,1000 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌟 Aprendo el Alfabeto</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --shadow-soft: 0 8px 32px rgba(0,0,0,0.12);
-    --shadow-strong: 0 20px 60px rgba(0,0,0,0.22);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌟 Aprendo el Alfabeto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.12);
+      --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.22);
+    }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 6px 20px;
-    overflow: hidden;
-    position: relative;
-  }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 16px 20px 26px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-  /* ── Background shapes ── */
-  .bg-shapes {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .shape {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.1;
-    animation: float-around 28s infinite ease-in-out;
-  }
-  .shape:nth-child(1) { width:140px;height:140px;background:#FFE66D;top:8%;left:4%;animation-delay:0s; }
-  .shape:nth-child(2) { width:180px;height:180px;background:#4ECDC4;top:55%;right:6%;animation-delay:5s; }
-  .shape:nth-child(3) { width:100px;height:100px;background:#FF6B9D;bottom:12%;left:10%;animation-delay:10s; }
-  .shape:nth-child(4) { width:160px;height:160px;background:#6BCB77;top:20%;right:18%;animation-delay:15s; }
-  .shape:nth-child(5) { width:120px;height:120px;background:#FF9F1C;bottom:25%;right:30%;animation-delay:8s; }
+    /* ── Background shapes ── */
+    .bg-shapes {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
 
-  @keyframes float-around {
-    0%,100% { transform: translate(0,0) rotate(0deg) scale(1); }
-    25% { transform: translate(40px,-40px) rotate(90deg) scale(1.1); }
-    50% { transform: translate(-30px,30px) rotate(180deg) scale(0.9); }
-    75% { transform: translate(50px,50px) rotate(270deg) scale(1.05); }
-  }
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float-around 28s infinite ease-in-out;
+    }
 
-  /* ── Layout — Chromebook 1366×768 (16:9) ── */
-  .page {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    max-width: 1340px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0;
-  }
+    .shape:nth-child(1) {
+      width: 140px;
+      height: 140px;
+      background: #FFE66D;
+      top: 8%;
+      left: 4%;
+      animation-delay: 0s;
+    }
 
-  /* ── Header ── */
-  .header {
-    text-align: center;
-    margin-bottom: 5px;
-    animation: slideDown 0.6s cubic-bezier(0.34,1.56,0.64,1);
-  }
+    .shape:nth-child(2) {
+      width: 180px;
+      height: 180px;
+      background: #4ECDC4;
+      top: 55%;
+      right: 6%;
+      animation-delay: 5s;
+    }
 
-  @keyframes slideDown {
-    from { transform: translateY(-40px); opacity: 0; }
-    to   { transform: translateY(0);     opacity: 1; }
-  }
+    .shape:nth-child(3) {
+      width: 100px;
+      height: 100px;
+      background: #FF6B9D;
+      bottom: 12%;
+      left: 10%;
+      animation-delay: 10s;
+    }
 
-  .mascot {
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    display: inline-block;
-    animation: bounce-mascot 2s ease-in-out infinite;
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
-  }
+    .shape:nth-child(4) {
+      width: 160px;
+      height: 160px;
+      background: #6BCB77;
+      top: 20%;
+      right: 18%;
+      animation-delay: 15s;
+    }
 
-  @keyframes bounce-mascot {
-    0%,100% { transform: translateY(0) rotate(-5deg); }
-    50%     { transform: translateY(-8px) rotate(5deg); }
-  }
+    .shape:nth-child(5) {
+      width: 120px;
+      height: 120px;
+      background: #FF9F1C;
+      bottom: 25%;
+      right: 30%;
+      animation-delay: 8s;
+    }
 
-  .title {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(1.2rem, 2.6vw, 2rem);
-    color: white;
-    text-shadow: 4px 4px 0 rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.3);
-    letter-spacing: 1px;
-    line-height: 1.05;
-  }
+    @keyframes float-around {
 
-  .subtitle {
-    font-size: clamp(0.6rem, 1.1vw, 0.82rem);
-    color: rgba(255,255,255,0.92);
-    font-weight: 700;
-    margin-top: 1px;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-  }
+      0%,
+      100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
 
-  /* ── Progress bar (decoration) ── */
-  .progress-strip {
-    height: 5px;
-    background: rgba(255,255,255,0.25);
-    border-radius: 10px;
-    margin-bottom: 6px;
-    overflow: hidden;
-    animation: slideDown 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s backwards;
-  }
-  .progress-fill {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, #FFE66D, #FF9F1C, #FF6B9D, #C77DFF, #4ECDC4);
-    background-size: 300% 100%;
-    animation: shimmer 3s linear infinite;
-    border-radius: 10px;
-  }
-  @keyframes shimmer {
-    0%   { background-position: 0% 0; }
-    100% { background-position: 300% 0; }
-  }
+      25% {
+        transform: translate(40px, -40px) rotate(90deg) scale(1.1);
+      }
 
-  /* ── Cards grid — 6 columnas × 2 filas, ocupa el ancho disponible ── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 7px;
-    animation: scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s backwards;
-  }
+      50% {
+        transform: translate(-30px, 30px) rotate(180deg) scale(0.9);
+      }
 
-  @keyframes scaleIn {
-    from { transform: scale(0.88); opacity: 0; }
-    to   { transform: scale(1);    opacity: 1; }
-  }
+      75% {
+        transform: translate(50px, 50px) rotate(270deg) scale(1.05);
+      }
+    }
 
-  /* ── Activity card ── */
-  .activity-card {
-    background: white;
-    border-radius: 14px;
-    padding: 7px 7px 7px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
-    position: relative;
-    overflow: hidden;
-    border: 3px solid transparent;
-  }
+    /* ── Layout — Chromebook 1366×768 (16:9) ── */
+    .page {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1340px;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+    }
 
-  .activity-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    border-radius: 17px;
-  }
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 5px;
+      animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-  .activity-card:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: var(--shadow-strong);
-  }
+    @keyframes slideDown {
+      from {
+        transform: translateY(-40px);
+        opacity: 0;
+      }
 
-  .activity-card:hover::before { opacity: 1; }
-  .activity-card:active { transform: translateY(-3px) scale(1.01); }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
 
-  /* ── Individual card colors ── */
-  .card-1 { border-color: #FF6B9D; }
-  .card-1::before { background: linear-gradient(135deg, rgba(255,107,157,0.08), rgba(255,143,176,0.12)); }
-  .card-1 .card-accent { background: linear-gradient(135deg,#FF6B9D,#FF8FB0); }
-  .card-1 .card-badge { background: linear-gradient(135deg,#FF6B9D,#ff4d8b); }
+    .mascot {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      display: inline-block;
+      animation: bounce-mascot 2s ease-in-out infinite;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+    }
 
-  .card-2 { border-color: #4ECDC4; }
-  .card-2::before { background: linear-gradient(135deg, rgba(78,205,196,0.08), rgba(68,160,141,0.12)); }
-  .card-2 .card-accent { background: linear-gradient(135deg,#4ECDC4,#44A08D); }
-  .card-2 .card-badge { background: linear-gradient(135deg,#4ECDC4,#2fb5ab); }
+    @keyframes bounce-mascot {
 
-  .card-3 { border-color: #6C63FF; }
-  .card-3::before { background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(157,78,221,0.12)); }
-  .card-3 .card-accent { background: linear-gradient(135deg,#6C63FF,#9D4EDD); }
-  .card-3 .card-badge { background: linear-gradient(135deg,#6C63FF,#5a52d5); }
+      0%,
+      100% {
+        transform: translateY(0) rotate(-5deg);
+      }
 
-  .card-4 { border-color: #4A90E2; }
-  .card-4::before { background: linear-gradient(135deg, rgba(74,144,226,0.08), rgba(53,122,189,0.12)); }
-  .card-4 .card-accent { background: linear-gradient(135deg,#4A90E2,#357ABD); }
-  .card-4 .card-badge { background: linear-gradient(135deg,#4A90E2,#2872c8); }
+      50% {
+        transform: translateY(-8px) rotate(5deg);
+      }
+    }
 
-  .card-5 { border-color: #F59E0B; }
-  .card-5::before { background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(217,119,6,0.12)); }
-  .card-5 .card-accent { background: linear-gradient(135deg,#F59E0B,#D97706); }
-  .card-5 .card-badge { background: linear-gradient(135deg,#F59E0B,#e08c00); }
+    .title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.2rem, 2.6vw, 2rem);
+      color: white;
+      text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2), 0 0 40px rgba(255, 255, 255, 0.3);
+      letter-spacing: 1px;
+      line-height: 1.05;
+    }
 
-  .card-6 { border-color: #06b6d4; }
-  .card-6::before { background: linear-gradient(135deg, rgba(6,182,212,0.08), rgba(8,145,178,0.12)); }
-  .card-6 .card-accent { background: linear-gradient(135deg,#06b6d4,#0891b2); }
-  .card-6 .card-badge { background: linear-gradient(135deg,#06b6d4,#0e7490); }
+    .subtitle {
+      font-size: clamp(0.6rem, 1.1vw, 0.82rem);
+      color: rgba(255, 255, 255, 0.92);
+      font-weight: 700;
+      margin-top: 1px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
 
-  .card-7 { border-color: #ec4899; }
-  .card-7::before { background: linear-gradient(135deg, rgba(236,72,153,0.08), rgba(219,39,119,0.12)); }
-  .card-7 .card-accent { background: linear-gradient(135deg,#ec4899,#db2777); }
-  .card-7 .card-badge { background: linear-gradient(135deg,#ec4899,#be185d); }
+    /* ── Progress bar (decoration) ── */
+    .progress-strip {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      overflow: hidden;
+      animation: slideDown 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+    }
 
-  .card-8 { border-color: #10b981; }
-  .card-8::before { background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.12)); }
-  .card-8 .card-accent { background: linear-gradient(135deg,#10b981,#059669); }
-  .card-8 .card-badge { background: linear-gradient(135deg,#10b981,#047857); }
+    .progress-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #FFE66D, #FF9F1C, #FF6B9D, #C77DFF, #4ECDC4);
+      background-size: 300% 100%;
+      animation: shimmer 3s linear infinite;
+      border-radius: 10px;
+    }
 
-  .card-9 { border-color: #f97316; }
-  .card-9::before { background: linear-gradient(135deg, rgba(249,115,22,0.08), rgba(234,88,12,0.12)); }
-  .card-9 .card-accent { background: linear-gradient(135deg,#f97316,#ea580c); }
-  .card-9 .card-badge { background: linear-gradient(135deg,#f97316,#c2410c); }
+    @keyframes shimmer {
+      0% {
+        background-position: 0% 0;
+      }
 
-  .card-10 { border-color: #a855f7; }
-  .card-10::before { background: linear-gradient(135deg, rgba(168,85,247,0.08), rgba(124,58,237,0.12)); }
-  .card-10 .card-accent { background: linear-gradient(135deg,#a855f7,#7c3aed); }
-  .card-10 .card-badge { background: linear-gradient(135deg,#a855f7,#6d28d9); }
+      100% {
+        background-position: 300% 0;
+      }
+    }
 
-  .card-11 { border-color: #06b6d4; }
-  .card-11::before { background: linear-gradient(135deg, rgba(6,182,212,0.08), rgba(8,145,178,0.12)); }
-  .card-11 .card-accent { background: linear-gradient(135deg,#06b6d4,#0891b2); }
-  .card-11 .card-badge { background: linear-gradient(135deg,#06b6d4,#0e7490); }
+    /* ── Cards grid — 7 columnas, tantas filas como haga falta ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-auto-rows: minmax(150px, auto);
+      gap: 9px;
+      animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
+    }
 
-  .card-12 { border-color: #1aad72; }
-  .card-12::before { background: linear-gradient(135deg, rgba(26,173,114,0.08), rgba(13,122,80,0.12)); }
-  .card-12 .card-accent { background: linear-gradient(135deg,#1aad72,#0d7a50); }
-  .card-12 .card-badge { background: linear-gradient(135deg,#1aad72,#0d7a50); }
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.88);
+        opacity: 0;
+      }
 
-  .card-13 { border-color: #e879f9; }
-  .card-13::before { background: linear-gradient(135deg, rgba(232,121,249,0.08), rgba(192,38,211,0.12)); }
-  .card-13 .card-accent { background: linear-gradient(135deg,#e879f9,#c026d3); }
-  .card-13 .card-badge { background: linear-gradient(135deg,#e879f9,#a21caf); }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
 
- .card-14 { border-color: #F59E0B; }
-  .card-14::before { background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(217,119,6,0.12)); }
-  .card-14 .card-accent { background: linear-gradient(135deg,#F59E0B,#D97706); }
-  .card-14 .card-badge { background: linear-gradient(135deg,#F59E0B,#e08c00); }
-  
+    /* ── Activity card ── */
+    .activity-card {
+      background: white;
+      border-radius: 14px;
+      padding: 7px 7px 7px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+      border: 3px solid transparent;
+    }
 
-  /* ── Card inner parts ── */
-  .card-accent {
-    width: 100%;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px 0;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.13);
-  }
+    .activity-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 17px;
+    }
 
-  .card-emoji {
-    font-size: clamp(1.4rem, 2.6vw, 2rem);
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.15));
-    animation: float-card 3s ease-in-out infinite;
-  }
+    .activity-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: var(--shadow-strong);
+    }
 
-  .activity-card:nth-child(1)  .card-emoji { animation-delay: 0s; }
-  .activity-card:nth-child(2)  .card-emoji { animation-delay: 0.3s; }
-  .activity-card:nth-child(3)  .card-emoji { animation-delay: 0.6s; }
-  .activity-card:nth-child(4)  .card-emoji { animation-delay: 0.9s; }
-  .activity-card:nth-child(5)  .card-emoji { animation-delay: 1.2s; }
-  .activity-card:nth-child(6)  .card-emoji { animation-delay: 1.5s; }
-  .activity-card:nth-child(7)  .card-emoji { animation-delay: 1.8s; }
-  .activity-card:nth-child(8)  .card-emoji { animation-delay: 2.1s; }
-  .activity-card:nth-child(9)  .card-emoji { animation-delay: 2.4s; }
-  .activity-card:nth-child(10) .card-emoji { animation-delay: 2.7s; }
-  .activity-card:nth-child(11) .card-emoji { animation-delay: 3.0s; }
-  .activity-card:nth-child(12) .card-emoji { animation-delay: 3.3s; }
-  .activity-card:nth-child(13) .card-emoji { animation-delay: 3.6s; }
-  
+    .activity-card:hover::before {
+      opacity: 1;
+    }
 
-  @keyframes float-card {
-    0%,100% { transform: translateY(0); }
-    50%     { transform: translateY(-6px); }
-  }
+    .activity-card:active {
+      transform: translateY(-3px) scale(1.01);
+    }
 
-  .card-badge {
-    color: white;
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(0.5rem, 0.85vw, 0.65rem);
-    padding: 2px 8px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
+    /* ── Individual card colors ── */
+    .card-1 {
+      border-color: #FF6B9D;
+    }
 
-  .card-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(0.68rem, 1.2vw, 0.88rem);
-    color: #3d0066;
-    text-align: center;
-    line-height: 1.15;
-  }
+    .card-1::before {
+      background: linear-gradient(135deg, rgba(255, 107, 157, 0.08), rgba(255, 143, 176, 0.12));
+    }
 
-  .card-desc {
-    font-size: clamp(0.54rem, 0.9vw, 0.68rem);
-    color: #7c3aed;
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.25;
-  }
+    .card-1 .card-accent {
+      background: linear-gradient(135deg, #FF6B9D, #FF8FB0);
+    }
 
-  .card-level {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    font-size: clamp(0.52rem, 0.85vw, 0.65rem);
-    color: #9ca3af;
-    font-weight: 800;
-  }
+    .card-1 .card-badge {
+      background: linear-gradient(135deg, #FF6B9D, #ff4d8b);
+    }
 
-  /* ── Footer stars ── */
-  .footer {
-    text-align: center;
-    margin-top: 5px;
-    animation: slideDown 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.4s backwards;
-  }
+    .card-2 {
+      border-color: #4ECDC4;
+    }
 
-  .footer-stars {
-    font-size: clamp(0.8rem, 1.5vw, 1.1rem);
-    letter-spacing: 6px;
-    animation: pulse-stars 2s ease-in-out infinite;
-    filter: drop-shadow(0 2px 6px rgba(255,230,109,0.6));
-  }
+    .card-2::before {
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.08), rgba(68, 160, 141, 0.12));
+    }
 
-  @keyframes pulse-stars {
-    0%,100% { transform: scale(1); opacity: 1; }
-    50%     { transform: scale(1.08); opacity: 0.85; }
-  }
+    .card-2 .card-accent {
+      background: linear-gradient(135deg, #4ECDC4, #44A08D);
+    }
 
-  .footer-text {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(0.65rem, 1.2vw, 0.85rem);
-    color: rgba(255,255,255,0.85);
-    margin-top: 2px;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-  }
+    .card-2 .card-badge {
+      background: linear-gradient(135deg, #4ECDC4, #2fb5ab);
+    }
 
-  /* ── Confetti on hover ── */
-  .sparkle {
-    position: absolute;
-    pointer-events: none;
-    font-size: 1rem;
-    animation: sparkle-fly 0.8s ease-out forwards;
-    z-index: 20;
-  }
+    .card-3 {
+      border-color: #6C63FF;
+    }
 
-  @keyframes sparkle-fly {
-    0%   { opacity:1; transform:translate(0,0) scale(1); }
-    100% { opacity:0; transform:translate(var(--tx),var(--ty)) scale(0.3); }
-  }
-</style>
+    .card-3::before {
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.08), rgba(157, 78, 221, 0.12));
+    }
+
+    .card-3 .card-accent {
+      background: linear-gradient(135deg, #6C63FF, #9D4EDD);
+    }
+
+    .card-3 .card-badge {
+      background: linear-gradient(135deg, #6C63FF, #5a52d5);
+    }
+
+    .card-4 {
+      border-color: #4A90E2;
+    }
+
+    .card-4::before {
+      background: linear-gradient(135deg, rgba(74, 144, 226, 0.08), rgba(53, 122, 189, 0.12));
+    }
+
+    .card-4 .card-accent {
+      background: linear-gradient(135deg, #4A90E2, #357ABD);
+    }
+
+    .card-4 .card-badge {
+      background: linear-gradient(135deg, #4A90E2, #2872c8);
+    }
+
+    .card-5 {
+      border-color: #F59E0B;
+    }
+
+    .card-5::before {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.12));
+    }
+
+    .card-5 .card-accent {
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+    }
+
+    .card-5 .card-badge {
+      background: linear-gradient(135deg, #F59E0B, #e08c00);
+    }
+
+    .card-6 {
+      border-color: #06b6d4;
+    }
+
+    .card-6::before {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(8, 145, 178, 0.12));
+    }
+
+    .card-6 .card-accent {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+
+    .card-6 .card-badge {
+      background: linear-gradient(135deg, #06b6d4, #0e7490);
+    }
+
+    .card-7 {
+      border-color: #ec4899;
+    }
+
+    .card-7::before {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(219, 39, 119, 0.12));
+    }
+
+    .card-7 .card-accent {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+    }
+
+    .card-7 .card-badge {
+      background: linear-gradient(135deg, #ec4899, #be185d);
+    }
+
+    .card-8 {
+      border-color: #10b981;
+    }
+
+    .card-8::before {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(5, 150, 105, 0.12));
+    }
+
+    .card-8 .card-accent {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .card-8 .card-badge {
+      background: linear-gradient(135deg, #10b981, #047857);
+    }
+
+    .card-9 {
+      border-color: #f97316;
+    }
+
+    .card-9::before {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(234, 88, 12, 0.12));
+    }
+
+    .card-9 .card-accent {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+    }
+
+    .card-9 .card-badge {
+      background: linear-gradient(135deg, #f97316, #c2410c);
+    }
+
+    .card-10 {
+      border-color: #a855f7;
+    }
+
+    .card-10::before {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(124, 58, 237, 0.12));
+    }
+
+    .card-10 .card-accent {
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+    }
+
+    .card-10 .card-badge {
+      background: linear-gradient(135deg, #a855f7, #6d28d9);
+    }
+
+    .card-11 {
+      border-color: #06b6d4;
+    }
+
+    .card-11::before {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(8, 145, 178, 0.12));
+    }
+
+    .card-11 .card-accent {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+
+    .card-11 .card-badge {
+      background: linear-gradient(135deg, #06b6d4, #0e7490);
+    }
+
+    .card-12 {
+      border-color: #1aad72;
+    }
+
+    .card-12::before {
+      background: linear-gradient(135deg, rgba(26, 173, 114, 0.08), rgba(13, 122, 80, 0.12));
+    }
+
+    .card-12 .card-accent {
+      background: linear-gradient(135deg, #1aad72, #0d7a50);
+    }
+
+    .card-12 .card-badge {
+      background: linear-gradient(135deg, #1aad72, #0d7a50);
+    }
+
+    .card-13 {
+      border-color: #e879f9;
+    }
+
+    .card-13::before {
+      background: linear-gradient(135deg, rgba(232, 121, 249, 0.08), rgba(192, 38, 211, 0.12));
+    }
+
+    .card-13 .card-accent {
+      background: linear-gradient(135deg, #e879f9, #c026d3);
+    }
+
+    .card-13 .card-badge {
+      background: linear-gradient(135deg, #e879f9, #a21caf);
+    }
+
+    .card-14 {
+      border-color: #22d3ee;
+    }
+
+    .card-14::before {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(8, 145, 178, 0.12));
+    }
+
+    .card-14 .card-accent {
+      background: linear-gradient(135deg, #22d3ee, #0e8ba3);
+    }
+
+    .card-14 .card-badge {
+      background: linear-gradient(135deg, #22d3ee, #0e8ba3);
+    }
+
+    .card-15 {
+      border-color: #f43f5e;
+    }
+
+    .card-15::before {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.08), rgba(190, 18, 60, 0.12));
+    }
+
+    .card-15 .card-accent {
+      background: linear-gradient(135deg, #f43f5e, #be123c);
+    }
+
+    .card-15 .card-badge {
+      background: linear-gradient(135deg, #f43f5e, #be123c);
+    }
+
+    .card-16 {
+      border-color: #84cc16;
+    }
+
+    .card-16::before {
+      background: linear-gradient(135deg, rgba(132, 204, 22, 0.08), rgba(77, 124, 15, 0.12));
+    }
+
+    .card-16 .card-accent {
+      background: linear-gradient(135deg, #84cc16, #4d7c0f);
+    }
+
+    .card-16 .card-badge {
+      background: linear-gradient(135deg, #84cc16, #4d7c0f);
+    }
+
+    .card-17 {
+      border-color: #eab308;
+    }
+
+    .card-17::before {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.08), rgba(161, 98, 7, 0.12));
+    }
+
+    .card-17 .card-accent {
+      background: linear-gradient(135deg, #eab308, #a16207);
+    }
+
+    .card-17 .card-badge {
+      background: linear-gradient(135deg, #eab308, #a16207);
+    }
+
+
+    /* ── Card inner parts ── */
+    .card-accent {
+      width: 100%;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 0;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.13);
+    }
+
+    .card-emoji {
+      font-size: clamp(1.4rem, 2.6vw, 2rem);
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+      animation: float-card 3s ease-in-out infinite;
+    }
+
+    .activity-card:nth-child(1) .card-emoji {
+      animation-delay: 0s;
+    }
+
+    .activity-card:nth-child(2) .card-emoji {
+      animation-delay: 0.3s;
+    }
+
+    .activity-card:nth-child(3) .card-emoji {
+      animation-delay: 0.6s;
+    }
+
+    .activity-card:nth-child(4) .card-emoji {
+      animation-delay: 0.9s;
+    }
+
+    .activity-card:nth-child(5) .card-emoji {
+      animation-delay: 1.2s;
+    }
+
+    .activity-card:nth-child(6) .card-emoji {
+      animation-delay: 1.5s;
+    }
+
+    .activity-card:nth-child(7) .card-emoji {
+      animation-delay: 1.8s;
+    }
+
+    .activity-card:nth-child(8) .card-emoji {
+      animation-delay: 2.1s;
+    }
+
+    .activity-card:nth-child(9) .card-emoji {
+      animation-delay: 2.4s;
+    }
+
+    .activity-card:nth-child(10) .card-emoji {
+      animation-delay: 2.7s;
+    }
+
+    .activity-card:nth-child(11) .card-emoji {
+      animation-delay: 3.0s;
+    }
+
+    .activity-card:nth-child(12) .card-emoji {
+      animation-delay: 3.3s;
+    }
+
+    .activity-card:nth-child(13) .card-emoji {
+      animation-delay: 3.6s;
+    }
+
+    .activity-card:nth-child(14) .card-emoji {
+      animation-delay: 3.9s;
+    }
+
+    .activity-card:nth-child(15) .card-emoji {
+      animation-delay: 4.2s;
+    }
+
+    .activity-card:nth-child(16) .card-emoji {
+      animation-delay: 4.5s;
+    }
+
+    .activity-card:nth-child(17) .card-emoji {
+      animation-delay: 4.8s;
+    }
+
+
+    @keyframes float-card {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    .card-badge {
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(0.5rem, 0.85vw, 0.65rem);
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(0.68rem, 1.2vw, 0.88rem);
+      color: #3d0066;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .card-desc {
+      font-size: clamp(0.54rem, 0.9vw, 0.68rem);
+      color: #7c3aed;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .card-level {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: clamp(0.52rem, 0.85vw, 0.65rem);
+      color: #9ca3af;
+      font-weight: 800;
+    }
+
+    /* ── Footer stars ── */
+    .footer {
+      text-align: center;
+      margin-top: 5px;
+      animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards;
+    }
+
+    .footer-stars {
+      font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+      letter-spacing: 6px;
+      animation: pulse-stars 2s ease-in-out infinite;
+      filter: drop-shadow(0 2px 6px rgba(255, 230, 109, 0.6));
+    }
+
+    @keyframes pulse-stars {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.08);
+        opacity: 0.85;
+      }
+    }
+
+    .footer-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 2px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ── Confetti on hover ── */
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      font-size: 1rem;
+      animation: sparkle-fly 0.8s ease-out forwards;
+      z-index: 20;
+    }
+
+    @keyframes sparkle-fly {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0.3);
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="bg-shapes">
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-</div>
-
-<div class="page">
-
-  <!-- Header -->
-  <header class="header">
-    <div class="mascot">🦉</div>
-    <h1 class="title">Aprendo el Alfabeto</h1>
-    <p class="subtitle">¡Elige una actividad y a jugar! 🎉</p>
-  </header>
-
-  <!-- Rainbow progress strip -->
-  <div class="progress-strip">
-    <div class="progress-fill"></div>
+  <div class="bg-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
   </div>
 
-  <!-- Activity cards -->
-  <div class="cards-grid">
+  <div class="page">
 
-    <!-- 1 -->
-    <a class="activity-card card-1" href="ComienzaCon-dibujo.html">
-      <div class="card-accent">
-        <span class="card-emoji">🎨</span>
-      </div>
-      <div class="card-badge">NIVEL 1</div>
-      <div class="card-title">COMIENZA CON DIBUJO</div>
-      <div class="card-desc">¿Qué imagen empieza con la letra?</div>
-      <div class="card-level">⭐ Fácil</div>
-    </a>
+    <!-- Header -->
+    <header class="header">
+      <div class="mascot">🦉</div>
+      <h1 class="title">Aprendo el Alfabeto</h1>
+      <p class="subtitle">¡Elige una actividad y a jugar! 🎉</p>
+    </header>
 
-    <!-- 2 -->
-    <a class="activity-card card-2" href="ComienzaCon-letra.html">
-      <div class="card-accent">
-        <span class="card-emoji">🎯</span>
-      </div>
-      <div class="card-badge">NIVEL 2</div>
-      <div class="card-title">ENCONTRAR LA LETRA</div>
-      <div class="card-desc">¿Con qué letra comienzan las palabras?</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
+    <!-- Rainbow progress strip -->
+    <div class="progress-strip">
+      <div class="progress-fill"></div>
+    </div>
 
-    <!-- 3 -->
-    <a class="activity-card card-3" href="OrdenarSilabas.html">
-      <div class="card-accent">
-        <span class="card-emoji">🆎</span>
-      </div>
-      <div class="card-badge">NIVEL 3</div>
-      <div class="card-title">ORDENAR LAS SÍLABAS</div>
-      <div class="card-desc">Arrastra y forma la palabra correcta</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
+    <!-- Activity cards -->
+    <div class="cards-grid">
 
-    <!-- 4 -->
-    <a class="activity-card card-4" href="CompletarABC.html">
-      <div class="card-accent">
-        <span class="card-emoji">🔤</span>
-      </div>
-      <div class="card-badge">NIVEL 4</div>
-      <div class="card-title">COMPLETAR EL ABC</div>
-      <div class="card-desc">¿Cuáles son las letras que faltan?</div>
-      <div class="card-level">⭐⭐⭐ Difícil</div>
-    </a>
+      <!-- 1 -->
+      <a class="activity-card card-1" href="ComienzaCon-dibujo.html">
+        <div class="card-accent">
+          <span class="card-emoji">🎨</span>
+        </div>
+        <div class="card-badge">NIVEL 1</div>
+        <div class="card-title">COMIENZA CON DIBUJO</div>
+        <div class="card-desc">¿Qué imagen empieza con la letra?</div>
+        <div class="card-level">⭐ Fácil</div>
+      </a>
 
-    <!-- 5 -->
-    <a class="activity-card card-5" href="CompletarConVocales.html">
-      <div class="card-accent">
-        <span class="card-emoji">🎵</span>
-      </div>
-      <div class="card-badge">NIVEL 5</div>
-      <div class="card-title">COMPLETAR CON VOCALES</div>
-      <div class="card-desc">Rellena las vocales que faltan</div>
-      <div class="card-level">⭐⭐⭐ Difícil</div>
-    </a>
+      <!-- 2 -->
+      <a class="activity-card card-2" href="ComienzaCon-letra.html">
+        <div class="card-accent">
+          <span class="card-emoji">🎯</span>
+        </div>
+        <div class="card-badge">NIVEL 2</div>
+        <div class="card-title">ENCONTRAR LA LETRA</div>
+        <div class="card-desc">¿Con qué letra comienzan las palabras?</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
 
-    <!-- 6 -->
-    <a class="activity-card card-6" href="Grafismo.html">
-      <div class="card-accent">
-        <span class="card-emoji">✏️</span>
-      </div>
-      <div class="card-badge">NIVEL 6</div>
-      <div class="card-title">SEGUIR EL CAMINO</div>
-      <div class="card-desc">Dibuja el recorrido con el mouse</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
+      <!-- 3 -->
+      <a class="activity-card card-3" href="OrdenarSilabas.html">
+        <div class="card-accent">
+          <span class="card-emoji">🆎</span>
+        </div>
+        <div class="card-badge">NIVEL 3</div>
+        <div class="card-title">ORDENAR LAS SÍLABAS</div>
+        <div class="card-desc">Arrastra y forma la palabra correcta</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
 
+      <!-- 4 -->
+      <a class="activity-card card-4" href="CompletarABC.html">
+        <div class="card-accent">
+          <span class="card-emoji">🔤</span>
+        </div>
+        <div class="card-badge">NIVEL 4</div>
+        <div class="card-title">COMPLETAR EL ABC</div>
+        <div class="card-desc">¿Cuáles son las letras que faltan?</div>
+        <div class="card-level">⭐⭐⭐ Difícil</div>
+      </a>
 
-<!-- 7 -->
-    <a class="activity-card card-7" href="rimas/index.html">
-      <div class="card-accent">
-        <span class="card-emoji">🎶</span>
-      </div>
-      <div class="card-badge">NIVEL 7</div>
-      <div class="card-title">RIMAS</div>
-      <div class="card-desc">¡Encontrá las palabras que riman!</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
-    
-    
-    <!-- 8 -->
-    <a class="activity-card card-8" href="SilabaInicial.html">
-      <div class="card-accent">
-        <span class="card-emoji">🔡</span>
-      </div>
-      <div class="card-badge">NIVEL 8</div>
-      <div class="card-title">SÍLABA INICIAL</div>
-      <div class="card-desc">¿Qué imágenes empiezan con la sílaba?</div>
-      <div class="card-level">⭐⭐⭐ Difícil</div>
-    </a>
+      <!-- 5 -->
+      <a class="activity-card card-5" href="CompletarConVocales.html">
+        <div class="card-accent">
+          <span class="card-emoji">🎵</span>
+        </div>
+        <div class="card-badge">NIVEL 5</div>
+        <div class="card-title">COMPLETAR CON VOCALES</div>
+        <div class="card-desc">Rellena las vocales que faltan</div>
+        <div class="card-level">⭐⭐⭐ Difícil</div>
+      </a>
 
-    <!-- 9 -->
-    <a class="activity-card card-9" href="rutis/index.html">
-      <div class="card-accent">
-        <span class="card-emoji">🖊️</span>
-      </div>
-      <div class="card-badge">NIVEL 9</div>
-      <div class="card-title">PRE-TRAZOS</div>
-      <div class="card-desc">Practicá los trazos de la escritura cursiva</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
-
-    <!-- 10 -->
-    <a class="activity-card card-10" href="UnirImagenPalabra.html">
-      <div class="card-accent">
-        <span class="card-emoji">🔗</span>
-      </div>
-      <div class="card-badge">NIVEL 10</div>
-      <div class="card-title">UNIR IMAGEN Y PALABRA</div>
-      <div class="card-desc">Conectá cada dibujo con su nombre</div>
-      <div class="card-level">⭐⭐⭐ Difícil</div>
-    </a>
-
-    <!-- 11 -->
-    <a class="activity-card card-11" href="Escribo_Silabas.html">
-      <div class="card-accent">
-        <span class="card-emoji">✍️</span>
-      </div>
-      <div class="card-badge">NIVEL 11</div>
-      <div class="card-title">ESCRIBIR CON SÍLABAS</div>
-      <div class="card-desc">Escribí palabras para cada sílaba</div>
-      <div class="card-level">⭐⭐⭐ Difícil</div>
-    </a>
-
-    <!-- 12 -->
-    <a class="activity-card card-12" href="OrdenarLetras.html">
-      <div class="card-accent">
-        <span class="card-emoji">🔀</span>
-      </div>
-      <div class="card-badge">NIVEL 12</div>
-      <div class="card-title">ORDENAR LAS LETRAS</div>
-      <div class="card-desc">Formá la palabra ordenando las letras</div>
-      <div class="card-level">⭐⭐⭐ Difícil</div>
-    </a>
-
-        <!-- NIVEL 13 -->
-    <a class="activity-card card-13" href="separa-en-silabas/index.html">
-      <div class="card-accent">
-        <span class="card-emoji">✂️</span>
-      </div>
-      <div class="card-badge">NIVEL 13</div>
-      <div class="card-title">SEPARÁ EN SÍLABAS</div>
-      <div class="card-desc">Arrastrá para marcar cada sílaba</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
-
-    <!-- 14 -->
-    <a class="activity-card card-12" href="bingo/index.html">
-      <div class="card-accent">
-        <span class="card-emoji">🧩</span>
-      </div>
-      <div class="card-badge">JUEGO</div>
-      <div class="card-title">BINGO DE LETRAS</div>
-      <div class="card-desc">¡Marcá los objetos que empiezan con la letra!</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
-
-   <!-- 15 -->
-    <a class="activity-card card-13" href="tuttifrutti/index.html">
-      <div class="card-accent">
-        <span class="card-emoji">🧩</span>
-      </div>
-      <div class="card-badge">JUEGO</div>
-      <div class="card-title">TUTTI FRUTTI</div>
-      <div class="card-desc">¡Completá con palabras que empiezan con la letra!</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
+      <!-- 6 -->
+      <a class="activity-card card-6" href="Grafismo.html">
+        <div class="card-accent">
+          <span class="card-emoji">✏️</span>
+        </div>
+        <div class="card-badge">NIVEL 6</div>
+        <div class="card-title">SEGUIR EL CAMINO</div>
+        <div class="card-desc">Dibuja el recorrido con el mouse</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
 
 
-     <!-- 16 -->
-    <a class="activity-card card-14" href="colorear/index.html">
-      <div class="card-accent">
-        <span class="card-emoji">🧩</span>
-      </div>
-      <div class="card-badge">JUEGO</div>
-      <div class="card-title">COLOREAR</div>
-      <div class="card-desc">¡Colorear según la letra!</div>
-      <div class="card-level">⭐⭐ Medio</div>
-    </a>
+      <!-- 7 -->
+      <a class="activity-card card-7" href="rimas/index.html">
+        <div class="card-accent">
+          <span class="card-emoji">🎶</span>
+        </div>
+        <div class="card-badge">NIVEL 7</div>
+        <div class="card-title">RIMAS</div>
+        <div class="card-desc">¡Encontrá las palabras que riman!</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
 
 
-   
+      <!-- 8 -->
+      <a class="activity-card card-8" href="SilabaInicial.html">
+        <div class="card-accent">
+          <span class="card-emoji">🔡</span>
+        </div>
+        <div class="card-badge">NIVEL 8</div>
+        <div class="card-title">SÍLABA INICIAL</div>
+        <div class="card-desc">¿Qué imágenes empiezan con la sílaba?</div>
+        <div class="card-level">⭐⭐⭐ Difícil</div>
+      </a>
+
+      <!-- 9 -->
+      <a class="activity-card card-9" href="rutis/index.html">
+        <div class="card-accent">
+          <span class="card-emoji">🖊️</span>
+        </div>
+        <div class="card-badge">NIVEL 9</div>
+        <div class="card-title">PRE-TRAZOS</div>
+        <div class="card-desc">Practicá los trazos de la escritura cursiva</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
+
+      <!-- 10 -->
+      <a class="activity-card card-10" href="UnirImagenPalabra.html">
+        <div class="card-accent">
+          <span class="card-emoji">🔗</span>
+        </div>
+        <div class="card-badge">NIVEL 10</div>
+        <div class="card-title">UNIR IMAGEN Y PALABRA</div>
+        <div class="card-desc">Conectá cada dibujo con su nombre</div>
+        <div class="card-level">⭐⭐⭐ Difícil</div>
+      </a>
+
+      <!-- 11 -->
+      <a class="activity-card card-11" href="Escribo_Silabas.html">
+        <div class="card-accent">
+          <span class="card-emoji">✍️</span>
+        </div>
+        <div class="card-badge">NIVEL 11</div>
+        <div class="card-title">ESCRIBIR CON SÍLABAS</div>
+        <div class="card-desc">Escribí palabras para cada sílaba</div>
+        <div class="card-level">⭐⭐⭐ Difícil</div>
+      </a>
+
+      <!-- 12 -->
+      <a class="activity-card card-12" href="OrdenarLetras.html">
+        <div class="card-accent">
+          <span class="card-emoji">🔀</span>
+        </div>
+        <div class="card-badge">NIVEL 12</div>
+        <div class="card-title">ORDENAR LAS LETRAS</div>
+        <div class="card-desc">Formá la palabra ordenando las letras</div>
+        <div class="card-level">⭐⭐⭐ Difícil</div>
+      </a>
+
+      <!-- 13 -->
+      <a class="activity-card card-13" href="separa-en-silabas/index.html">
+        <div class="card-accent">
+          <span class="card-emoji">✂️</span>
+        </div>
+        <div class="card-badge">NIVEL 13</div>
+        <div class="card-title">SEPARÁ EN SÍLABAS</div>
+        <div class="card-desc">Arrastrá para marcar cada sílaba</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
+
+      <!-- 14 -->
+      <a class="activity-card card-17" href="lecturitas/index.html">
+        <div class="card-accent">
+          <span class="card-emoji">📖</span>
+        </div>
+        <div class="card-badge">JUEGO</div>
+        <div class="card-title">LECTURITAS</div>
+        <div class="card-desc">¡Leé y encontrá la palabra en el texto!</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
+
+      <!-- 15 -->
+      <a class="activity-card card-14" href="bingo/index.html">
+        <div class="card-accent">
+          <span class="card-emoji">🧩</span>
+        </div>
+        <div class="card-badge">JUEGO</div>
+        <div class="card-title">BINGO DE LETRAS</div>
+        <div class="card-desc">¡Marcá los objetos que empiezan con la letra!</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
+
+      <!-- 16 -->
+      <a class="activity-card card-15" href="tuttifrutti/index.html">
+        <div class="card-accent">
+          <span class="card-emoji">🧩</span>
+        </div>
+        <div class="card-badge">JUEGO</div>
+        <div class="card-title">TUTTI FRUTTI</div>
+        <div class="card-desc">¡Completá con palabras que empiezan con la letra!</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
+
+      <!-- 17 -->
+      <a class="activity-card card-16" href="colorear/index.html">
+        <div class="card-accent">
+          <span class="card-emoji">🧩</span>
+        </div>
+        <div class="card-badge">JUEGO</div>
+        <div class="card-title">COLOREAR</div>
+        <div class="card-desc">¡Colorear según la letra!</div>
+        <div class="card-level">⭐⭐ Medio</div>
+      </a>
+
+
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-stars">⭐✨🌟✨⭐</div>
+      <p class="footer-text">¡Completá las actividades y sé un campeón del alfabeto!</p>
+      <br>
+      <br>
+      <p class="footer-text">📖 · ALFABETIZACIÓN PARA PRIMER GRADO · Contenido Pedagógico: Prof. Paola Espinosa ·
+        Desarrollo Web: Seño Laura 📖</p>
+    </div>
 
   </div>
 
-  <!-- Footer -->
-  <div class="footer">
-    <div class="footer-stars">⭐✨🌟✨⭐</div>
-    <p class="footer-text">¡Completá las actividades y sé un campeón del alfabeto!</p>
-    <br>
-    <br>
-    <p class="footer-text">📖 · ALFABETIZACIÓN PARA PRIMER GRADO · Contenido Pedagógico: Prof. Paola Espinosa · Desarrollo Web: Seño Laura 📖</p>
-  </div>
-
-</div>
-
-<script>
-  // Sparkle effect on card hover
-  document.querySelectorAll('.activity-card').forEach(card => {
-    card.addEventListener('mouseenter', (e) => {
-      const emojis = ['✨','⭐','🌟','💫','🎉'];
-      for (let i = 0; i < 4; i++) {
-        const sp = document.createElement('span');
-        sp.className = 'sparkle';
-        sp.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        const tx = (Math.random() - 0.5) * 80;
-        const ty = -(Math.random() * 60 + 20);
-        sp.style.setProperty('--tx', tx + 'px');
-        sp.style.setProperty('--ty', ty + 'px');
-        sp.style.left = (Math.random() * 80 + 10) + '%';
-        sp.style.top = '30%';
-        sp.style.animationDelay = (i * 0.08) + 's';
-        card.appendChild(sp);
-        setTimeout(() => sp.remove(), 900);
-      }
+  <script>
+    // Sparkle effect on card hover
+    document.querySelectorAll('.activity-card').forEach(card => {
+      card.addEventListener('mouseenter', (e) => {
+        const emojis = ['✨', '⭐', '🌟', '💫', '🎉'];
+        for (let i = 0; i < 4; i++) {
+          const sp = document.createElement('span');
+          sp.className = 'sparkle';
+          sp.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          const tx = (Math.random() - 0.5) * 80;
+          const ty = -(Math.random() * 60 + 20);
+          sp.style.setProperty('--tx', tx + 'px');
+          sp.style.setProperty('--ty', ty + 'px');
+          sp.style.left = (Math.random() * 80 + 10) + '%';
+          sp.style.top = '30%';
+          sp.style.animationDelay = (i * 0.08) + 's';
+          card.appendChild(sp);
+          setTimeout(() => sp.remove(), 900);
+        }
+      });
     });
-  });
-</script>
+  </script>
 
 </body>
+
 </html>
 
