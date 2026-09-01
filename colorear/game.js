@@ -123,7 +123,8 @@ function renderPalette(legend) {
   legend.forEach((entry, index) => {
     const btn = document.createElement("button");
     btn.className = "color-btn";
-    btn.innerHTML = `<span class="color-swatch" style="background:${entry.color}"></span><span>${entry.letter}</span>`;
+    const labelClass = entry.letter.length > 3 ? "label-text long-label" : "label-text";
+    btn.innerHTML = `<span class="color-swatch" style="background:${entry.color}"></span><span class="${labelClass}">${entry.letter}</span>`;
     btn.addEventListener("click", () => {
       document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("selected"));
       btn.classList.add("selected");
@@ -198,7 +199,19 @@ function handleCanvasClick(evt) {
   if (!selectedColor) return;
   const { x, y } = getCanvasCoords(evt);
   if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
-  floodFill(x, y, selectedColor);
+  try {
+    floodFill(x, y, selectedColor);
+  } catch (err) {
+    if (err && err.name === "SecurityError") {
+      alert(
+        "No se puede pintar porque la página se abrió como archivo local (file://).\n\n" +
+        "Abrí la app con un servidor local (por ejemplo 'python3 -m http.server' o la extensión Live Server) " +
+        "o subila a GitHub Pages: ahí va a funcionar sin problemas."
+      );
+    } else {
+      console.error("Error al rellenar la zona:", err);
+    }
+  }
 }
 
 function resetCanvas() {

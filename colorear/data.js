@@ -91,5 +91,18 @@ const PRESET_ACTIVITIES = [
       { letter: "I", color: "#FF9932" },
       { letter: "D", color: "#FFFE01" }
     ]
+  },
+  {
+    id: "dragon",
+    name: "EL DRAGÓN (SUMAS)",
+    image: "images/dragon.jpg",
+    legend: [
+      { letter: "3, 7, 12", color: "#97CE5E" },
+      { letter: "8, 10, 13", color: "#F6A8D0" },
+      { letter: "4, 9", color: "#B4B1CE" },
+      { letter: "5, 6, 11", color: "#F2F158" },
+      { letter: "2, 14, 16", color: "#B1ECF7" },
+      { letter: "15, 17", color: "#986D2A" }
+    ]
   }
 ];
