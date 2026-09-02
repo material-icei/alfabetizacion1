@@ -5,5 +5,5 @@
 // (localStorage) y se puede seguir probando la actividad con normalidad.
 
 const CONFIG = {
-  SCRIPT_URL: "",
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwIChUP8q_CAJ8-4jGlBPTii_LNLqo9UXUD3Ko2h44tSlxD71XoAHSpWM2ASpcrEg2lnQ/exec",
 };
