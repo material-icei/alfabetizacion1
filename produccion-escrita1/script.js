@@ -141,7 +141,7 @@ function enviarCuento() {
     
   };
 
-  var url = "https://script.google.com/macros/s/AKfycbz85xBgtEJyX7glox5vA5u7TCVdEW-g8nN4q8azCRv0p-WX9qcWrDhJnns2KMjU4ZWm/exec";
+  var url = "https://script.google.com/macros/s/AKfycbyzV2G9JEBqZlA4LVyoO6ZPGDTPl34xdIHJgzc5SpQmIn-RE8ZU8nYnB0-v2wYVntm_/exec";
 
   fetch(url, {
     method: "POST",
