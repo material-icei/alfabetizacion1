@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>El cuento del perrito 🐶</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <span class="paw">🐾</span>
+      <h1>El cuento del perrito</h1>
+      <span class="paw">🐾</span>
+    </div>
+    <p class="subtitle">Mirá las imágenes y escribí tu cuento. ¡Usá las sugerencias si necesitás ayuda!</p>
+  </header>
+
+  <main>
+
+     <!-- 🧑 DATOS DEL ALUMNO -->
+    <section class="story-table" style="margin-bottom:20px; padding:15px;">
+      <div class="col-write" style="gap:12px;">
+        <label class="write-label">Nombre:</label>
+        <input id="nombre" class="story-area" type="text" placeholder="Escribí tu nombre...">
+
+        <label class="write-label">Curso:</label>
+        <input id="curso" class="story-area" type="text" placeholder="Ej: 2A">
+
+        <label class="write-label">Título del cuento:</label>
+        <input id="titulo" class="story-area" type="text" placeholder="Inventá un título... ✨">
+
+
+      </div>
+    </section>
+
+
+    <div class="story-table">
+
+      <!-- ===== INICIO ===== -->
+      <section class="story-row" id="row-inicio">
+        <div class="col-image">
+          <div class="part-badge badge-inicio">1. Inicio</div>
+          <div class="image-frame frame-inicio">
+            <img src="inicio.png" alt="El perrito corre lleno de barro" />
+          </div>
+          <div class="image-caption">¿Quién es el personaje? ¿Dónde está?</div>
+        </div>
+        <div class="col-write">
+          <label class="write-label" for="ta-inicio">Escribí el <strong>inicio</strong> de tu cuento:</label>
+          <textarea id="ta-inicio" class="story-area ta-inicio" placeholder="Empezá a escribir aquí..." rows="6"></textarea>
+          <div class="word-count"><span id="wc-inicio">0</span> palabras</div>
+        </div>
+      </section>
+
+      <div class="row-divider">
+        <div class="divider-line"></div>
+        <span class="divider-icon">📖</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- ===== CONFLICTO ===== -->
+      <section class="story-row" id="row-conflicto">
+        <div class="col-image">
+          <div class="part-badge badge-conflicto">2. Conflicto</div>
+          <div class="image-frame frame-conflicto">
+            <img src="conflicto.png" alt="El perrito en la bañera con espuma" />
+          </div>
+          <div class="image-caption">¿Qué problema apareció?</div>
+        </div>
+        <div class="col-write">
+          <label class="write-label" for="ta-conflicto">Escribí el <strong>conflicto</strong> de tu cuento:</label>
+          <textarea id="ta-conflicto" class="story-area ta-conflicto" placeholder="¿Qué problema tuvo el perrito?" rows="6"></textarea>
+          <div class="word-count"><span id="wc-conflicto">0</span> palabras</div>
+        </div>
+      </section>
+
+      <div class="row-divider">
+        <div class="divider-line"></div>
+        <span class="divider-icon">📖</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- ===== DESENLACE ===== -->
+      <section class="story-row" id="row-desenlace">
+        <div class="col-image">
+          <div class="part-badge badge-desenlace">3. Desenlace</div>
+          <div class="image-frame frame-desenlace">
+            <img src="desenlace.png" alt="El perrito limpio y feliz" />
+          </div>
+          <div class="image-caption">¿Cómo terminó la historia?</div>
+        </div>
+        <div class="col-write">
+          <label class="write-label" for="ta-desenlace">Escribí el <strong>desenlace</strong> de tu cuento:</label>
+          <textarea id="ta-desenlace" class="story-area ta-desenlace" placeholder="¿Cómo terminó todo?" rows="6"></textarea>
+          <div class="word-count"><span id="wc-desenlace">0</span> palabras</div>
+        </div>
+      </section>
+
+    </div><!-- end story-table -->
+
+    <!-- ACTIONS -->
+    <div class="actions-bar">
+      <button class="btn btn-preview" onclick="showPreview()">👀 Ver mi cuento</button>
+      <button class="btn btn-clear" onclick="clearAll()">🗑️ Borrar todo</button>
+      <button class="btn btn-print" onclick="enviarCuento()">📤 Enviar</button>
+    </div>
+
+  </main>
+
+  <!-- PREVIEW MODAL -->
+  <div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
+    <div class="modal-box" id="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-header">
+        <span>🐶</span>
+        <h2 id="modal-title">Mi cuento</h2>
+        <span>🐾</span>
+      </div>
+      <div class="modal-content">
+        <div class="modal-part mp-inicio">
+          <h3>Inicio</h3>
+          <p id="mp-inicio-text"></p>
+        </div>
+        <div class="modal-part mp-conflicto">
+          <h3>Conflicto</h3>
+          <p id="mp-conflicto-text"></p>
+        </div>
+        <div class="modal-part mp-desenlace">
+          <h3>Desenlace</h3>
+          <p id="mp-desenlace-text"></p>
+        </div>
+      </div>
+      <div id="modal-empty" class="modal-empty hidden">¡Todavía no escribiste ninguna parte! Completá el cuento primero. 🖊️</div>
+      <div id="congrats" class="congrats hidden">
+        <span>🌟</span> ¡Excelente trabajo! Escribiste un cuento completo. <span>🌟</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
