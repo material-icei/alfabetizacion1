@@ -1,0 +1,206 @@
+/* =============================================
+   PRODUCCIÓN ESCRITA — Pantalla de selección de cuento
+   Misma estética que las páginas de cada cuento
+   ============================================= */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-perrito: #4caf50;
+  --color-perrito-light: #e8f5e9;
+  --color-perrito-border: #a5d6a7;
+  --color-camping: #ff9800;
+  --color-camping-light: #fff3e0;
+  --color-camping-border: #ffcc80;
+  --color-bg: #fffef7;
+  --font-main: 'Nunito', sans-serif;
+  --font-title: 'Fredoka One', cursive;
+  --shadow-card: 0 4px 18px rgba(0,0,0,0.10);
+  --radius-card: 20px;
+  --radius-chip: 30px;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: #333;
+  min-height: 100vh;
+}
+
+/* ---- HEADER ---- */
+header {
+  position: relative;
+  background: linear-gradient(135deg, #fff8e1 0%, #ffe0b2 100%);
+  border-bottom: 4px solid #ffcc02;
+  padding: 22px 16px 16px;
+  text-align: center;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-title);
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  color: #e65100;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 #ffcc02;
+}
+
+.paw {
+  font-size: 2rem;
+  animation: wobble 2.5s ease-in-out infinite;
+}
+.paw:last-child { animation-delay: 1.2s; }
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(-8deg); }
+  50%      { transform: rotate(8deg); }
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  color: #795548;
+  font-weight: 600;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.back-link {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #e65100;
+  background: white;
+  border: 2.5px solid #ffcc80;
+  border-radius: var(--radius-chip);
+  padding: 6px 16px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.back-link:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.18); }
+
+/* ---- MAIN ---- */
+main {
+  max-width: 1050px;
+  margin: 36px auto 40px;
+  padding: 0 16px;
+}
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+  justify-content: center;
+}
+
+/* ---- STORY CARD ---- */
+.story-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 26px 22px 24px;
+  background: white;
+  border-radius: var(--radius-card);
+  border: 3px solid;
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.story-card:hover,
+.story-card:focus-visible {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+}
+.story-card:active { transform: scale(0.97); }
+
+.card-frame {
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 4/3;
+  border-radius: 14px;
+  border: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.13);
+}
+
+.card-emoji {
+  font-size: 5rem;
+  animation: float-card 3s ease-in-out infinite;
+}
+.card-camping .card-emoji { animation-delay: 1s; }
+
+@keyframes float-card {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+.card-badge {
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  padding: 5px 18px;
+  border-radius: var(--radius-chip);
+  border: 2px solid;
+  letter-spacing: 0.5px;
+}
+
+.card-title {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.card-desc {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #8d6e63;
+  font-style: italic;
+  max-width: 260px;
+}
+
+.card-go {
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: 800;
+  color: white;
+  padding: 10px 26px;
+  border-radius: var(--radius-chip);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  margin-top: 4px;
+}
+
+/* ---- Colores por cuento ---- */
+.card-perrito { border-color: var(--color-perrito-border); background: #fbfffb; }
+.card-perrito .card-frame { border-color: var(--color-perrito-border); background: var(--color-perrito-light); }
+.card-perrito .card-badge { background: var(--color-perrito-light); color: #2e7d32; border-color: var(--color-perrito-border); }
+.card-perrito .card-title { color: #2e7d32; }
+.card-perrito .card-go    { background: var(--color-perrito); }
+
+.card-camping { border-color: var(--color-camping-border); background: #fffcf7; }
+.card-camping .card-frame { border-color: var(--color-camping-border); background: var(--color-camping-light); }
+.card-camping .card-badge { background: var(--color-camping-light); color: #e65100; border-color: var(--color-camping-border); }
+.card-camping .card-title { color: #e65100; }
+.card-camping .card-go    { background: var(--color-camping); }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 680px) {
+  .back-link { position: static; display: inline-block; margin-bottom: 10px; }
+  .stories-grid { grid-template-columns: 1fr; }
+}
