@@ -1,0 +1,170 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --fondo: #fff7e6;
+  --tarjeta: #ffffff;
+  --texto: #3a2e1f;
+  --acento: #ff8c42;
+  --azul: #1d6fe0;
+  --verde: #2a9d3f;
+  --rojo: #e63946;
+  --borde: #f0dcc0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: 'Nunito', sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pantalla { height: 100vh; display: flex; flex-direction: column; }
+.pantalla[hidden], .overlay[hidden] { display: none !important; }
+
+/* ---------- Barra superior ---------- */
+.barra {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 16px;
+  background: var(--acento);
+  color: #fff;
+  flex-shrink: 0;
+}
+.barra h1, .barra h2 { font-family: 'Fredoka One', cursive; font-weight: normal; }
+.barra h1 { font-size: 2rem; flex: 1; text-align: center; }
+.barra h2 { font-size: 1.5rem; }
+.titulos { flex: 1; text-align: center; }
+.titulos p { font-weight: 800; font-size: 1.05rem; }
+.espacio { width: 52px; }
+
+.btn-volver {
+  width: 52px; height: 52px;
+  border: none; border-radius: 14px;
+  background: rgba(255,255,255,.25);
+  font-size: 1.7rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+.btn-volver:hover { background: rgba(255,255,255,.4); }
+
+/* ---------- Menú de laberintos ---------- */
+.subtitulo {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.6rem; text-align: center; margin: 14px 0 6px;
+}
+.grilla {
+  flex: 1; overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px; padding: 10px 24px 24px;
+  align-content: start;
+}
+.tarjeta {
+  background: var(--tarjeta);
+  border: 4px solid var(--borde);
+  border-radius: 20px;
+  padding: 10px;
+  cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  transition: transform .15s, border-color .15s;
+  font-family: inherit; color: inherit;
+}
+.tarjeta:hover { transform: translateY(-4px) scale(1.02); border-color: var(--acento); }
+.tarjeta img {
+  width: 100%; height: 150px;
+  object-fit: contain;
+  background: #fafafa; border-radius: 12px;
+}
+.tarjeta .num {
+  font-family: 'Fredoka One', cursive;
+  background: var(--acento); color: #fff;
+  border-radius: 50%; width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+.tarjeta .nombre { font-weight: 800; font-size: 1.05rem; text-align: center; }
+
+/* ---------- Zona de juego ---------- */
+.zona-juego {
+  flex: 1; min-height: 0;
+  display: flex; gap: 12px;
+  padding: 10px 12px 12px;
+}
+.lienzo {
+  flex: 1; min-width: 0; min-height: 0;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+#img-laberinto {
+  position: absolute;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  background: #fff;
+  pointer-events: none;
+}
+#canvas-trazo {
+  position: absolute;
+  touch-action: none;
+  cursor: crosshair;
+}
+#canvas-trazo.goma { cursor: cell; }
+
+.herramientas {
+  width: 110px; flex-shrink: 0;
+  display: flex; flex-direction: column; gap: 10px;
+  overflow-y: auto;
+}
+.herr {
+  border: 4px solid var(--borde);
+  background: var(--tarjeta);
+  border-radius: 16px;
+  padding: 8px 4px;
+  font-size: 2rem; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center;
+  font-family: inherit; color: var(--texto);
+}
+.herr span { font-size: .85rem; font-weight: 800; }
+.herr.activa { border-color: var(--azul); background: #e6f0ff; }
+.herr.peligro:hover { border-color: var(--rojo); }
+.herr.exito { border-color: var(--verde); background: #e8f7ea; }
+
+.colores {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  padding: 8px; background: var(--tarjeta);
+  border: 4px solid var(--borde); border-radius: 16px;
+}
+.color {
+  aspect-ratio: 1; border-radius: 50%;
+  border: 4px solid #fff; cursor: pointer;
+  box-shadow: 0 0 0 2px var(--borde);
+}
+.color.activo { box-shadow: 0 0 0 4px var(--texto); }
+
+/* ---------- Ventanas ---------- */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+}
+.modal {
+  background: #fff; border-radius: 24px;
+  padding: 28px 36px; text-align: center;
+  font-family: 'Fredoka One', cursive; font-size: 1.7rem;
+  animation: aparecer .25s ease-out;
+}
+.estrellas { font-size: 3rem; margin-bottom: 8px; animation: saltar .8s ease-in-out infinite alternate; }
+.modal-botones { display: flex; gap: 14px; justify-content: center; margin-top: 20px; }
+.btn-grande {
+  font-family: 'Fredoka One', cursive; font-size: 1.2rem;
+  border: none; border-radius: 14px;
+  padding: 12px 22px; cursor: pointer;
+  background: #eee; color: var(--texto);
+}
+.btn-grande.peligro { background: var(--rojo); color: #fff; }
+.btn-grande.exito { background: var(--verde); color: #fff; }
+
+@keyframes aparecer { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes saltar { from { transform: translateY(0); } to { transform: translateY(-8px); } }

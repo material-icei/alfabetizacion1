@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laberintos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PANTALLA 1: elegir laberinto -->
+  <section id="pantalla-menu" class="pantalla">
+    <header class="barra">
+      <a class="btn-volver" href="../index.html" title="Volver al menú">🏠</a>
+      <h1>🧭 Laberintos</h1>
+      <span class="espacio"></span>
+    </header>
+    <p class="subtitulo">Elegí un laberinto</p>
+    <div id="grilla" class="grilla"></div>
+  </section>
+
+  <!-- PANTALLA 2: jugar -->
+  <section id="pantalla-juego" class="pantalla" hidden>
+    <header class="barra">
+      <button id="btn-atras" class="btn-volver" title="Elegir otro laberinto">⬅️</button>
+      <div class="titulos">
+        <h2 id="titulo-juego"></h2>
+        <p id="consigna-juego"></p>
+      </div>
+      <span class="espacio"></span>
+    </header>
+
+    <div class="zona-juego">
+      <div id="lienzo" class="lienzo">
+        <img id="img-laberinto" alt="Laberinto" draggable="false">
+        <canvas id="canvas-trazo"></canvas>
+      </div>
+
+      <aside class="herramientas">
+        <button class="herr activa" data-herr="lapiz" title="Lápiz">✏️<span>Lápiz</span></button>
+        <button class="herr" data-herr="goma" title="Goma">🧽<span>Goma</span></button>
+
+        <div class="colores">
+          <button class="color activo" data-color="#e63946" style="background:#e63946" title="Rojo"></button>
+          <button class="color" data-color="#1d6fe0" style="background:#1d6fe0" title="Azul"></button>
+          <button class="color" data-color="#2a9d3f" style="background:#2a9d3f" title="Verde"></button>
+          <button class="color" data-color="#8e44ad" style="background:#8e44ad" title="Violeta"></button>
+        </div>
+
+        <button id="btn-borrar-todo" class="herr peligro" title="Borrar todo el dibujo">🗑️<span>Borrar todo</span></button>
+        <button id="btn-termine" class="herr exito" title="¡Terminé!">⭐<span>¡Terminé!</span></button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Confirmar borrar todo -->
+  <div id="modal-borrar" class="overlay" hidden>
+    <div class="modal">
+      <p>¿Borrar todo tu camino?</p>
+      <div class="modal-botones">
+        <button id="borrar-si" class="btn-grande peligro">Sí, borrar</button>
+        <button id="borrar-no" class="btn-grande">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Festejo -->
+  <div id="modal-festejo" class="overlay" hidden>
+    <div class="modal">
+      <div class="estrellas">⭐⭐⭐</div>
+      <p>¡Muy bien!<br>Mostrale tu camino a la seño.</p>
+      <div class="modal-botones">
+        <button id="festejo-otro" class="btn-grande exito">Otro laberinto</button>
+        <button id="festejo-seguir" class="btn-grande">Seguir dibujando</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
