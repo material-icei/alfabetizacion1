@@ -45,6 +45,21 @@ const LABERINTOS = [
     imagen: "comida.jpg",
     titulo: "Cada uno a su alimento",
     consigna: "Dibujá el camino desde el inicio hasta el alimento."
+  },
+   {
+    imagen: "planeta.jpg",
+    titulo: "Llegar al planeta",
+    consigna: "Dibujá el camino desde la nave al planeta."
+  },
+   {
+    imagen: "caminos.jpg",
+    titulo: "Llegar a casa",
+    consigna: "Dibujá el camino hasta la casa."
+  },
+   {
+    imagen: "osopolar.jpg",
+    titulo: "Llegar al iglú",
+    consigna: "Dibujá el camino para llegar al iglú."
   }
   // ,{
   //   imagen: "laberinto5.jpg",
