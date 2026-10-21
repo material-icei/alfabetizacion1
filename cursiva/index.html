@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>¡Jugamos con la cursiva!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ INICIO ============ -->
+  <section class="pantalla activa" id="inicio" aria-label="Inicio">
+    <div class="deco deco-nube n1"></div><div class="deco deco-nube n2"></div>
+    <div class="deco deco-estrella e1">★</div><div class="deco deco-estrella e2">★</div><div class="deco deco-estrella e3">★</div>
+    <a class="btn-chico volver-plataforma" href="../index.html" aria-label="Volver al menú de actividades">🏠 Actividades</a>
+    <button class="btn-chico nuevo-jugador" data-accion="nuevo-jugador">👋 Nuevo jugador</button>
+
+    <div class="inicio-centro">
+      <div class="mascota grande" aria-hidden="true"></div>
+      <div class="inicio-textos">
+        <h1 class="titulo-cursiva">¡Jugamos con la cursiva!</h1>
+        <p class="subtitulo">Dibuja, practica y aprende la cursiva</p>
+        <div class="elige-modo" role="radiogroup" aria-label="¿Cómo querés practicar?">
+          <button class="tarjeta-modo" role="radio" data-modo-escritura="libre">
+            <span class="tm-icono">✏️</span>
+            <span class="tm-nombre">Modo libre</span>
+            <span class="tm-desc">Dibujo la letra a mi manera</span>
+            <span class="tm-check" aria-hidden="true">✔</span>
+          </button>
+          <button class="tarjeta-modo" role="radio" data-modo-escritura="guiado">
+            <span class="tm-icono">👀</span>
+            <span class="tm-nombre">Modo guiado</span>
+            <span class="tm-desc">Miro el trazo y sigo los puntitos</span>
+            <span class="tm-check" aria-hidden="true">✔</span>
+          </button>
+        </div>
+        <button class="btn-grande btn-empezar" data-ir="tipo">¡Empezar a jugar! ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TIPO DE ESCRITURA ============ -->
+  <section class="pantalla" id="tipo" aria-label="Elegir tipo de letra">
+    <header class="barra">
+      <button class="btn-nav" data-ir="inicio">◀ Inicio</button>
+      <h2>¿Qué letras querés practicar?</h2>
+      <span></span>
+    </header>
+    <div class="tipo-tarjetas">
+      <button class="tarjeta-tipo" data-tipo="may">
+        <span class="tt-icono">🔠</span>
+        <span class="tt-muestra cursiva">A B C</span>
+        <span class="tt-nombre">Cursiva mayúscula</span>
+        <span class="tt-desc">Letras grandes</span>
+      </button>
+      <button class="tarjeta-tipo" data-tipo="min">
+        <span class="tt-icono">🔡</span>
+        <span class="tt-muestra cursiva">a b c</span>
+        <span class="tt-nombre">Cursiva minúscula</span>
+        <span class="tt-desc">Letras chicas</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ MENÚ DE JUEGOS ============ -->
+  <section class="pantalla" id="menu" aria-label="Juegos">
+    <header class="barra">
+      <button class="btn-nav" data-ir="inicio">◀ Inicio</button>
+      <h2>¿A qué jugamos?</h2>
+      <div class="barra-der">
+        <div class="selector-tipo" role="radiogroup" aria-label="Tipo de letra"></div>
+        <span class="contador-estrellas" aria-label="Estrellas"></span>
+      </div>
+    </header>
+    <div class="menu-grid">
+      <button class="tarjeta-juego c-celeste" data-juego="una"><span class="tj-icono">✍️</span><span class="tj-nombre">Practico una letra</span><span class="tj-desc">Elijo la letra que quiero</span></button>
+      <button class="tarjeta-juego c-turquesa" data-juego="recorro"><span class="tj-icono">🚂</span><span class="tj-nombre">Recorro el abecedario</span><span class="tj-desc">De la A a la Z, una por una</span></button>
+      <button class="tarjeta-juego c-violeta" data-juego="par"><span class="tj-icono">🤝</span><span class="tj-nombre">Mayúscula y minúscula</span><span class="tj-desc">La grande y la chica juntas</span></button>
+      <button class="tarjeta-juego c-verde" data-juego="copio"><span class="tj-icono">👀</span><span class="tj-nombre">Copio la letra</span><span class="tj-desc">Miro el modelo y lo escribo</span></button>
+      <button class="tarjeta-juego c-coral" data-juego="desafio"><span class="tj-icono">🎲</span><span class="tj-nombre">Desafío de letras</span><span class="tj-desc">¡Una letra sorpresa!</span></button>
+      <button class="tarjeta-juego c-amarillo etapa2" data-juego="palabras"><span class="tj-etiqueta">Etapa 2</span><span class="tj-icono">📝</span><span class="tj-nombre">Palabras sencillas</span><span class="tj-desc">Después de las letras</span></button>
+    </div>
+    <div class="menu-pie">
+      <button class="btn-pie" data-ir="progreso">📊 Mi progreso</button>
+      <button class="btn-pie" data-ir="album">📒 Mi álbum</button>
+    </div>
+  </section>
+
+  <!-- ============ ABECEDARIO ============ -->
+  <section class="pantalla" id="abc" aria-label="Abecedario">
+    <header class="barra">
+      <button class="btn-nav" data-ir="menu">◀ Juegos</button>
+      <h2 id="abc-titulo">Elegí una letra</h2>
+      <div class="barra-der">
+        <div class="selector-tipo" role="radiogroup" aria-label="Tipo de letra"></div>
+      </div>
+    </header>
+    <div class="abc-grid" id="abc-grid"></div>
+  </section>
+
+  <!-- ============ PRÁCTICA ============ -->
+  <section class="pantalla" id="practica" aria-label="Práctica de escritura">
+    <header class="barra barra-practica">
+      <button class="btn-nav" id="p-volver">◀ Abecedario</button>
+      <div class="p-titulo">
+        <span class="p-juego" id="p-juego"></span>
+        <span class="p-paso" id="p-paso"></span>
+      </div>
+      <div class="barra-der">
+        <div class="selector-tipo" id="p-selector-tipo" role="radiogroup" aria-label="Tipo de letra"></div>
+        <div class="selector-escritura" role="radiogroup" aria-label="Modo de escritura">
+          <button data-modo-escritura="libre" role="radio">✏️ Libre</button>
+          <button data-modo-escritura="guiado" role="radio">👀 Guiado</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="p-cuerpo">
+      <aside class="p-lateral">
+        <div class="tarjeta-modelo" id="tarjeta-modelo">
+          <div class="tm-cabecera">
+            <span class="etiqueta-caso" id="etiqueta-caso">minúscula</span>
+            <button class="btn-ojo" id="btn-ojo" aria-pressed="false">🙈 Ocultar</button>
+          </div>
+          <canvas id="canvas-modelo" aria-label="Letra modelo"></canvas>
+          <div class="modelo-oculto" id="modelo-oculto">🙈<br>Modelo oculto</div>
+        </div>
+        <div class="pasos-guiado" id="pasos-guiado" role="radiogroup" aria-label="Pasos del modo guiado">
+          <button data-paso="mirar">▶ <span>1. Mirar</span></button>
+          <button data-paso="repasar">⋯ <span>2. Repasar</span></button>
+          <button data-paso="solo">✎ <span>3. Solo</span></button>
+        </div>
+        <div class="p-nav">
+          <button class="btn-nav-letra" id="btn-anterior" aria-label="Letra anterior">◀<span>Anterior</span></button>
+          <button class="btn-nav-letra" id="btn-siguiente" aria-label="Letra siguiente"><span>Siguiente</span>▶</button>
+        </div>
+        <button class="btn-quiero" id="btn-quiero" aria-pressed="false">🤍 Quiero practicarla más</button>
+      </aside>
+
+      <div class="p-area">
+        <div class="lienzo" id="lienzo">
+          <canvas id="canvas-guias" aria-hidden="true"></canvas>
+          <canvas id="canvas-dibujo" aria-label="Área para dibujar con el dedo"></canvas>
+          <div class="globo-ayuda" id="globo-ayuda" aria-live="polite"></div>
+        </div>
+        <div class="p-controles">
+          <div class="colores" role="radiogroup" aria-label="Color del lápiz"></div>
+          <button class="ctrl" id="btn-deshacer">↩️<span>Deshacer último trazo</span></button>
+          <button class="ctrl" id="btn-borrar">🧽<span>Borrar todo</span></button>
+          <button class="ctrl" id="btn-modelo" aria-pressed="false">👁️<span>Ver modelo</span></button>
+          <button class="ctrl" id="btn-otra-vez">🔄<span>Intentar de nuevo</span></button>
+          <button class="ctrl ctrl-dado" id="btn-dado">🎲<span>Otra letra</span></button>
+          <button class="ctrl ctrl-listo" id="btn-listo">⭐<span>¡Listo!</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PALABRAS ============ -->
+  <section class="pantalla" id="palabras" aria-label="Palabras sencillas">
+    <header class="barra">
+      <button class="btn-nav" data-ir="menu">◀ Juegos</button>
+      <h2>Elegí una palabra para copiar</h2>
+      <span class="contador-estrellas"></span>
+    </header>
+    <div class="palabras-grid" id="palabras-grid"></div>
+  </section>
+
+  <!-- ============ MI PROGRESO ============ -->
+  <section class="pantalla" id="progreso" aria-label="Mi progreso">
+    <header class="barra">
+      <button class="btn-nav" data-ir="menu">◀ Juegos</button>
+      <h2>Mi progreso</h2>
+      <button class="btn-nav btn-reiniciar" data-accion="reiniciar">🗑️ Borrar mi progreso</button>
+    </header>
+    <div class="progreso-cuerpo" id="progreso-cuerpo"></div>
+  </section>
+
+  <!-- ============ ÁLBUM ============ -->
+  <section class="pantalla" id="album" aria-label="Mi álbum de letras">
+    <header class="barra">
+      <button class="btn-nav" data-ir="menu">◀ Juegos</button>
+      <h2>Mi álbum de letras</h2>
+      <div class="barra-der"><div class="selector-tipo" role="radiogroup" aria-label="Tipo de letra"></div></div>
+    </header>
+    <div class="album-cuerpo">
+      <div class="album-grid" id="album-grid"></div>
+      <div class="medallas-estante" id="medallas-estante"></div>
+    </div>
+  </section>
+
+  <!-- ============ FESTEJO ============ -->
+  <div class="capa" id="festejo" hidden>
+    <div class="confeti" id="confeti" aria-hidden="true"></div>
+    <div class="caja-festejo" role="dialog" aria-modal="true" aria-labelledby="festejo-msg">
+      <div class="mascota" aria-hidden="true"></div>
+      <div class="festejo-estrella" aria-hidden="true">⭐</div>
+      <p class="festejo-msg" id="festejo-msg">¡Muy bien!</p>
+      <p class="festejo-extra" id="festejo-extra"></p>
+      <div class="festejo-botones">
+        <button class="btn-festejo b-otra" id="f-otra-vez">🔄 Practicar otra vez</button>
+        <button class="btn-festejo b-sig" id="f-siguiente">▶ Siguiente letra</button>
+        <button class="btn-festejo b-abc" id="f-abc">🔤 Volver al abecedario</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CONFIRMACIÓN ============ -->
+  <div class="capa" id="confirmar" hidden>
+    <div class="caja-confirmar" role="alertdialog" aria-modal="true" aria-labelledby="confirmar-texto">
+      <p class="confirmar-icono" aria-hidden="true">🤔</p>
+      <p id="confirmar-texto">¿Seguro?</p>
+      <div class="confirmar-botones">
+        <button class="btn-festejo b-abc" id="confirmar-no">✋ No, volver</button>
+        <button class="btn-festejo b-borrar" id="confirmar-si">✔ Sí, borrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="girar-aviso" aria-live="polite">🔄 Girá la pantalla para jugar</div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
