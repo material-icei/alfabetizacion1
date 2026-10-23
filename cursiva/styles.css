@@ -385,3 +385,7 @@ button:focus-visible, a:focus-visible { outline: 0.6vmin solid var(--violeta); o
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 .pasos-guiado button[hidden] { display: none; }
+
+/* Letras dibujadas (V, v, B, b) dentro de tarjetas y botones */
+.letra-svg { height: 1.5em; vertical-align: -0.3em; overflow: visible; }
+.mini-abc .letra-svg { height: 1.25em; vertical-align: -0.2em; }
