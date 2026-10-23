@@ -189,6 +189,52 @@
   }
   const aPx = (cas, x, y) => [cas.ox + x * cas.k, cas.base - y * cas.k];
 
+  /* ---------- Letra modelo (fuente + entrada desde el renglón, o forma dibujada) ---------- */
+  const GROSOR_FUENTE = 86;                    // grosor del trazo de la fuente, en unidades em
+  const capa = document.createElement("canvas");
+  const entradaDe = (t) => (typeof ENTRADAS !== "undefined" && ENTRADAS[t]) || null;
+  const formaDe = (t) => (typeof FORMAS !== "undefined" && FORMAS[t]) || null;
+  const margenEntrada = (t) => { const e = entradaDe(t); return e ? Math.max(0, -Math.min(...e.map((p) => p[0]))) : 0; };
+  const anchoForma = (f) => Math.max(...f.flat().map((p) => p[0])) + 60;
+  function anchoLetra(ctx, t, k) {             // ancho en unidades em
+    const f = formaDe(t);
+    if (f) return anchoForma(f);
+    ctx.font = `${1000 * k}px ${FUENTE}`;
+    return ctx.measureText(t).width / k + margenEntrada(t);
+  }
+  function lineas(c, lista, x, base, k) {
+    c.lineWidth = GROSOR_FUENTE * k; c.lineCap = "round"; c.lineJoin = "round"; c.beginPath();
+    lista.forEach((l) => l.forEach(([ex, ey], i) => (i ? c.lineTo(x + ex * k, base - ey * k) : c.moveTo(x + ex * k, base - ey * k))));
+    c.stroke();
+  }
+  function pintarLetra(ctx, t, x, base, k, color, alfa = 1) {
+    const f = formaDe(t), e = entradaDe(t);
+    const dibujar = (c) => {
+      c.fillStyle = color; c.strokeStyle = color;
+      if (f) { lineas(c, f, x, base, k); return; }
+      c.font = `${1000 * k}px ${FUENTE}`; c.fillText(t, x, base);
+      if (e) lineas(c, [e], x, base, k);
+    };
+    if (!(e || f) || alfa >= 1) { ctx.save(); ctx.globalAlpha = alfa; dibujar(ctx); ctx.restore(); return; }
+    // con transparencia: se dibuja opaco en una capa aparte para que los cruces no queden más oscuros
+    if (capa.width !== ctx.canvas.width || capa.height !== ctx.canvas.height) { capa.width = ctx.canvas.width; capa.height = ctx.canvas.height; }
+    const c = capa.getContext("2d");
+    c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, capa.width, capa.height); c.setTransform(ctx.getTransform());
+    dibujar(c);
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = alfa; ctx.drawImage(capa, 0, 0); ctx.restore();
+  }
+
+  /* Letra para usar en botones y tarjetas (HTML): texto con la fuente, o SVG si es una forma dibujada */
+  function letraHTML(texto) {
+    return Array.from(texto).map((t) => {
+      const f = formaDe(t);
+      if (!f) return t;
+      const w = anchoForma(f) + 60;
+      const d = f.map((l) => "M" + l.map(([x, y]) => `${x} ${-y}`).join("L")).join("");
+      return `<svg class="letra-svg" viewBox="-60 -1200 ${w} 1500" style="width:${(w / 1000).toFixed(2)}em" aria-label="${t}" role="img"><path d="${d}" fill="none" stroke="currentColor" stroke-width="${GROSOR_FUENTE}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    }).join("");
+  }
+
   /* ---------- Guías (renglones) ---------- */
   function dibujarRenglon(ctx, k, base, x0, x1) {
     const y = (v) => base - v * k;
@@ -245,9 +291,7 @@
       const esModelo = cas.rol === "modelo";
       // Modelo fijo (copio / palabras)
       if (esModelo && V.verModelo) {
-        ctx.fillStyle = "#1f3352";
-        ctx.font = `${1000 * cas.k}px ${FUENTE}`;
-        ctx.fillText(o.texto, cas.ox, cas.base);
+        pintarLetra(ctx, o.texto, cas.ox, cas.base, cas.k, "#1f3352");
       }
       if (esModelo && !V.verModelo) {
         ctx.fillStyle = "#90a4ae"; ctx.font = `700 ${Math.max(14, H * 0.045)}px Nunito, sans-serif`; ctx.textAlign = "center";
@@ -257,9 +301,7 @@
       // Sombra del modelo para repasar
       const modeloAparte = J.juego === "copio" || o.palabra;   // el modelo está en otro casillero
       if (!esModelo && ((V.verModelo && !modeloAparte) || (o.palabra && V.paso === "repasar"))) {
-        ctx.fillStyle = o.palabra && V.paso === "repasar" ? "rgba(126,87,194,0.20)" : "rgba(126,87,194,0.16)";
-        ctx.font = `${1000 * cas.k}px ${FUENTE}`;
-        ctx.fillText(o.texto, cas.ox, cas.base);
+        pintarLetra(ctx, o.texto, cas.ox, cas.base, cas.k, "#7e57c2", o.palabra && V.paso === "repasar" ? 0.2 : 0.16);
       }
       // Animación / punteado
       if (o.trazos && (esModelo || J.juego !== "copio")) {
@@ -309,7 +351,7 @@
         ctx.setLineDash([0.1, lw * 2.1]); ctx.lineWidth = lw; ctx.strokeStyle = "rgba(126,87,194,0.55)";
         ctx.beginPath(); trazarSuave(ctx, pts); ctx.stroke(); ctx.setLineDash([]);
         // flechas de sentido
-        const L = longitudes(t), paso = 300; let sig = 170;
+        const L = longitudes(t), paso = 300; let sig = 170 + 130 * i;   // desfasado por trazo para que no se encimen
         for (let j = 1; j < t.length; j++) {
           while (L[j] >= sig && sig < L[L.length - 1] - 60) {
             const f = (sig - L[j - 1]) / Math.max(1e-6, L[j] - L[j - 1]);
@@ -330,8 +372,7 @@
     // prog: { trazo, dist }
     const k = cas.k, lw = Math.max(6, 46 * k);
     // modelo tenue de fondo
-    ctx.fillStyle = "rgba(31,51,82,0.07)"; ctx.font = `${1000 * k}px ${FUENTE}`;
-    ctx.fillText(objetivo().texto, cas.ox, cas.base);
+    pintarLetra(ctx, objetivo().texto, cas.ox, cas.base, k, "#1f3352", 0.07);
     let punta = null;
     for (let i = 0; i <= Math.min(prog.trazo, trazos.length - 1); i++) {
       const t = trazos[i], L = longitudes(t), tot = L[L.length - 1];
@@ -579,16 +620,14 @@
       : [{ t: o.texto, on: true }];
     const SUP = supDe(o.trazos ? cajaTrazos(o.trazos) : null);
     let k = (h * 0.9) / (SUP - INF);
-    const anchos = items.map((it) => { gM.font = `${1000 * k}px ${FUENTE}`; return gM.measureText(it.t).width / k; });
+    const anchos = items.map((it) => anchoLetra(gM, it.t, k));
     const total = anchos.reduce((a, b) => a + b, 0) + 300 * (items.length - 1);
     k = Math.min(k, (w * 0.9) / (total + 100));
     const base = (h - (SUP - INF) * k) / 2 + SUP * k;
     dibujarRenglon(gM, k, base, w * 0.03, w * 0.97);
     let x = w / 2 - (total / 2) * k;
     items.forEach((it, i) => {
-      gM.font = `${1000 * k}px ${FUENTE}`;
-      gM.fillStyle = it.on ? "#1f3352" : "rgba(31,51,82,0.3)";
-      gM.fillText(it.t, x, base);
+      pintarLetra(gM, it.t, x + margenEntrada(it.t) * k, base, k, "#1f3352", it.on ? 1 : 0.3);
       x += (anchos[i] + 300) * k;
     });
     if (o.palabra) {
@@ -692,7 +731,7 @@
       const texto = J.juego === "par" ? `${b}${b.toLowerCase()}` : letraDe(b, caso);
       const ins = (reg ? '<span title="Ya la practicaste">⭐</span>' : "") + (q ? '<span title="Quiero practicarla más">❤️</span>' : "");
       return `<button class="tarjeta-letra ${caso} ${reg ? "practicada" : ""}" data-idx="${i}" aria-label="Letra ${b}${reg ? ", ya practicada" : ""}">
-        <span class="tl-letra">${texto}</span><span class="tl-insignias">${ins}</span>${reg ? `<span class="tl-veces">×${reg.n}</span>` : ""}</button>`;
+        <span class="tl-letra">${letraHTML(texto)}</span><span class="tl-insignias">${ins}</span>${reg ? `<span class="tl-veces">×${reg.n}</span>` : ""}</button>`;
     }).join("");
   }
   alEntrar.abc = pintarAbecedario;
@@ -710,7 +749,7 @@
   function pintarProgreso() {
     const e = estadisticas();
     const barra = (nom, n, tot) => `<div class="barra-avance"><span>${nom}</span><div class="ba-fondo"><div class="ba-lleno" style="width:${Math.round((n / tot) * 100)}%"></div></div><span>${n} de ${tot}</span></div>`;
-    const mini = (caso) => `<div class="mini-abc">${ABECEDARIO.map((b) => `<span class="${P.letras[caso][b] ? "si" : ""}">${letraDe(b, caso)}</span>`).join("")}</div>`;
+    const mini = (caso) => `<div class="mini-abc">${ABECEDARIO.map((b) => `<span class="${P.letras[caso][b] ? "si" : ""}">${letraHTML(letraDe(b, caso))}</span>`).join("")}</div>`;
     const quiero = ["may", "min"].flatMap((c) => P.quiero[c].map((b) => ({ c, b })));
     $("#progreso-cuerpo").innerHTML = `
       <div class="prog-tiles">
@@ -729,7 +768,7 @@
       </div>
       <div class="panel">
         <h3>❤️ Quiero seguir practicando</h3>
-        ${quiero.length ? `<div class="lista-quiero">${quiero.map((q) => `<button data-quiero-caso="${q.c}" data-quiero-letra="${q.b}" aria-label="Practicar ${q.b}">${letraDe(q.b, q.c)}</button>`).join("")}</div>`
+        ${quiero.length ? `<div class="lista-quiero">${quiero.map((q) => `<button data-quiero-caso="${q.c}" data-quiero-letra="${q.b}" aria-label="Practicar ${q.b}">${letraHTML(letraDe(q.b, q.c))}</button>`).join("")}</div>`
         : `<p class="vacio">Tocá «🤍 Quiero practicarla más» cuando estés practicando una letra y aparece acá.</p>`}
         <h3>🏅 Mis medallas</h3>
         <div class="medallas-mini">${MEDALLAS.map((m) => `<span class="${P.medallas.includes(m.id) ? "ganada" : ""}" title="${m.nombre}: ${m.desc}" aria-label="${m.nombre}${P.medallas.includes(m.id) ? " (ganada)" : " (por ganar)"}">${m.icono}</span>`).join("")}</div>
@@ -743,7 +782,7 @@
       const reg = P.letras[caso][b];
       const col = ["#e1f5fe", "#e0f7fa", "#fff8e1", "#e8f5e9", "#fbe9e7", "#ede7f6"][i % 6];
       return `<button class="figurita ${reg ? "pegada" : ""}" data-idx="${i}" style="${reg ? `background:${col}` : ""}" aria-label="Figurita ${b}${reg ? ", pegada" : ", por conseguir"}">
-        <span class="fg-letra">${letraDe(b, caso)}</span>
+        <span class="fg-letra">${letraHTML(letraDe(b, caso))}</span>
         ${reg ? `<span class="fg-estrellas">⭐ ${reg.n}</span>` : `<span class="fg-falta">por pegar</span>`}</button>`;
     }).join("");
     $("#medallas-estante").innerHTML = "<h3>🏅 Medallas</h3>" + MEDALLAS.map((m) => {
@@ -868,6 +907,7 @@
   /* ==========================================================
      INICIO
      ========================================================== */
+  $$(".tt-muestra").forEach((m) => (m.innerHTML = letraHTML(m.textContent)));
   alEntrar.tipo = () => $$(".tarjeta-tipo").forEach((t) => t.setAttribute("aria-pressed", String(t.dataset.tipo === P.pref.tipo)));
   alEntrar.practica = () => { };
 
